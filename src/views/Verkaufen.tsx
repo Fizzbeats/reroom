@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { verkaeuferStarten } from "../services/uebergabeNetz";
 import {
-  erloesCent, guthabenCent, kaeuferZahltCent, neuesInserat, qrText, STATUS_TEXT, uebergabeGueltig,
+  erloesCent, guthabenCent, kaeuferZahltCent, neuesInserat, qrText, STATUS_TEXT, uebergabeGueltig, uebergabeLink,
   type Entwurf, type Erloesart, type Inserat,
 } from "../logic/verkaufen";
 import { alsCent, euro } from "../logic/preisRechner";
@@ -30,6 +31,11 @@ export default function Verkaufen({ inserate, onInserate, guthabenCent: guthaben
   const [qrFuer, setQrFuer] = useState<string>();
   const [erloesFuer, setErloesFuer] = useState<string>();
   const [fehler, setFehler] = useState("");
+  // Zweites Handy: Verbindungs-Nummer für den QR-Code und Stand der Verbindung
+  const [peerId, setPeerId] = useState<string>();
+  const [netzFehler, setNetzFehler] = useState(false);
+  const inserateRef = useRef(inserate);
+  inserateRef.current = inserate;
 
   const aendern = (id: string, teil: Partial<Inserat>) => onInserate(inserate.map((i) => (i.id === id ? { ...i, ...teil } : i)));
   const qrInserat = inserate.find((i) => i.id === qrFuer);
@@ -42,7 +48,34 @@ export default function Verkaufen({ inserate, onInserate, guthabenCent: guthaben
     setAssistent(false);
   }
 
-  /** Demo: Der Käufer scannt den QR-Code. Wir lesen den echten Code-Text und prüfen ihn. */
+  // Solange der QR-Code offen ist, wartet dieses Handy auf das zweite Handy des Käufers
+  useEffect(() => {
+    if (!qrFuer) return;
+    setPeerId(undefined);
+    setNetzFehler(false);
+    let beenden = () => {};
+    let aktiv = true;
+    verkaeuferStarten(
+      (id, code) => {
+        const i = inserateRef.current.find((x) => x.id === qrFuer);
+        if (!i || !uebergabeGueltig(i, `reroom://uebergabe/${id}/${code}`)) return undefined;
+        // Bestätigung vom Käufer-Handy: weiter wie beim Scannen
+        setTimeout(() => { setQrFuer(undefined); setErloesFuer(i.id); }, 600);
+        return i.titel;
+      },
+      (id) => aktiv && setPeerId(id),
+      () => aktiv && setNetzFehler(true),
+    ).then((v) => {
+      if (aktiv) beenden = v.stoppen;
+      else v.stoppen();
+    }, () => aktiv && setNetzFehler(true));
+    return () => {
+      aktiv = false;
+      beenden();
+    };
+  }, [qrFuer]);
+
+  /** Ohne zweites Handy: Der Käufer scannt den QR-Code. Wir lesen den echten Code-Text und prüfen ihn. */
   function kaeuferScannt(i: Inserat) {
     if (!uebergabeGueltig(i, qrText(i))) return setFehler("Der Code passt nicht zu diesem Inserat.");
     setFehler("");
@@ -148,10 +181,17 @@ export default function Verkaufen({ inserate, onInserate, guthabenCent: guthaben
             </div>
             <div className="qr-inhalt">
               <p style={{ margin: 0, textAlign: "center" }}>Zeig dem Käufer diesen Code, wenn er {qrInserat.titel} abholt. Erst wenn er ihn scannt, bekommst du dein Geld.</p>
-              <div className="qr-rahmen"><QrCode text={qrText(qrInserat)} groesse={230} /></div>
+              <div className="qr-rahmen" data-link={peerId ? uebergabeLink(qrInserat, peerId, location.origin + location.pathname) : undefined}><QrCode text={peerId ? uebergabeLink(qrInserat, peerId, location.origin + location.pathname) : qrText(qrInserat)} groesse={230} /></div>
               <p className="code-ziffern" aria-label={`Code ${qrInserat.code.split("").join(" ")}`}>{qrInserat.code.slice(0, 3)} {qrInserat.code.slice(3)}</p>
+              <p className="gedaempft" role="status" style={{ margin: 0, textAlign: "center", fontSize: ".86rem" }}>
+                {netzFehler
+                  ? "Keine Verbindung zum Vermittler. Ohne Internet geht die Übergabe nur mit dem Knopf unten."
+                  : peerId
+                    ? "Bereit. Der Käufer scannt mit seiner Kamera, öffnet den Link und bestätigt. Lass diese Seite offen."
+                    : "Verbindung wird vorbereitet …"}
+              </p>
               {fehler && <p role="alert" className="hinweis">{fehler}</p>}
-              <button className="knopf breit" onClick={() => kaeuferScannt(qrInserat)}>Demo: Käufer scannt jetzt</button>
+              <button className="knopf leise breit" onClick={() => kaeuferScannt(qrInserat)}>Ohne zweites Handy testen: Käufer scannt jetzt</button>
             </div>
           </div>
         </div>

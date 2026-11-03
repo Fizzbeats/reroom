@@ -40,9 +40,10 @@ export function willkommenMessText(art: MessArt): MessText {
 export const START_MESSEN_TEXT = "Miss Tür, Treppenhaus und Raum, Schritt für Schritt. ReRoom zeigt dir dann nur Möbel, die wirklich passen.";
 
 /** Erste Nachricht des Chats. Sagt ehrlich, was er kann und ob er deinen Raum schon kennt. */
-export function chatBegruessung(raumName?: string): string {
+export function chatBegruessung(raumName?: string, mitKi = false): string {
   const raum = raumName
     ? `Ich kenne die Maße deines Raums „${raumName}“ und schlage nur Möbel vor, die durch Tür und Treppenhaus passen.`
     : "Ich kenne deinen Raum noch nicht. Miss ihn oder wähle einen Beispielraum, dann prüfe ich auch Tür und Treppenhaus.";
+  if (mitKi) return `Hallo! Ich bin der ReRoom-Assistent mit KI. Frag mich frei, ich schlage dir nur Möbel vor, die zu deinem Raum passen. ${raum} Was suchst du?`;
   return `Hallo! Ich bin der ReRoom-Assistent, noch ohne KI. Ich verstehe Möbelart, Farbe, Stil, Preis, Entfernung und Nische. ${raum} Was suchst du?`;
 }

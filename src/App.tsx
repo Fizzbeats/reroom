@@ -15,6 +15,8 @@ import Verkaufen from "./views/Verkaufen";
 import KontoSeite from "./views/Konto";
 import GeteilteWohnung from "./views/GeteilteWohnung";
 import { leseTeilLink, teilLink, type Teilen } from "./logic/teilen";
+import KaeuferUebergabe from "./views/KaeuferUebergabe";
+import { liesUebergabeLink } from "./logic/verkaufen";
 import { Icon, type IconName } from "./views/ui";
 import type { FestePlatz, Platzierung } from "./logic/einrichten";
 import { inseratZuMoebel, type Inserat } from "./logic/verkaufen";
@@ -47,6 +49,8 @@ export default function App() {
   // Wer einen Wohnungs-Link öffnet, sieht zuerst die geteilte Wohnung
   const [geteilt, setGeteilt] = useState<Teilen | undefined>(() => leseTeilLink(location.hash));
   const [geteiltRundgang, setGeteiltRundgang] = useState<Platzierung[]>();
+  // Zweites Handy: Käufer hat den QR-Code der Übergabe gescannt
+  const [uebergabe, setUebergabe] = useState(() => liesUebergabeLink(location.hash));
   const [konto, setKonto] = useLokal<Konto>("reroom.konto", START_KONTO);
   const [nachrichten, setNachrichten] = useState<Nachricht[]>([]);
   const [verbrauch, setVerbrauch] = useLokal<Verbrauch>("reroom.chat", KEIN_VERBRAUCH);
@@ -245,7 +249,14 @@ export default function App() {
         </Suspense>
       )}
 
-      {!willkommenGesehen && !geteilt && (
+      {uebergabe && (
+        <KaeuferUebergabe
+          {...uebergabe}
+          onSchliessen={() => { setUebergabe(undefined); history.replaceState(null, "", location.pathname + location.search); }}
+        />
+      )}
+
+      {!willkommenGesehen && !geteilt && !uebergabe && (
         <Willkommen
           onMessen={() => { setWillkommenGesehen(true); gehe("Messen"); }}
           onStilFinder={() => { setWillkommenGesehen(true); setStilFinderOffen(true); }}

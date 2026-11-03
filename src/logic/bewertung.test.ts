@@ -37,3 +37,32 @@ describe("Wohnung teilen", () => {
     expect(leseTeilLink("#wohnung=" + btoa(JSON.stringify({ raum: { name: "x" }, moebelIds: [] })))).toBeUndefined();
   });
 });
+
+import { liesQr, liesUebergabeLink, uebergabeLink } from "./verkaufen";
+
+describe("Übergabe-Link für das zweite Handy", () => {
+  const i = { id: "ins-abc123", code: "123456" };
+  it("Link lässt sich lesen und enthält die Verbindungs-Nummer", () => {
+    const link = uebergabeLink(i, "a1b2-c3d4", "https://x.de/reroom/");
+    expect(liesUebergabeLink(link.slice(link.indexOf("#")))).toEqual({ id: "ins-abc123", code: "123456", peer: "a1b2-c3d4" });
+    expect(liesQr(link)).toEqual({ id: "ins-abc123", code: "123456" });
+  });
+  it("fremde oder kaputte Links werden abgelehnt", () => {
+    expect(liesUebergabeLink("#uebergabe/x/12/p")).toBeUndefined();
+    expect(liesUebergabeLink("#uebergabe/x/123456/p q")).toBeUndefined();
+    expect(liesQr("https://x.de/#anderes")).toBeUndefined();
+  });
+});
+
+import { stilVorschlag } from "./farbanalyse";
+
+describe("Stil-Vorschlag aus Bildfarben", () => {
+  it("schlägt je Farbmischung einen Stil vor", () => {
+    expect(stilVorschlag(["terrakotta", "holz"])).toBe("boho");
+    expect(stilVorschlag(["schwarz", "grau"])).toBe("industrial");
+    expect(stilVorschlag(["schwarz", "weiss"])).toBe("modern");
+    expect(stilVorschlag(["weiss", "holz"])).toBe("skandi");
+    expect(stilVorschlag(["braun", "holz"])).toBe("vintage");
+    expect(stilVorschlag([])).toBeUndefined();
+  });
+});

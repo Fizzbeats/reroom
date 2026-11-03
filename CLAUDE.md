@@ -53,7 +53,13 @@
 >
 > **Ergänzt nach dem Businessplan-Abgleich (`docs/businessplan-abgleich.html`):** Datenschutz und Impressum (`src/views/Rechtliches.tsx`, aus dem Konto erreichbar), Demo-Profil mit Name, Bewertungen (`src/logic/bewertung.ts`: Beispielwerte je Verkäufer, Käufer bewertet nach der Übergabe als Demo), Wohnung als Link teilen (`src/logic/teilen.ts`, `src/views/GeteilteWohnung.tsx`; alles steckt im Link, der Empfänger sieht Grundriss, Möbel, Preise und 3D), Schritt Farben im Stil-Finder (mag ich / mag ich nicht), Preisalarm-Demo im Konto, 15-%-Anteil beim Transport sichtbar.
 >
-> **Noch offen (laut Businessplan):** echte Zahlung und Auszahlung (bisher Demo), zweites Gerät für den Käufer (braucht Server), echte Konten, echte Partner-Shops und Produktfotos, KI im Chatbot und beim Erkennen des Stils, Kamera-Scan als eigene App (Ausbaustufe), AR am echten Android-Handy testen.
+> **Zweites Handy bei der Übergabe (umgesetzt):** Der QR-Code enthält einen Link (`uebergabeLink`). Verkäufer und Käufer verbinden sich direkt per WebRTC (`src/services/uebergabeNetz.ts`, PeerJS, nur der Verbindungsaufbau läuft über deren öffentlichen Vermittler). Käufer-Seite `src/views/KaeuferUebergabe.tsx`. Der Knopf „Ohne zweites Handy testen“ bleibt für die Vorführung ohne Internet. Im Datenschutz steht, dass der Vermittler die IP-Adressen sieht.
+>
+> **Testkasse (umgesetzt):** Warenkorb zeigt eine Testkasse ohne Karteneingabe (niemand soll echte Kartendaten in ein Testformular tippen), Bestellnummer und den Hinweis, dass gebrauchtes Geld bis zur Übergabe gehalten wird.
+>
+> **KI-Chatbot, vorbereitet:** `src/services/chatCloud.ts` fragt eine Cloud-Funktion (`cloud/chat-worker.js`, Cloudflare Workers), wenn `VITE_CHAT_URL` gesetzt ist, sonst antwortet die lokale Logik. Der API-Schlüssel steht nur als Secret in der Funktion. Die KI darf nur Möbel vorschlagen, die es gibt und die nicht rot sind. Nicht eingeschaltet, weil es einen bezahlten Schlüssel braucht. Eigene Inspo-Bilder: Stil-Vorschlag nach Farbregel (`stilVorschlag`), keine KI.
+>
+> **Noch offen (laut Businessplan):** echte Zahlung und Auszahlung (braucht einen Zahlungsdienstleister), echte Konten, echte Partner-Shops und Produktfotos, KI einschalten (API-Schlüssel), Transport-Partner, Kamera-Scan als eigene App (Ausbaustufe), AR am echten Android-Handy testen.
 >
 > **Befehle:** `npm install`, `npm run dev` (Entwicklung), `npm test`, `npm run build`.
 > **CI:** `.github/workflows/ci.yml` (Typen, Tests, Build bei jedem Push und Pull Request).

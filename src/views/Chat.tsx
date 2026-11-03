@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import type { Moebel, Raum } from "../models/types";
 import { antworte, type Kontext } from "../logic/chatbot";
+import { chatAdresse, frageKi } from "../services/chatCloud";
 import { FRAGEN_PRO_TAG, tagVon, verbleibend, verbrauche, type Verbrauch } from "../logic/chatLimit";
 import { pruefeMoebel } from "../logic/passtCheck";
 import { alsCent, euro } from "../logic/preisRechner";
@@ -55,7 +56,7 @@ export default function Chat({ katalog, raum, nachrichten, onNachrichten, verbra
     ende.current?.scrollIntoView({ block: "end" });
   }, [nachrichten.length]);
 
-  function senden(text: string) {
+  async function senden(text: string) {
     const frage = text.trim();
     if (!frage) return;
     const naechsteId = (nachrichten.at(-1)?.id ?? 0) + 1;
@@ -74,7 +75,11 @@ export default function Chat({ katalog, raum, nachrichten, onNachrichten, verbra
       return;
     }
 
-    const a = antworte(frage, katalog, raum, vorher ?? {});
+    // Mit eingetragener Cloud-Adresse fragt der Chat zuerst die KI, sonst (oder bei einem Fehler) die lokale Logik.
+    // Rückfragen (z. B. nach der Nischenbreite) beantwortet immer die lokale Logik.
+    const adresse = chatAdresse();
+    const ki = adresse && !vorher ? await frageKi(adresse, frage, katalog, raum) : undefined;
+    const a = ki ?? antworte(frage, katalog, raum, vorher ?? {});
     const bot: Nachricht = {
       id: naechsteId + 1, von: "bot", text: a.text, treffer: a.treffer,
       kontext: a.rueckfrage ? { kriterien: a.kriterien, rueckfrage: a.rueckfrage } : undefined,
@@ -99,7 +104,7 @@ export default function Chat({ katalog, raum, nachrichten, onNachrichten, verbra
         </div>
 
         <div className="sheet-verlauf" aria-live="polite">
-          <div className="blase bot">{chatBegruessung(raum?.name)}</div>
+          <div className="blase bot">{chatBegruessung(raum?.name, Boolean(chatAdresse()))}</div>
           {nachrichten.map((n) => (
             <div key={n.id} className={`zeile-chat ${n.von}`}>
               <div className={`blase ${n.von}`}>{n.text}</div>

@@ -28,6 +28,10 @@ export default function Rechtliches({ seite, onSchliessen }: { seite: Rechtliche
             <p>Die Kamera startet nur, wenn du sie antippst und dein Browser es erlaubt. Fotos werden auf deinem Gerät verkleinert und dort gespeichert. Sie werden nicht hochgeladen.</p>
             <h2>Teilen</h2>
             <p>Wenn du eine Wohnung teilst, stehen Raummaße, Möbel-Nummern und Positionen im Link selbst. Wer den Link hat, kann sie sehen. Teile ihn nur mit Menschen, denen du das zeigen willst.</p>
+            <h2>Übergabe mit zwei Handys</h2>
+            <p>Beim QR-Code der Übergabe verbinden sich die beiden Handys direkt miteinander. Zum Verbindungsaufbau nutzt die App den kostenlosen öffentlichen Vermittler von PeerJS. Dieser sieht dabei die Internetadressen (IP) der beiden Handys, aber nicht den Inhalt. Gesendet werden nur Inserat-Nummer und Code. Beim Öffnen des QR-Codes wird die Verbindung aufgebaut, beim Schließen beendet.</p>
+            <h2>Chatbot</h2>
+            <p>Ohne eingerichtete Cloud-Funktion läuft der Chatbot nur auf deinem Gerät. Mit Cloud-Funktion gehen deine Frage, die Raummaße und der Möbelkatalog an die KI-Schnittstelle. Persönliche Daten sind nicht dabei.</p>
             <h2>Später mit echten Konten</h2>
             <p>Mit Anmeldung, Zahlung und Marktplatz kommen Daten dazu, die ein Server speichert. Dann braucht es eine Einwilligung, Löschung auf Wunsch und eine geprüfte Datenschutzerklärung.</p>
             <h2>Löschen</h2>

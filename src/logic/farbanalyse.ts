@@ -1,5 +1,7 @@
 // Erkennt die Hauptfarben eines Fotos und ordnet sie den Farben von ReRoom zu.
-// Das ist keine KI: Es zählt Bildpunkte und nimmt die nächstliegende Farbe. Den Stil wählt der Nutzer selbst.
+// Das ist keine KI: Es zählt Bildpunkte und nimmt die nächstliegende Farbe. Den Stil schlägt eine einfache Regel vor, der Nutzer entscheidet.
+
+import type { Stil } from "../models/types";
 
 const PALETTE: Record<string, [number, number, number]> = {
   grau: [163, 167, 171],
@@ -58,4 +60,18 @@ export function farbenAusPixeln(daten: ArrayLike<number>, maxFarben = 2, mindest
     .sort((a, b) => b[1] - a[1])
     .slice(0, maxFarben)
     .map(([name]) => name);
+}
+
+/** Schlägt aus den Bildfarben einen Stil vor. Nur ein Vorschlag, der Nutzer entscheidet. */
+export function stilVorschlag(farben: string[]): Stil | undefined {
+  const hat = (f: string) => farben.includes(f);
+  if (farben.length === 0) return undefined;
+  if (hat("terrakotta")) return "boho";
+  if (hat("schwarz") && hat("weiss")) return "modern";
+  if (hat("schwarz")) return "industrial";
+  if (hat("braun")) return "vintage";
+  if (hat("holz")) return "skandi";
+  if (hat("grau")) return "modern";
+  if (hat("weiss")) return "skandi";
+  return undefined;
 }

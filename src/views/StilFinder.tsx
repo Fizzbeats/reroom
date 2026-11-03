@@ -3,6 +3,7 @@ import type { Moebel, Raum } from "../models/types";
 import { INSPO_KARTEN } from "../data/inspo";
 import type { InspoKarte } from "../logic/stilAuswertung";
 import { bildVerkleinern, farbenAusBild } from "../services/foto";
+import { stilVorschlag } from "../logic/farbanalyse";
 import FotoAufnahme from "./FotoAufnahme";
 import { werteAus, zimmerSet, type StilErgebnis } from "../logic/stilAuswertung";
 import { pruefeMoebel } from "../logic/passtCheck";
@@ -71,10 +72,11 @@ export default function StilFinder({ katalog, raum, onFertig, onSchliessen }: Pr
             <h1 style={{ margin: "0 0 12px" }}>Welcher Stil ist das?</h1>
             <img src={entwurf.bildUrl} alt="Dein Inspirationsbild" style={{ width: "100%", maxHeight: "45vh", objectFit: "cover", borderRadius: 18 }} />
             <p className="gedaempft">
-              {entwurf.farben.length > 0 ? `ReRoom erkennt diese Farben: ${entwurf.farben.join(", ")}.` : "Farben konnte ReRoom hier nicht erkennen."} Den Stil wählst du selbst.
+              {entwurf.farben.length > 0 ? `ReRoom erkennt diese Farben: ${entwurf.farben.join(", ")}.` : "Farben konnte ReRoom hier nicht erkennen."}{" "}
+              {stilVorschlag(entwurf.farben) ? `Dazu passt meist ${STIL_INFO[stilVorschlag(entwurf.farben)!].name}. Das ist ein Vorschlag nach einer einfachen Farbregel, keine KI. Du entscheidest.` : "Wähle den Stil selbst."}
             </p>
             <div className="chips" style={{ padding: 0, flexWrap: "wrap" }}>
-              {(Object.keys(STIL_INFO) as Stil[]).map((st) => <button key={st} className="chip" onClick={() => stilWaehlen(st)}>{STIL_INFO[st].name}</button>)}
+              {(Object.keys(STIL_INFO) as Stil[]).map((st) => <button key={st} className="chip" aria-pressed={st === stilVorschlag(entwurf.farben)} onClick={() => stilWaehlen(st)}>{STIL_INFO[st].name}{st === stilVorschlag(entwurf.farben) ? " (Vorschlag)" : ""}</button>)}
             </div>
             <button className="link" onClick={() => setEntwurf(undefined)}>Verwerfen</button>
           </div>

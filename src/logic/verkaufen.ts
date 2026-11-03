@@ -144,7 +144,17 @@ export const qrText = (i: Pick<Inserat, "id" | "code">) => `reroom://uebergabe/$
 
 export function liesQr(text: string): { id: string; code: string } | undefined {
   const treffer = /^reroom:\/\/uebergabe\/([^/\s]+)\/(\d{6})$/.exec(text.trim());
-  return treffer ? { id: treffer[1]!, code: treffer[2]! } : undefined;
+  if (treffer) return { id: treffer[1]!, code: treffer[2]! };
+  const l = liesUebergabeLink(text.slice(text.indexOf("#")));
+  return l ? { id: l.id, code: l.code } : undefined;
+}
+
+/** Adresse im QR-Code: ein normaler Link, damit die Kamera-App des Käufers ihn öffnet. */
+export const uebergabeLink = (i: Pick<Inserat, "id" | "code">, peerId: string, basis: string) => `${basis}#uebergabe/${i.id}/${i.code}/${peerId}`;
+
+export function liesUebergabeLink(hash: string): { id: string; code: string; peer: string } | undefined {
+  const t = /^#uebergabe\/([\w-]+)\/(\d{6})\/([\w-]+)$/.exec(hash.trim());
+  return t ? { id: t[1]!, code: t[2]!, peer: t[3]! } : undefined;
 }
 
 /** Stimmt der gescannte Code mit dem Inserat überein, und wartet es auf die Übergabe? */

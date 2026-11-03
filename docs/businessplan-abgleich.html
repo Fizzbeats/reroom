@@ -130,8 +130,8 @@
     <ol class="schritte">
       <li><b>Namen im Impressum eintragen.</b> Datenschutz und Impressum gibt es jetzt, die Namen des Gründerteams stehen noch als Platzhalter da.</li>
       <li><b>Konten und Anmeldung.</b> Guthaben, Inserate und Tarife liegen nur im Browser des Geräts. Mit echten Konten gäbe es auch echte Bewertungen.</li>
-            <li><b>Zweites Gerät für den Käufer.</b> Damit die QR-Übergabe wirklich zwischen zwei Menschen läuft, nicht auf einem Handy.</li>
-            <li><b>Chatbot mit echter KI</b> über eine Cloud-Funktion (Stufe 2), und „KI erkennt den Stil“ bei eigenen Bildern.</li>
+                        <li><b>KI einschalten:</b> Cloud-Funktion mit API-Schlüssel einrichten (Anleitung in cloud/chat-worker.js). Das kostet Geld und braucht dein Konto, darum ist es nicht eingeschaltet.</li>
+      <li><b>Echte Zahlung:</b> Vertrag mit einem Zahlungsdienstleister mit Marktplatz-Funktion. Erst dann kann die Testkasse echt werden.</li>
     </ol>
   </section>
 
@@ -151,8 +151,8 @@
       ["ja", "Stil-Finder: Stil und Budget wählen", "Stil-Chips, Budget-Schieberegler fürs ganze Zimmer, Ergebnis als fertiges Set."],
       ["ja", "Stil-Finder: Farben wählen, auch ungeliebte Farben", "Eigener Schritt vor den Bildern: einmal tippen heißt „mag ich“, zweimal „mag ich nicht“. Ungeliebte Farben fallen aus dem Set heraus."],
       ["ja", "Inspo-Bilder durchwischen", "Acht gezeichnete Karten zum Wischen, die Auswertung zeigt zwei Stile und drei Farben."],
-      ["teil", "Eigene Inspo-Bilder hochladen, „die KI erkennt den Stil“", "Hochladen und Kamera gehen. Die App liest nur die Farben, den Stil wählt der Nutzer. Eine KI gibt es nicht."],
-      ["teil", "KI-Chatbot kennt die Raummaße", "Er kennt Maße, Nische, Preis, Farbe und schlägt nur passende Möbel vor, auch „Graues Sofa unter 400 €, das in meine Nische passt“. Es sind aber Stichwörter, keine KI. Das sagt der Chat offen."],
+      ["teil", "Eigene Inspo-Bilder hochladen, „die KI erkennt den Stil“", "Hochladen und Kamera gehen. Die App liest die Farben und schlägt nach einer einfachen Farbregel einen Stil vor, der Nutzer entscheidet. Das ist keine KI und wird auch nicht so genannt."],
+      ["teil", "KI-Chatbot kennt die Raummaße", "Er kennt Maße, Nische, Preis, Farbe und schlägt nur passende Möbel vor, auch „Graues Sofa unter 400 €, das in meine Nische passt“. Ohne Cloud-Funktion sind es Stichwörter (der Chat sagt das offen). Die KI-Anbindung ist fertig vorbereitet (cloud/chat-worker.js), sie braucht nur einen API-Schlüssel, der Geld kostet."],
       ["demo", "Gebraucht-Marktplatz: kaufen und verkaufen", "Inserat in vier Schritten, eigene Inserate erscheinen in Entdecken. Alles liegt nur im Browser, es gibt keine anderen Nutzer."],
       ["demo", "Warenkorb mit 4 % Cashback", "Cashback, Käuferschutz und Guthaben werden richtig gerechnet. Der Kauf ist ein Demo-Kauf, die Shops sind erfundene Beispiele."],
       ["ja", "3D-Rundgang durch die fertige Wohnung", "Überblick und Rundgang durch den Raum, dazu als Video aufnehmbar."],
@@ -165,9 +165,9 @@
     ]},
     { titel: "3 · Produkt und Gebraucht-Kreislauf", punkte: [
       ["ja", "Verkaufen: Maße eintragen, Fotos hochladen, Einstellen kostenlos", "Fotos werden verkleinert, bis zu mehreren je Inserat."],
-      ["demo", "Bezahlen über einen Zahlungsdienstleister, Geld liegt nicht bei ReRoom", "Zahlung ist ein Knopf. Es gibt keinen Zahlungsdienstleister, und es fließt kein Geld."],
+      ["demo", "Bezahlen über einen Zahlungsdienstleister, Geld liegt nicht bei ReRoom", "Die Testkasse zeigt den Ablauf: Betrag, Testkarte (ohne Karteneingabe), Bestellnummer, und dass gebrauchtes Geld bis zur Übergabe gehalten wird. Echtes Geld braucht einen Vertrag mit einem Zahlungsdienstleister."],
       ["teil", "Abholen oder Transport-Partner aus Chemnitz buchen", "Im Warenkorb wählbar: abholen oder „Transport buchen (+ 40 €)“. Es gibt keinen Partner und keine echte Buchung, die 15 % für ReRoom sind nicht abgebildet."],
-      ["demo", "Übergabe per QR-Code, erst dann bekommt der Verkäufer Geld", "QR-Code wird erzeugt, ist mit einem fremden Scanner lesbar und löst die Auszahlung aus. Der Käufer-Scan läuft auf demselben Gerät, nicht auf einem zweiten."],
+      ["teil", "Übergabe per QR-Code, erst dann bekommt der Verkäufer Geld", "Echt zwischen zwei Handys: Der Käufer scannt den QR-Code mit der Kamera, öffnet den Link und bestätigt, dann erst geht es beim Verkäufer weiter (getestet mit zwei Browser-Fenstern, direkte Handy-Verbindung). Nur die Auszahlung ist ein Test."],
       ["ja", "Erlös als Guthaben mit 5 % Bonus", "Guthaben wird im Warenkorb abgezogen."],
       ["teil", "Neue Möbel: Partner-Shop verkauft, ReRoom erhält Provision", "Die App leitet nicht an Shops weiter. Möbel und Shops sind Beispieldaten, Bilder sind Zeichnungen."],
     ]},
@@ -184,7 +184,7 @@
     { titel: "3 · Technik", punkte: [
       ["ja", "Messen mit Zollstock, Maße eintippen", "Der Mess-Assistent führt Schritt für Schritt mit Skizzen."],
       ["ja", "Passt-Check warnt schon bei 5 bis 10 cm Spielraum", "Gelb ab 5 bis 10 cm („bitte nachmessen“), rot unter 5 cm."],
-      ["teil", "KI-Schnittstelle für den Chatbot", "Heute lokale Stichwort-Logik. Die Claude-Anbindung über eine Cloud-Funktion ist als Stufe 2 geplant."],
+      ["teil", "KI-Schnittstelle für den Chatbot", "Der Chat fragt eine Cloud-Funktion, wenn eine Adresse eingetragen ist (VITE_CHAT_URL), und nimmt sonst die lokale Logik. Der Schlüssel liegt nur in der Funktion, nicht in der App. Nur Möbel ohne rote Ampel kommen durch."],
       ["teil", "Sicherheit, Datenschutz und Bezahlung von externer Firma geprüft", "Datenschutz und Impressum gibt es jetzt (im Konto), ehrlich für das Schulprojekt geschrieben. Die Namen des Teams fehlen noch, die externe Prüfung (5.000 € im Plan) ist erst nach der Schule dran."],
       ["demo", "Konten für Käufer und Verkäufer", "Demo-Profil mit Name im Konto. Es gibt keine Anmeldung, alles liegt nur im Browser, es gibt keine anderen Nutzer."],
       ["ja", "Ausbaustufe Kamera-Scan später", "Als eigene iPhone-App mit RoomPlan beschrieben und bewusst nicht gebaut. Im Browser gibt es schon eine Kamera-Messung auf Android (ungetestet)."],

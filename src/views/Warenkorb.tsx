@@ -15,7 +15,9 @@ interface Props {
 }
 
 export default function Warenkorb({ positionen, guthabenCent, onGuthabenVerbraucht, onEntfernen, onLeeren, onOeffnen }: Props) {
-  const [gekauft, setGekauft] = useState<{ abzugCent: number } | undefined>();
+  const [gekauft, setGekauft] = useState<{ abzugCent: number; nummer: string; gebraucht: number; neu: number } | undefined>();
+  const [kasseOffen, setKasseOffen] = useState(false);
+  const [bezahlt, setBezahlt] = useState(false);
   const [nutzeGuthaben, setNutzeGuthaben] = useState(true);
   // Gebrauchte Möbel: abholen (kostenlos) oder vom Transport-Partner bringen lassen
   const [transport, setTransport] = useState<string[]>([]);
@@ -29,10 +31,14 @@ export default function Warenkorb({ positionen, guthabenCent, onGuthabenVerbrauc
     return (
       <section>
         <h1>Danke!</h1>
-        <Leer titel="Demo-Kauf abgeschlossen">
-          Es wurde nichts bezahlt. Im echten Betrieb läuft die Zahlung über einen Zahlungsdienstleister.
+        <Leer titel={`Testbestellung ${gekauft.nummer}`}>
+          Es wurde nichts bezahlt, die Testkasse bucht kein Geld ab.
           {gekauft.abzugCent > 0 && ` Dein Guthaben hat ${euro(gekauft.abzugCent)} gespart.`}
         </Leer>
+        <ul className="beleg-liste">
+          {gekauft.gebraucht > 0 && <li>Gebrauchte Möbel ({gekauft.gebraucht}): Das Geld hält der Zahlungsdienstleister, bis du die Übergabe per QR-Code bestätigst.</li>}
+          {gekauft.neu > 0 && <li>Neue Möbel ({gekauft.neu}): Der Partner-Shop liefert. Dein Cashback kommt nach der Lieferung.</li>}
+        </ul>
         <button className="knopf breit" style={{ marginTop: 16 }} onClick={() => { setGekauft(undefined); setTransport([]); onLeeren(); }}>Zurück</button>
       </section>
     );
@@ -88,15 +94,46 @@ export default function Warenkorb({ positionen, guthabenCent, onGuthabenVerbrauc
           {k.cashbackCent > 0 && (
             <div className="summe gruen"><span>Du bekommst zurück ({prozent} % Cashback)</span><span>{euro(k.cashbackCent)}</span></div>
           )}
-          <button
-            className="knopf breit"
-            onClick={() => {
-              if (g.abzugCent > 0) onGuthabenVerbraucht(g.abzugCent);
-              setGekauft({ abzugCent: g.abzugCent });
-            }}
-          >
-            Demo-Kauf
+          <button className="knopf breit" onClick={() => { setBezahlt(false); setKasseOffen(true); }}>
+            Zur Testkasse
           </button>
+        </div>
+      )}
+
+      {kasseOffen && (
+        <div className="sheet-hintergrund" onClick={() => setKasseOffen(false)}>
+          <div className="sheet qr-sheet" role="dialog" aria-modal="true" aria-label="Testkasse" onClick={(e) => e.stopPropagation()}>
+            <div className="sheet-kopf">
+              <strong className="titel-schrift">Testkasse</strong>
+              <button className="rund" onClick={() => setKasseOffen(false)} aria-label="Schließen"><Icon name="schliessen" groesse={18} /></button>
+            </div>
+            <div className="qr-inhalt">
+              <p className="hinweis" role="note" style={{ margin: 0 }}>Testmodus: Hier gibst du keine Kartendaten ein und es wird nichts abgebucht.</p>
+              <div className="summe gross"><span>Du zahlst</span><span>{euro(g.zuZahlenCent)}</span></div>
+              <p className="gedaempft" style={{ margin: 0, fontSize: ".84rem" }}>
+                Echte Zahlungen laufen später über einen Zahlungsdienstleister. Gebrauchtes Geld bleibt dort, bis die Übergabe per QR-Code bestätigt ist.
+              </p>
+              <button
+                className="knopf breit"
+                disabled={bezahlt}
+                onClick={() => {
+                  setBezahlt(true);
+                  setTimeout(() => {
+                    if (g.abzugCent > 0) onGuthabenVerbraucht(g.abzugCent);
+                    setGekauft({
+                      abzugCent: g.abzugCent,
+                      nummer: `RR-${Date.now().toString(36).toUpperCase().slice(-6)}`,
+                      gebraucht: positionen.filter((m) => m.zustand === "gebraucht").length,
+                      neu: positionen.filter((m) => m.zustand === "neu").length,
+                    });
+                    setKasseOffen(false);
+                  }, 900);
+                }}
+              >
+                {bezahlt ? "Zahlung wird geprüft …" : "Mit Testkarte bezahlen"}
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </section>
