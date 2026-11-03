@@ -1,4 +1,4 @@
-import type { Masse, Raum } from "../models/types";
+import type { Masse, Moebel, Raum } from "../models/types";
 
 export type Ampel = "gruen" | "gelb" | "rot";
 
@@ -73,9 +73,12 @@ function pruefeRaum(m: Masse, raum: Raum): Pruefung {
   return { spielraumCm, text };
 }
 
-/** Ampel nach dem kleinsten Spielraum aus Tür, Treppenhaus und Raum, immer mit Begründung. */
-export function pruefePasst(m: Masse, raum: Raum): PasstErgebnis {
-  const pruefungen = [pruefeTuer(m, raum), pruefeTreppenhaus(m, raum), pruefeRaum(m, raum)];
+/**
+ * Ampel nach dem kleinsten Spielraum aus Tür, Treppenhaus und Raum, immer mit Begründung.
+ * `transport` sind die Maße beim Tragen (z. B. ein gerollter Teppich), sonst die normalen Maße.
+ */
+export function pruefePasst(m: Masse, raum: Raum, transport: Masse = m): PasstErgebnis {
+  const pruefungen = [pruefeTuer(transport, raum), pruefeTreppenhaus(transport, raum), pruefeRaum(m, raum)];
   const knappste = pruefungen.reduce((x, y) => (y.spielraumCm < x.spielraumCm ? y : x));
   const ampel = ampelFuer(knappste.spielraumCm);
   const hinweis = ampel === "gelb" ? " Bitte nachmessen." : "";
@@ -88,4 +91,14 @@ export function pruefePasst(m: Masse, raum: Raum): PasstErgebnis {
     begruendung,
     details: { tuerCm: tuer!.spielraumCm, treppenhausCm: treppenhaus!.spielraumCm, raumCm: raumP!.spielraumCm },
   };
+}
+
+/** Durchmesser eines gerollten Teppichs in cm */
+export const TEPPICH_ROLLE_CM = 30;
+
+/** Passt-Check für ein Möbel aus dem Katalog: Teppiche werden für Tür und Treppenhaus eingerollt. */
+export function pruefeMoebel(m: Moebel, raum: Raum): PasstErgebnis {
+  if (m.kategorie !== "teppich") return pruefePasst(m.masseCm, raum);
+  const gerollt = { breite: TEPPICH_ROLLE_CM, tiefe: TEPPICH_ROLLE_CM, hoehe: Math.min(m.masseCm.breite, m.masseCm.tiefe) };
+  return pruefePasst(m.masseCm, raum, gerollt);
 }

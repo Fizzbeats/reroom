@@ -1,7 +1,7 @@
 import { useMemo, useState } from "react";
 import { ALLE_FARBEN, type Moebel, type Raum, type Stil, type Zustand } from "../models/types";
 import { findePassende } from "../logic/stilFinder";
-import { pruefePasst } from "../logic/passtCheck";
+import { pruefeMoebel } from "../logic/passtCheck";
 import { alsCent, euro } from "../logic/preisRechner";
 import { STIL_INFO } from "./Start";
 import { Icon, Leer, ProduktKarte } from "./ui";
@@ -34,7 +34,7 @@ export default function Entdecken({ katalog, raum, stile, onStile, onOeffnen }: 
   const treffer = useMemo(() => {
     const s = suche.trim().toLowerCase();
     return findePassende(katalog, { budget, stile, farben })
-      .map((t) => ({ ...t, passt: raum ? pruefePasst(t.moebel.masseCm, raum) : undefined }))
+      .map((t) => ({ ...t, passt: raum ? pruefeMoebel(t.moebel, raum) : undefined }))
       .filter((t) => zustand === "alle" || t.moebel.zustand === zustand)
       .filter((t) => !s || `${t.moebel.name} ${t.moebel.kategorie} ${t.moebel.farben.join(" ")}`.toLowerCase().includes(s))
       .filter((t) => !raum || !nurPassend || t.passt?.ampel !== "rot");

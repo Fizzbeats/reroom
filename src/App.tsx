@@ -7,6 +7,8 @@ import Start from "./views/Start";
 import Scannen from "./views/Scannen";
 import Entdecken from "./views/Entdecken";
 import Detail from "./views/Detail";
+import StilFinder from "./views/StilFinder";
+import Willkommen from "./views/Willkommen";
 import Warenkorb from "./views/Warenkorb";
 import Verkaufen from "./views/Verkaufen";
 import { Icon, type IconName } from "./views/ui";
@@ -27,11 +29,15 @@ const repository = new LokalesMoebelRepository();
 export default function App() {
   const [tab, setTab] = useState<Tab>("Start");
   const [detailId, setDetailId] = useState<string>();
+  const [stilFinderOffen, setStilFinderOffen] = useState(false);
   const [katalog, setKatalog] = useState<Moebel[]>([]);
   const [raeume, setRaeume] = useLokal<Raum[]>("reroom.raeume", []);
   const [aktiverRaum, setAktiverRaum] = useLokal<string>("reroom.aktiverRaum", "");
   const [korb, setKorb] = useLokal<string[]>("reroom.korb", []);
   const [stile, setStile] = useLokal<Stil[]>("reroom.stile", []);
+  // Möbel, die der Nutzer in einen Raum gestellt hat, je Raum-ID
+  const [moebelImRaum, setMoebelImRaum] = useLokal<Record<string, string[]>>("reroom.imRaum", {});
+  const [willkommenGesehen, setWillkommenGesehen] = useLokal<boolean>("reroom.willkommenGesehen", false);
 
   useEffect(() => {
     repository.alle().then(setKatalog);
@@ -42,17 +48,30 @@ export default function App() {
   }, [tab]);
 
   const raum = [...raeume, ...BEISPIELRAEUME].find((r) => r.id === aktiverRaum);
+  const imRaum = raum ? moebelImRaum[raum.id] ?? [] : [];
   const detail = katalog.find((m) => m.id === detailId);
+
   const korbUmschalten = (id: string) => setKorb(korb.includes(id) ? korb.filter((k) => k !== id) : [...korb, id]);
+  const inKorb = (ids: string[]) => setKorb([...new Set([...korb, ...ids])]);
+  const imRaumUmschalten = (id: string) => {
+    if (!raum) return;
+    const neu = imRaum.includes(id) ? imRaum.filter((k) => k !== id) : [...imRaum, id];
+    setMoebelImRaum({ ...moebelImRaum, [raum.id]: neu });
+  };
+  const gehe = (t: Tab) => {
+    setDetailId(undefined);
+    setTab(t);
+  };
 
   return (
     <div className="app">
       <main>
         {tab === "Start" && (
           <Start
-            katalog={katalog} raeume={raeume} raum={raum} stile={stile}
+            katalog={katalog} raeume={raeume} raum={raum} imRaum={imRaum} stile={stile}
             onStile={setStile} onWaehlen={setAktiverRaum} onOeffnen={setDetailId}
-            onMessen={() => setTab("Messen")} onEntdecken={() => setTab("Entdecken")}
+            onAlleInKorb={(ids) => { inKorb(ids); gehe("Warenkorb"); }}
+            onMessen={() => gehe("Messen")} onEntdecken={() => gehe("Entdecken")} onStilFinder={() => setStilFinderOffen(true)}
           />
         )}
         {tab === "Messen" && (
@@ -60,7 +79,7 @@ export default function App() {
             onSpeichern={(r) => {
               setRaeume([...raeume, r]);
               setAktiverRaum(r.id);
-              setTab("Start");
+              gehe("Start");
             }}
           />
         )}
@@ -79,10 +98,35 @@ export default function App() {
       {detail && (
         <Detail
           moebel={detail}
+          katalog={katalog}
           raum={raum}
+          imRaum={imRaum}
           imKorb={korb.includes(detail.id)}
           onKorb={() => korbUmschalten(detail.id)}
+          onImRaum={() => imRaumUmschalten(detail.id)}
           onZurueck={() => setDetailId(undefined)}
+        />
+      )}
+
+      {stilFinderOffen && (
+        <StilFinder
+          katalog={katalog}
+          raum={raum}
+          onSchliessen={() => setStilFinderOffen(false)}
+          onFertig={(ergebnis, setIds) => {
+            if (ergebnis.stile.length > 0) setStile(ergebnis.stile);
+            inKorb(setIds);
+            setStilFinderOffen(false);
+            gehe("Warenkorb");
+          }}
+        />
+      )}
+
+      {!willkommenGesehen && (
+        <Willkommen
+          onMessen={() => { setWillkommenGesehen(true); gehe("Messen"); }}
+          onStilFinder={() => { setWillkommenGesehen(true); setStilFinderOffen(true); }}
+          onStoebern={() => setWillkommenGesehen(true)}
         />
       )}
 
@@ -92,7 +136,7 @@ export default function App() {
             key={t.id}
             className={t.mitte ? "mitte" : undefined}
             aria-current={tab === t.id && !detail ? "page" : undefined}
-            onClick={() => { setDetailId(undefined); setTab(t.id); }}
+            onClick={() => gehe(t.id)}
           >
             {t.mitte ? <b><Icon name={t.icon} /></b> : <Icon name={t.icon} groesse={24} />}
             {t.id}

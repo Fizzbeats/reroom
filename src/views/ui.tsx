@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import type { Kategorie, Moebel, Raum } from "../models/types";
 import type { Ampel } from "../logic/passtCheck";
+import { TUER_ABSTAND_CM, type Platzierung } from "../logic/einrichten";
 import { alsCent, cashbackCent, euro } from "../logic/preisRechner";
 
 // ---------- Icons (eigene Strich-Icons statt Emojis) ----------
@@ -18,22 +19,24 @@ const PFADE = {
   plus: <path d="M12 5v14M5 12h14" strokeLinecap="round" />,
   schliessen: <path d="M6 6l12 12M18 6 6 18" strokeLinecap="round" />,
   foto: <><rect x="3" y="5" width="18" height="14" rx="2" /><circle cx="9" cy="10" r="1.5" /><path d="m21 16-5-5-8 8" strokeLinejoin="round" /></>,
+  funkeln: <path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5 18 18M6 18l2.5-2.5M15.5 8.5 18 6" strokeLinecap="round" />,
 };
 export type IconName = keyof typeof PFADE;
 
-export function Icon({ name, groesse = 22 }: { name: IconName; groesse?: number }) {
+export function Icon({ name, groesse = 22, gefuellt = false }: { name: IconName; groesse?: number; gefuellt?: boolean }) {
   return (
-    <svg viewBox="0 0 24 24" width={groesse} height={groesse} fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
+    <svg viewBox="0 0 24 24" width={groesse} height={groesse} fill={gefuellt ? "currentColor" : "none"} stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
       {PFADE[name]}
     </svg>
   );
 }
 
-// ---------- Möbelbild: Anbieterfoto oder Zeichnung ----------
+// ---------- Möbel-Zeichnungen ----------
 
-const FARBE: Record<string, string> = {
+export const FARBE: Record<string, string> = {
   grau: "#A3A7AB", weiss: "#ECEAE5", holz: "#C9A06E", schwarz: "#2E2E2E", braun: "#80553A", terrakotta: "#C9694C",
 };
+export const farbeVon = (m: Moebel) => FARBE[m.farben[0] ?? "grau"] ?? "#A3A7AB";
 const HOLZ = "#B98C5C";
 
 function mischen(hex: string, ziel: number, anteil: number): string {
@@ -45,10 +48,14 @@ function mischen(hex: string, ziel: number, anteil: number): string {
 const dunkler = (hex: string, anteil = 0.22) => mischen(hex, 0, anteil);
 const heller = (hex: string, anteil = 0.18) => mischen(hex, 255, anteil);
 
-function Zeichnung({ kategorie, c }: { kategorie: Kategorie; c: string }) {
-  switch (kategorie) {
+export type ZeichnungsArt = Kategorie | "pflanze";
+
+/** Zeichnung eines Möbels als SVG-Gruppe im Feld 200 × 150 (zum Einbetten in größere Bilder). */
+export function MoebelZeichnung({ art, c }: { art: ZeichnungsArt; c: string }) {
+  const schatten = <ellipse cx="100" cy="134" rx="78" ry="6" fill="#000" opacity=".08" />;
+  switch (art) {
     case "sofa":
-      return (<>
+      return (<g>{schatten}
         <rect x="34" y="54" width="132" height="44" rx="16" fill={dunkler(c)} />
         <rect x="20" y="86" width="160" height="36" rx="13" fill={c} />
         <rect x="14" y="72" width="28" height="50" rx="13" fill={dunkler(c, 0.12)} />
@@ -56,62 +63,65 @@ function Zeichnung({ kategorie, c }: { kategorie: Kategorie; c: string }) {
         <rect x="46" y="84" width="52" height="16" rx="7" fill={heller(c)} />
         <rect x="102" y="84" width="52" height="16" rx="7" fill={heller(c)} />
         <rect x="34" y="122" width="6" height="10" rx="2" fill={HOLZ} /><rect x="160" y="122" width="6" height="10" rx="2" fill={HOLZ} />
-      </>);
+      </g>);
     case "stuhl":
-      return (<>
+      return (<g>{schatten}
         <rect x="70" y="30" width="60" height="54" rx="12" fill={dunkler(c, 0.1)} />
         <rect x="62" y="80" width="76" height="16" rx="7" fill={c} />
         <path d="M70 96 64 132M130 96 136 132M82 96 80 128M118 96 120 128" stroke={HOLZ} strokeWidth="5" strokeLinecap="round" />
-      </>);
+      </g>);
     case "bett":
-      return (<>
+      return (<g>{schatten}
         <rect x="22" y="40" width="40" height="88" rx="8" fill={dunkler(c)} />
         <rect x="40" y="92" width="150" height="30" rx="8" fill={c} />
         <rect x="48" y="74" width="40" height="18" rx="8" fill="#FFFFFF" />
         <rect x="36" y="118" width="156" height="10" rx="4" fill={dunkler(c, 0.3)} />
-      </>);
+      </g>);
     case "schrank":
-      return (<>
+      return (<g>{schatten}
         <rect x="50" y="14" width="100" height="116" rx="6" fill={c} />
         <line x1="100" y1="18" x2="100" y2="126" stroke={dunkler(c, 0.2)} strokeWidth="2" />
         <rect x="90" y="66" width="3" height="16" rx="1.5" fill={dunkler(c, 0.4)} /><rect x="107" y="66" width="3" height="16" rx="1.5" fill={dunkler(c, 0.4)} />
-      </>);
+      </g>);
     case "tisch":
-      return (<>
+      return (<g>{schatten}
         <rect x="22" y="62" width="156" height="12" rx="4" fill={c} />
         <path d="M38 74 34 130M162 74 166 130M56 74 58 120M144 74 142 120" stroke={dunkler(c, 0.25)} strokeWidth="6" strokeLinecap="round" />
         <rect x="112" y="46" width="20" height="16" rx="3" fill="#FFFFFF" />
-      </>);
+      </g>);
     case "regal":
-      return (<>
+      return (<g>{schatten}
         <rect x="58" y="12" width="84" height="120" rx="3" fill="none" stroke={c} strokeWidth="7" />
         {[44, 74, 104].map((y) => <rect key={y} x="58" y={y} width="84" height="6" fill={c} />)}
         <rect x="68" y="22" width="8" height="22" fill="#C9694C" /><rect x="78" y="26" width="7" height="18" fill="#555" />
         <rect x="87" y="20" width="9" height="24" fill="#D9C27A" /><circle cx="120" cy="66" r="8" fill="#7E9B7A" />
         <rect x="70" y="86" width="22" height="18" rx="3" fill="#D8D6D0" />
-      </>);
+      </g>);
     case "lampe":
-      return (<>
+      return (<g>{schatten}
         <ellipse cx="100" cy="130" rx="24" ry="5" fill={dunkler(c, 0.3)} />
         <rect x="98" y="46" width="4" height="84" fill={dunkler(c, 0.3)} />
         <path d="M72 46h56l-10-32H82z" fill={c} />
         <ellipse cx="100" cy="52" rx="38" ry="10" fill="#FFE7A3" opacity=".55" />
-      </>);
+      </g>);
     case "teppich":
-      return (<>
+      return (<g>{schatten}
         <path d="M30 118 62 62h108l-32 56z" fill={c} />
         <path d="M46 110 70 70h84l-24 40z" fill="none" stroke={heller(c, 0.45)} strokeWidth="3" />
-      </>);
+      </g>);
+    case "pflanze":
+      return (<g>{schatten}
+        <path d="M84 96h32l-4 34H88z" fill={c} />
+        <path d="M100 96c-4-20-22-26-28-40 14 2 24 14 28 30 2-22 12-34 26-40-4 16-14 30-20 48" fill="#5E8C5A" />
+      </g>);
   }
 }
 
 export function MoebelBild({ moebel }: { moebel: Moebel }) {
   if (moebel.bildUrl) return <img src={moebel.bildUrl} alt={moebel.name} loading="lazy" />;
-  const c = FARBE[moebel.farben[0] ?? "grau"] ?? FARBE.grau!;
   return (
     <svg viewBox="0 0 200 150" role="img" aria-label={`Zeichnung: ${moebel.name}`}>
-      <ellipse cx="100" cy="134" rx="78" ry="6" fill="#000" opacity=".08" />
-      <Zeichnung kategorie={moebel.kategorie} c={c} />
+      <MoebelZeichnung art={moebel.kategorie} c={farbeVon(moebel)} />
     </svg>
   );
 }
@@ -150,26 +160,78 @@ export function ProduktKarte({ moebel, ampel, onOeffnen }: { moebel: Moebel; amp
   );
 }
 
-// ---------- Grundriss aus den Raummaßen ----------
+// ---------- Grundriss mit Möbeln ----------
 
-/** Maßstäblicher Grundriss mit Tür (Position ist schematisch, die Breite stimmt). */
-export function Grundriss({ raum }: { raum: Raum }) {
-  const B = 220, H = 150; // verfügbare Zeichenfläche
-  const s = Math.min(B / raum.breiteCm, H / raum.tiefeCm);
+interface GrundrissProps {
+  raum: Raum;
+  platziert?: Platzierung[];
+  /** Dieses Möbel wird orange umrandet, die anderen treten zurück */
+  hervorheben?: string;
+  /** Gestrichelter Weg von der Tür zum hervorgehobenen Möbel, mit Hinweis zum Spielraum */
+  weg?: string;
+  onMoebel?: (id: string) => void;
+}
+
+/** Maßstäblicher Grundriss (Draufsicht) mit Tür unten links und optional platzierten Möbeln. */
+export function Grundriss({ raum, platziert = [], hervorheben, weg, onMoebel }: GrundrissProps) {
+  const FLAECHE = 230;
+  const s = Math.min(FLAECHE / raum.breiteCm, FLAECHE / raum.tiefeCm);
   const w = raum.breiteCm * s, h = raum.tiefeCm * s;
-  const x = 30 + (B - w) / 2, y = 14 + (H - h) / 2;
+  const x0 = 20 + (FLAECHE - w) / 2, y0 = 12;
   const tuer = raum.tuerBreiteCm * s;
-  const tx = x + 12, ty = y + h;
+  const tx = x0 + TUER_ABSTAND_CM * s, ty = y0 + h;
   const m = (cm: number) => `${(cm / 100).toFixed(2).replace(".", ",")} m`;
+  const ziel = platziert.find((p) => p.moebel.id === hervorheben);
+  // Teppiche zuerst zeichnen, damit sie unter den anderen Möbeln liegen
+  const reihenfolge = [...platziert].sort((a, b) => Number(b.moebel.kategorie === "teppich") - Number(a.moebel.kategorie === "teppich"));
+
   return (
-    <svg className="grundriss" viewBox="0 0 280 190" role="img" aria-label={`Grundriss ${m(raum.breiteCm)} mal ${m(raum.tiefeCm)}`}>
-      <rect x={x} y={y} width={w} height={h} fill="rgb(255 255 255 / .05)" stroke="#fff" strokeWidth="3.5" />
-      <rect x={tx} y={ty - 2} width={tuer} height="5" fill="#111" />
+    <svg className="grundriss" viewBox={`0 0 300 ${h + 44}`} role="img" aria-label={`Grundriss ${m(raum.breiteCm)} mal ${m(raum.tiefeCm)} mit ${platziert.length} Möbeln`}>
+      <defs>
+        <marker id="pfeil" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0 10 5 0 10z" fill="var(--orange)" /></marker>
+      </defs>
+      <rect x={x0} y={y0} width={w} height={h} fill="rgb(255 255 255 / .04)" stroke="#fff" strokeWidth="3.5" />
+      <rect x={tx} y={ty - 2} width={tuer} height="5" fill="var(--raumkarte)" />
       <path d={`M${tx} ${ty} A${tuer} ${tuer} 0 0 1 ${tx + tuer} ${ty - tuer}`} fill="none" stroke="var(--orange)" strokeWidth="1.6" strokeDasharray="3 3" />
       <line x1={tx} y1={ty} x2={tx} y2={ty - tuer} stroke="var(--orange)" strokeWidth="2.5" />
-      <text x={x + w / 2} y={y + h + 18} textAnchor="middle">{m(raum.breiteCm)}</text>
-      <text x={x + w + 8} y={y + h / 2} dominantBaseline="middle">{m(raum.tiefeCm)}</text>
-      <text x={tx + tuer + 6} y={ty - 6} className="tuer-text">Tür {raum.tuerBreiteCm} cm</text>
+
+      {reihenfolge.map((p) => {
+        const px = x0 + p.x * s, py = y0 + p.y * s, pw = p.w * s, ph = p.h * s;
+        const aktiv = p.moebel.id === hervorheben;
+        const leise = hervorheben !== undefined && !aktiv;
+        const titel = p.moebel.name.split(" ")[0]!;
+        return (
+          <g
+            key={p.moebel.id}
+            className={onMoebel ? "fussabdruck klickbar" : "fussabdruck"}
+            opacity={leise ? 0.35 : 1}
+            onClick={onMoebel ? () => onMoebel(p.moebel.id) : undefined}
+          >
+            <rect x={px} y={py} width={pw} height={ph} rx="4" fill={farbeVon(p.moebel)} stroke={aktiv ? "var(--orange)" : "rgb(0 0 0 / .25)"} strokeWidth={aktiv ? 2.5 : 1} />
+            {pw > 30 && ph > 14 && (
+              <text x={px + pw / 2} y={py + ph / 2} textAnchor="middle" dominantBaseline="middle" className="fuss-text" fill={p.moebel.farben[0] === "weiss" ? "#111" : "#fff"}>
+                {titel}
+              </text>
+            )}
+          </g>
+        );
+      })}
+
+      {ziel && weg && (
+        <>
+          <path
+            d={`M${tx + tuer / 2} ${ty + 14} L${tx + tuer / 2} ${ty - tuer} Q${tx + tuer / 2} ${y0 + (ziel.y + ziel.h) * s + 30} ${x0 + (ziel.x + ziel.w / 2) * s} ${y0 + (ziel.y + ziel.h) * s + 4}`}
+            fill="none" stroke="var(--orange)" strokeWidth="2.5" strokeDasharray="6 5" markerEnd="url(#pfeil)"
+          />
+          <g transform={`translate(${tx + tuer + 6} ${ty - 22})`}>
+            <rect width="92" height="20" rx="10" fill="var(--gelb-bg)" />
+            <text x="46" y="10.5" textAnchor="middle" dominantBaseline="middle" className="weg-text">{weg}</text>
+          </g>
+        </>
+      )}
+
+      <text x={x0 + w / 2} y={y0 + h + 22} textAnchor="middle">{m(raum.breiteCm)}</text>
+      <text x={x0 + w + 8} y={y0 + h / 2} dominantBaseline="middle">{m(raum.tiefeCm)}</text>
     </svg>
   );
 }

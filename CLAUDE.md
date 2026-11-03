@@ -18,7 +18,13 @@
 >
 > **Design:** Marktplatz-Stil nach Entwurf `public/design/index.html`: Weiß/Schwarz, Bilder im 2er-Raster, Orange `#FF5B2E` nur als Marken-Akzent, Grün nur für „mit ReRoom“, Schrift Bricolage Grotesque für Titel und Preise, eigene Strich-Icons (`src/views/ui.tsx`). Möbelbilder: Produktfoto des Anbieters (`bildUrl`), sonst Zeichnung je Kategorie. Kein Blau, kein Creme/Serif-Look. Alte Entwürfe unter `public/entwuerfe/` sind verworfen.
 >
-> **Noch offen (laut Businessplan):** Budget fürs ganze Zimmer statt pro Möbel, Farben „mag ich nicht“, Inspo-Bilder wischen und hochladen, 3D-Rundgang, Chatbot, Verkaufserlös als Guthaben mit 5 % Bonus, QR-Übergabe, Transport-Partner, Free = 1 Raum, Möbel-Detailseite, Möbelbilder.
+> **Erlebnis für neue Kunden (umgesetzt):**
+> - Willkommen-Karten beim ersten Besuch (`src/views/Willkommen.tsx`): Messen, Stil finden, Sparen.
+> - Möbel im eigenen Grundriss: automatische Platzierung (`src/logic/einrichten.ts`), Startseite zeigt „So könnte es aussehen“, Detailseite hat „Foto / In meinem Raum“ mit Weg durch die Tür. Eigene Auswahl je Raum in `reroom.imRaum`.
+> - Stil-Finder zum Wischen (`src/views/StilFinder.tsx`, Karten in `src/data/inspo.ts`, Auswertung und Zimmer-Set in `src/logic/stilAuswertung.ts`) mit Budget fürs ganze Zimmer.
+> - Teppiche werden im Passt-Check für Tür und Treppe gerollt gerechnet (`pruefeMoebel`).
+>
+> **Noch offen (laut Businessplan):** eigene Inspo-Bilder hochladen, Möbel im Grundriss per Finger verschieben, 3D-Rundgang, Chatbot, Verkaufserlös als Guthaben mit 5 % Bonus, QR-Übergabe, Transport-Partner, Free = 1 Raum, Möbel-Detailseite, Möbelbilder.
 >
 > **Befehle:** `npm install`, `npm run dev` (Entwicklung), `npm test`, `npm run build`.
 > **CI:** `.github/workflows/ci.yml` (Typen, Tests, Build bei jedem Push und Pull Request).

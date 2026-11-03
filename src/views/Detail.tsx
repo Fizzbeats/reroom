@@ -1,36 +1,42 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import type { Moebel, Raum } from "../models/types";
-import { ampelFuer, pruefePasst } from "../logic/passtCheck";
+import { ampelFuer, pruefeMoebel } from "../logic/passtCheck";
+import { einrichten } from "../logic/einrichten";
 import { alsCent, euro, kaeuferschutzCent } from "../logic/preisRechner";
 import { STIL_INFO } from "./Start";
-import { AMPEL_TEXT, Icon, MitReRoom, MoebelBild } from "./ui";
+import { AMPEL_TEXT, Grundriss, Icon, MitReRoom, MoebelBild } from "./ui";
 
 interface Props {
   moebel: Moebel;
+  katalog: Moebel[];
   raum?: Raum;
+  imRaum: string[];
   imKorb: boolean;
   onKorb: () => void;
+  onImRaum: () => void;
   onZurueck: () => void;
 }
 
 const BALKEN_MAX_CM = 60; // ab hier ist der Balken voll
+const FARBE_AMPEL = { gruen: "var(--ampel-gruen)", gelb: "var(--ampel-gelb)", rot: "var(--ampel-rot)" };
 
 function Balken({ name, cm }: { name: string; cm: number }) {
-  const farbe = { gruen: "var(--ampel-gruen)", gelb: "var(--ampel-gelb)", rot: "var(--ampel-rot)" }[ampelFuer(cm)];
-  const breite = Math.max(0, Math.min(100, (cm / BALKEN_MAX_CM) * 100));
+  const breite = cm < 0 ? 100 : Math.max(3, Math.min(100, (cm / BALKEN_MAX_CM) * 100));
   return (
     <div className="balken-zeile">
       <span>{name}</span>
-      <span className="spur"><i style={{ width: `${Math.max(breite, cm < 0 ? 100 : 3)}%`, background: farbe }} /></span>
+      <span className="spur"><i style={{ width: `${breite}%`, background: FARBE_AMPEL[ampelFuer(cm)] }} /></span>
       <em>{cm} cm</em>
     </div>
   );
 }
 
-/** Möbel-Detail: großes Bild, Passt-Check als Balken, Maße, Kaufleiste unten. */
-export default function Detail({ moebel: m, raum, imKorb, onKorb, onZurueck }: Props) {
-  const passt = raum ? pruefePasst(m.masseCm, raum) : undefined;
+/** Möbel-Detail: Foto oder „In meinem Raum“, Passt-Check als Balken, Maße, Kaufleiste unten. */
+export default function Detail({ moebel: m, katalog, raum, imRaum, imKorb, onKorb, onImRaum, onZurueck }: Props) {
+  const [ansicht, setAnsicht] = useState<"foto" | "raum">("foto");
+  const passt = raum ? pruefeMoebel(m, raum) : undefined;
   const cent = alsCent(m.preis);
+  const istImRaum = imRaum.includes(m.id);
 
   useEffect(() => {
     const esc = (e: KeyboardEvent) => e.key === "Escape" && onZurueck();
@@ -38,15 +44,36 @@ export default function Detail({ moebel: m, raum, imKorb, onKorb, onZurueck }: P
     return () => removeEventListener("keydown", esc);
   }, [onZurueck]);
 
+  // Dieses Möbel zusammen mit dem, was schon im Raum steht
+  const andere = imRaum.filter((id) => id !== m.id).map((id) => katalog.find((k) => k.id === id)).filter((k): k is Moebel => Boolean(k));
+  const plan = raum ? einrichten(raum, [m, ...andere]) : undefined;
+  const findetPlatz = plan?.platziert.some((p) => p.moebel.id === m.id) ?? false;
+  const wegText = passt && (passt.details.tuerCm < 0 ? "Passt nicht durch die Tür" : `Tür: ${passt.details.tuerCm} cm Luft`);
+
   return (
     <div className="detail" role="dialog" aria-modal="true" aria-label={m.name}>
       <div className="detail-innen">
-        <div className="detail-bild">
-          <button className="rund" onClick={onZurueck} aria-label="Zurück"><Icon name="zurueck" /></button>
-          <MoebelBild moebel={m} />
-        </div>
+        {ansicht === "foto" || !raum || !plan ? (
+          <div className="detail-bild">
+            <button className="rund" onClick={onZurueck} aria-label="Zurück"><Icon name="zurueck" /></button>
+            <MoebelBild moebel={m} />
+          </div>
+        ) : (
+          <div className="detail-plan">
+            <button className="rund" onClick={onZurueck} aria-label="Zurück"><Icon name="zurueck" /></button>
+            <Grundriss raum={raum} platziert={plan.platziert} hervorheben={m.id} weg={wegText} />
+            {!findetPlatz && <p className="plan-tipp">Für dieses Möbel ist im Raum gerade kein freier Platz.</p>}
+          </div>
+        )}
 
         <div className="detail-text">
+          {raum && (
+            <div className="umschalter" role="tablist" aria-label="Ansicht">
+              <button role="tab" aria-selected={ansicht === "foto"} onClick={() => setAnsicht("foto")}><Icon name="foto" groesse={16} /> Foto</button>
+              <button role="tab" aria-selected={ansicht === "raum"} onClick={() => setAnsicht("raum")}><Icon name="raum" groesse={16} /> In meinem Raum</button>
+            </div>
+          )}
+
           <div className="tags">
             <span className="tag">{m.zustand === "neu" ? "Neu" : "Gebraucht"}</span>
             {m.stile.map((s) => <span key={s} className="tag">{STIL_INFO[s].name}</span>)}
@@ -90,6 +117,17 @@ export default function Detail({ moebel: m, raum, imKorb, onKorb, onZurueck }: P
             <span className="preis-gross">{euro(cent)}</span>
             {m.zustand === "neu" ? <MitReRoom moebel={m} /> : <small>+ {euro(kaeuferschutzCent(cent))} Käuferschutz</small>}
           </div>
+          {raum && passt?.ampel !== "rot" && (
+            <button
+              className={`knopf-quadrat ${istImRaum ? "an" : ""}`}
+              onClick={() => { onImRaum(); setAnsicht("raum"); }}
+              aria-pressed={istImRaum}
+              aria-label={istImRaum ? "Aus meinem Raum nehmen" : "In meinen Raum stellen"}
+              title={istImRaum ? "Aus meinem Raum nehmen" : "In meinen Raum stellen"}
+            >
+              <Icon name="raum" />
+            </button>
+          )}
           <button className={`knopf ${imKorb ? "zweit" : ""}`} onClick={onKorb}>
             {imKorb ? "Im Warenkorb ✓" : "In den Warenkorb"}
           </button>

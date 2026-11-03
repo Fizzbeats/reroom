@@ -1,7 +1,10 @@
 import type { Moebel, Raum, Stil } from "../models/types";
 import { BEISPIELRAEUME } from "../data/raeume";
 import { findePassende } from "../logic/stilFinder";
-import { pruefePasst } from "../logic/passtCheck";
+import { pruefeMoebel } from "../logic/passtCheck";
+import { einrichten } from "../logic/einrichten";
+import { zimmerSet } from "../logic/stilAuswertung";
+import { alsCent, euro } from "../logic/preisRechner";
 import { Grundriss, Icon, ProduktKarte } from "./ui";
 
 export const STIL_INFO: Record<Stil, { name: string; farbe: string }> = {
@@ -12,50 +15,70 @@ export const STIL_INFO: Record<Stil, { name: string; farbe: string }> = {
   vintage: { name: "Vintage", farbe: "#80553A" },
 };
 
+const VORSCHLAG_BUDGET = 1000; // Budget für das automatische „So könnte es aussehen“
+
 interface Props {
   katalog: Moebel[];
   raeume: Raum[];
   raum?: Raum;
+  imRaum: string[];
   stile: Stil[];
   onStile: (s: Stil[]) => void;
   onWaehlen: (id: string) => void;
   onOeffnen: (id: string) => void;
+  onAlleInKorb: (ids: string[]) => void;
   onMessen: () => void;
   onEntdecken: () => void;
+  onStilFinder: () => void;
 }
 
-/** Startseite: der eigene Raum als Grundriss, dazu Stil und passende Möbel. */
-export default function Start({ katalog, raeume, raum, stile, onStile, onWaehlen, onOeffnen, onMessen, onEntdecken }: Props) {
-  const passend = raum
+/** Startseite: der eigene Raum als Grundriss mit Möbeln, dazu Stil und weitere Vorschläge. */
+export default function Start(props: Props) {
+  const { katalog, raeume, raum, imRaum, stile, onStile, onWaehlen, onOeffnen, onAlleInKorb, onMessen, onEntdecken, onStilFinder } = props;
+  const alleRaeume = [...raeume, ...BEISPIELRAEUME];
+
+  // Eigene Auswahl im Raum, sonst ein automatischer Vorschlag
+  const eigene = imRaum.map((id) => katalog.find((m) => m.id === id)).filter((m): m is Moebel => Boolean(m));
+  const vorschlag = raum && eigene.length === 0 ? zimmerSet(katalog, { stile, farben: [] }, VORSCHLAG_BUDGET, raum).moebel : [];
+  const imPlan = eigene.length > 0 ? eigene : vorschlag;
+  const plan = raum ? einrichten(raum, imPlan) : undefined;
+  const summe = imPlan.reduce((s, m) => s + alsCent(m.preis), 0);
+
+  const imPlanIds = new Set(imPlan.map((m) => m.id));
+  const imPlanKategorien = new Set(imPlan.map((m) => m.kategorie));
+  const nochPlatz = raum
     ? findePassende(katalog, { budget: Infinity, stile, farben: [] })
-        .map((t) => ({ ...t, passt: pruefePasst(t.moebel.masseCm, raum) }))
+        .filter((t) => !imPlanIds.has(t.moebel.id))
+        .map((t) => ({ ...t, passt: pruefeMoebel(t.moebel, raum) }))
         .filter((t) => t.passt.ampel !== "rot")
+        .sort((a, b) => Number(imPlanKategorien.has(a.moebel.kategorie)) - Number(imPlanKategorien.has(b.moebel.kategorie)))
         .slice(0, 4)
     : [];
-  const alleRaeume = [...raeume, ...BEISPIELRAEUME];
-  const flaeche = ((raum?.breiteCm ?? 0) * (raum?.tiefeCm ?? 0)) / 10000;
 
   return (
     <section>
       <div className="kopf">
         <p className="marke">ReRoom<i /></p>
+        {raum && <button className="chip" onClick={onMessen}><Icon name="kamera" groesse={16} /> Neu messen</button>}
       </div>
 
-      {raum ? (
+      {raum && plan ? (
         <div className="raumkarte">
           <div className="zeile">
             <div>
-              <small>Dein Raum</small>
-              <h3>{raum.name}</h3>
+              <small>Dein {raum.name} · {((raum.breiteCm * raum.tiefeCm) / 10000).toLocaleString("de-DE", { maximumFractionDigits: 1 })} m²</small>
+              <h3>{eigene.length > 0 ? "Dein Raum, eingerichtet" : "So könnte es aussehen"}</h3>
             </div>
-            <button className="chip" onClick={onMessen}><Icon name="kamera" groesse={16} /> Neu messen</button>
+            <span className="passt-zahl">{plan.platziert.length} Möbel passen</span>
           </div>
-          <Grundriss raum={raum} />
-          <div className="werte">
-            <div><b>{flaeche.toLocaleString("de-DE", { maximumFractionDigits: 1 })} m²</b>Fläche</div>
-            <div><b>{raum.tuerBreiteCm} cm</b>Tür</div>
-            <div><b>{raum.treppenhausBreiteCm} cm</b>Treppe</div>
-          </div>
+          <Grundriss raum={raum} platziert={plan.platziert} onMoebel={onOeffnen} />
+          {imPlan.length > 0 && (
+            <div className="plan-leiste">
+              <span>Zusammen <b>{euro(summe)}</b></span>
+              <button className="chip hell" onClick={() => onAlleInKorb(imPlan.map((m) => m.id))}>Alle in den Korb</button>
+            </div>
+          )}
+          <p className="plan-tipp">Tippe auf ein Möbel im Grundriss, um es anzusehen.</p>
           {alleRaeume.length > 1 && (
             <div className="raumwahl" aria-label="Raum wechseln">
               {alleRaeume.map((r) => (
@@ -75,7 +98,7 @@ export default function Start({ katalog, raeume, raum, stile, onStile, onWaehlen
         </div>
       )}
 
-      <h2>Dein Stil</h2>
+      <h2>Dein Stil <button className="link" onClick={onStilFinder}>Stil-Finder starten</button></h2>
       <div className="chips">
         {(Object.keys(STIL_INFO) as Stil[]).map((s) => (
           <button
@@ -91,9 +114,9 @@ export default function Start({ katalog, raeume, raum, stile, onStile, onWaehlen
 
       {raum ? (
         <>
-          <h2>Passt in dein {raum.name} <button className="link" onClick={onEntdecken}>Alle</button></h2>
+          <h2>Noch Platz für <button className="link" onClick={onEntdecken}>Alle</button></h2>
           <div className="raster">
-            {passend.map((t) => (
+            {nochPlatz.map((t) => (
               <ProduktKarte key={t.moebel.id} moebel={t.moebel} ampel={t.passt.ampel} onOeffnen={() => onOeffnen(t.moebel.id)} />
             ))}
           </div>
