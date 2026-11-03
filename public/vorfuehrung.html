@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ReRoom Vorführung</title>
+<style>
+  :root { --bg:#fff; --flaeche:#F1F1EF; --fg:#111; --muted:#5E5E5E; --linie:#E5E4E1; --orange:#FF5B2E; --gruen:#0B7A4B; --gruen-bg:#E3F3EA; --gelb:#8A5F00; --gelb-bg:#FFF1CC; --grau-bg:#E9E9E7;
+    --titel:"Bricolage Grotesque","Segoe UI",system-ui,sans-serif; --text:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; }
+  @media (prefers-color-scheme: dark) { :root { --bg:#0E0E0E; --flaeche:#1C1C1C; --fg:#F2F2F2; --muted:#A6A6A6; --linie:#2A2A2A; --gruen:#5FD39A; --gruen-bg:#12301F; --gelb:#F2C94C; --gelb-bg:#3A2E0E; --grau-bg:#2A2A2A; } }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--fg); font:16px/1.55 var(--text); }
+  .seite { max-width:1180px; margin:0 auto; padding:18px; min-height:100vh; display:grid; gap:22px; grid-template-columns: minmax(300px, 390px) 1fr; align-items:start; }
+  .telefon { position:sticky; top:14px; width:100%; max-width:390px; aspect-ratio:390/844; max-height:calc(100vh - 28px); border:10px solid #111; border-radius:44px; overflow:hidden; background:#fff; box-shadow:0 18px 40px rgb(0 0 0 / .22); margin:0 auto; }
+  .telefon iframe { width:100%; height:100%; border:0; display:block; }
+  .buehne { display:grid; gap:16px; align-content:start; padding-top:6px; }
+  .marke { font:800 1.4rem var(--titel); letter-spacing:-.035em; } .marke i { display:inline-block; width:.3em; height:.3em; border-radius:50%; background:var(--orange); margin-left:.06em; }
+  .zaehler { color:var(--muted); font:600 .85rem var(--text); }
+  .fortschritt { display:flex; gap:4px; } .fortschritt button { flex:1; height:8px; padding:0; border:0; border-radius:4px; background:var(--linie); cursor:pointer; min-width:8px; } .fortschritt button[aria-current="step"] { background:var(--orange); } .fortschritt button.fertig { background:var(--fg); }
+  h1 { font:800 clamp(2rem,4.5vw,3rem)/1.05 var(--titel); letter-spacing:-.04em; margin:4px 0; }
+  .kap { display:inline-block; font:700 .72rem var(--text); letter-spacing:.1em; text-transform:uppercase; color:var(--muted); }
+  .pille { display:inline-block; font:700 .72rem var(--text); letter-spacing:.06em; text-transform:uppercase; padding:3px 10px; border-radius:999px; margin-right:6px; }
+  .p-echt { background:var(--gruen-bg); color:var(--gruen); } .p-teil { background:var(--gelb-bg); color:var(--gelb); } .p-demo { background:var(--grau-bg); color:var(--muted); }
+  .sprich { background:var(--flaeche); border-radius:20px; padding:20px 22px; font-size:1.12rem; max-width:62ch; }
+  .sprich b { font-family:var(--titel); }
+  .zeigen { margin:0; padding-left:20px; color:var(--muted); display:grid; gap:4px; max-width:62ch; }
+  .achtung { background:var(--gelb-bg); color:var(--gelb); border-radius:14px; padding:12px 16px; max-width:62ch; font-size:.94rem; }
+  .knoepfe { display:flex; gap:10px; flex-wrap:wrap; }
+  .knopf { font:700 1rem var(--text); min-height:48px; padding:0 22px; border-radius:999px; border:0; background:var(--fg); color:var(--bg); cursor:pointer; }
+  .knopf.leise { background:var(--flaeche); color:var(--fg); }
+  .knopf:disabled { opacity:.4; cursor:default; }
+  .start { grid-column:1/-1; max-width:640px; margin:12vh auto; text-align:left; display:grid; gap:14px; }
+  .start p { margin:0; }
+  table { border-collapse:collapse; width:100%; max-width:62ch; font-size:.95rem; } td { padding:9px 10px; border-bottom:1px solid var(--linie); vertical-align:top; }
+  @media (max-width:820px) { .seite { grid-template-columns:1fr; } .telefon { position:relative; top:0; max-height:none; width:min(100%,360px); } }
+  :focus-visible { outline:3px solid var(--orange); outline-offset:2px; }
+</style>
+</head>
+<body>
+<div class="seite" id="seite">
+  <div class="start" id="start">
+    <span class="marke">ReRoom<i></i></span>
+    <h1>Vorführung</h1>
+    <p>Links läuft die echte App, rechts steht, was du dazu sagst. Mit „Weiter“ (oder der Pfeiltaste) führt die Vorführung die App selbst durch die Schritte des Businessplans.</p>
+    <p class="muted" style="color:var(--muted)">Beim Start werden die gespeicherten Daten von ReRoom in diesem Browser zurückgesetzt, damit jede Vorführung gleich beginnt.</p>
+    <div class="knoepfe"><button class="knopf" id="los">Vorführung starten</button></div>
+  </div>
+</div>
+
+<script>
+  const APP = new URL("./", location.href).href;
+  const INSERAT_BILD = "data:image/svg+xml," + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 150"><rect width="200" height="150" fill="#ECEAE5"/><rect x="30" y="60" width="140" height="50" rx="10" fill="#A3A7AB"/><rect x="40" y="40" width="120" height="30" rx="10" fill="#8E9296"/></svg>');
+  const TEILEN = "#wohnung=eyJyYXVtIjp7ImlkIjoid29obiIsIm5hbWUiOiJXb2huemltbWVyIiwiYnJlaXRlQ20iOjQwMCwidGllZmVDbSI6NTAwLCJob2VoZUNtIjoyNTAsInR1ZXJCcmVpdGVDbSI6OTAsInR1ZXJIb2VoZUNtIjoyMTAsInRyZXBwZW5oYXVzQnJlaXRlQ20iOjEyMH0sIm1vZWJlbElkcyI6WyJzb2ZhLTAxIiwidGVwcGljaC0wMyIsInRpc2NoLTA1IiwibGFtcGUtMDIiLCJyZWdhbC0wMyJdLCJmZXN0ZSI6e319";
+  const imHaus = { "reroom.willkommenGesehen": true, "reroom.aktiverRaum": "wohn" };
+  const inserat = { id: "ins-vorf1", titel: "Sofa Lund", kategorie: "sofa", farbe: "grau", zustand: "Gut", masseCm: { breite: 200, tiefe: 85, hoehe: 80 }, neupreis: 450, preis: 180, fotos: [INSERAT_BILD], hervorgehoben: false, abholung: "abholung", status: "verkauft", code: "123456", erstelltAm: "2026-11-04T10:00:00Z" };
+
+  // Eine Handlung ist ein Text zum Antippen: { klick: "Text" }, { tab: 0..4 }, { css: ".klasse" }, { tippe: [".feld", "Text"] }, { warte: ms }
+  const SCHRITTE = [
+    { kap: "1 · Geschäftsidee", titel: "Das Problem", art: "echt",
+      sprich: "Wer Möbel kauft, merkt oft erst zu Hause, dass sie nicht passen. ReRoom beantwortet vorher: Passt das? Und zwar in einer Web-App ohne Download.",
+      zeigen: ["Slogan: Ausmessen, Stil wählen, günstiger einrichten", "Drei Karten: Messen, Stil finden, Sparen", "Auf der letzten Karte steht, dass es ein Schulprojekt mit Beispieldaten ist"],
+      speicher: {}, aktionen: [] },
+    { kap: "1 · Raum eingeben und 3D-Modell", titel: "Dein Raum als Grundriss", art: "echt",
+      sprich: "Man gibt Raum, Tür und Treppenhaus an. Daraus entsteht ein maßstäblicher Grundriss. Die App stellt die Möbel automatisch hinein und zeigt, was zusammen kostet.",
+      zeigen: ["Grundriss mit Tür unten links", "Möbel lassen sich mit dem Finger verschieben", "Start-Aktion: 6 % Cashback steht oben"],
+      speicher: imHaus, aktionen: [] },
+    { kap: "3 · Technik: Raum messen", titel: "Messen: so kommen die Maße in die App", art: "teil",
+      sprich: "Am iPhone führt ein Assistent durch sechs Maße, mit Foto und Bankkarte oder der Maßband-App. Auf Android misst die AR-Kamera von allein. Die Maße sind eine Schätzung, deshalb gibt der Passt-Check Sicherheitsabstand.",
+      zeigen: ["Ein Maß pro Bildschirm, mit Skizze", "Die Kamera ist im Foto-Messen eingebaut"],
+      achtung: "Die AR-Messung auf Android ist an keinem echten Handy getestet. Das nicht als genau bewerben.",
+      speicher: imHaus, aktionen: [{ tab: 2 }] },
+    { kap: "1 · Passt-Check", titel: "Passt das Sofa durch die Tür?", art: "echt",
+      sprich: "Der Passt-Check prüft Tür, Treppenhaus und Raum. Ampel grün, gelb oder rot, immer mit Begründung. Bei einem gebrauchten Möbel sieht man auch die Bewertung des Verkäufers.",
+      zeigen: ["Balken für Tür, Treppenhaus und Raum", "Foto / In meinem Raum mit Weg durch die Tür", "Preisvorteil: „mit ReRoom“ steht beim neuen Möbel"],
+      speicher: imHaus, aktionen: [{ tab: 1 }, { warte: 500 }, { klickText: "Sofa Lund" }] },
+    { kap: "3 · Stil-Finder", titel: "Stil, Farben, Budget, Inspo-Bilder", art: "echt",
+      sprich: "Erst Farben wählen, dann durch Einrichtungsbilder wischen, am Ende das Budget fürs ganze Zimmer. Eigene Bilder gehen auch. Die App liest die Farben und schlägt einen Stil vor, die Entscheidung bleibt bei dir.",
+      zeigen: ["Farben: einmal tippen mag ich, zweimal mag ich nicht", "Wischen oder die Pfeiltasten", "Ergebnis: ein komplettes Set für das Budget"],
+      achtung: "Das ist keine KI. Die Auswertung zählt Stile und Farben der Bilder.",
+      speicher: imHaus, aktionen: [{ klickText: "Stil-Finder starten" }] },
+    { kap: "1 · KI-Chatbot", titel: "Der Assistent kennt deinen Raum", art: "teil",
+      sprich: "Man schreibt frei, zum Beispiel: Graues Sofa unter 400 Euro, das in meine Nische passt. Der Chat fragt nach der Breite und schlägt nur Möbel vor, die im Passt-Check nicht rot sind. Kostenlos sind fünf Fragen am Tag.",
+      zeigen: ["Der Chat versteht Möbelart, Farbe, Stil, Preis und Nische", "Zähler: Noch 4 von 5 Fragen heute"],
+      achtung: "Ohne Cloud-Funktion sind es Stichwörter, keine KI. Der Chat sagt das selbst. Die KI-Anbindung ist vorbereitet, aber nicht eingeschaltet.",
+      speicher: imHaus, aktionen: [{ css: ".chat-fab" }, { warte: 500 }, { tippe: [".sheet-eingabe input", "Graues Sofa unter 400 €, das in meine Nische passt"] }] },
+    { kap: "1 · Warenkorb mit Cashback", titel: "Neu und gebraucht in einem Warenkorb", art: "demo",
+      sprich: "Neue und gebrauchte Möbel liegen zusammen im Korb. Cashback, Käuferschutz und Transport werden einzeln ausgewiesen. Gebrauchtes holt man ab oder bucht einen Transport.",
+      zeigen: ["Käuferschutz 4 % + 0,50 € nur bei gebraucht", "Cashback: 6 % in der Start-Aktion, sonst 4 %", "Transport ab 40 €, davon 15 % für ReRoom"],
+      achtung: "Bezahlt wird in einer Testkasse. Es gibt keinen Zahlungsdienstleister und keine echten Partner-Shops.",
+      speicher: { ...imHaus, "reroom.korb": ["sofa-01", "tisch-01", "regal-03"] }, aktionen: [{ tab: 3 }] },
+    { kap: "3 · Gebraucht-Kreislauf", titel: "Verkaufen und Übergabe per QR-Code", art: "teil",
+      sprich: "Der Verkäufer stellt kostenlos ein, mit Fotos und Maßen. Bei der Übergabe zeigt er einen QR-Code. Der Käufer scannt ihn mit dem zweiten Handy und bestätigt. Erst danach bekommt der Verkäufer sein Geld, als Guthaben mit 5 % Bonus.",
+      zeigen: ["Der QR-Code enthält einen Link, den jede Kamera öffnet", "Die Handys verbinden sich direkt miteinander", "Knopf für die Vorführung ohne zweites Handy"],
+      achtung: "Die Übergabe zwischen zwei Handys ist echt. Die Auszahlung des Geldes ist ein Test.",
+      speicher: { ...imHaus, "reroom.inserate2": [inserat] }, aktionen: [{ tab: 4 }, { warte: 500 }, { klickText: "QR-Code zeigen" }] },
+    { kap: "3 · Preise und Varianten", titel: "Tarife: Free, Umzugs-Pass, Premium, Business", art: "demo",
+      sprich: "Free hat einen Raum und fünf Chatfragen am Tag. Der Umzugs-Pass kostet einmalig 7,99 Euro für drei Monate. Premium 24,99 Euro im Jahr mit Preisalarm. Makler zahlen 19 oder 59 Euro im Monat.",
+      zeigen: ["Freischalten schaltet Räume, Chat und Video wirklich frei", "Freunde einladen gibt den Umzugs-Pass gratis", "Datenschutz und Impressum ganz unten"],
+      achtung: "Freischalten ist eine Demo ohne Zahlung.",
+      speicher: imHaus, aktionen: [{ aria: "Dein Konto und Preise" }] },
+    { kap: "1 · 3D-Rundgang", titel: "Am Ende: die fertige Wohnung", art: "echt",
+      sprich: "Im Überblick dreht man den Raum mit dem Finger, im Rundgang geht die Kamera einmal durch die Wohnung. Mit Umzugs-Pass lässt sich der Rundgang als Video speichern und teilen.",
+      zeigen: ["Überblick und Rundgang umschalten", "Video aufnehmen dauert etwa 30 Sekunden"],
+      speicher: imHaus, aktionen: [{ klickText: "3D", genau: true }] },
+    { kap: "2 · Makler und Vermieter", titel: "Wohnung als Link teilen", art: "echt",
+      sprich: "Eine eingerichtete Wohnung lässt sich als Link verschicken. Wer ihn öffnet, sieht Grundriss, Möbel, Preise und 3D, ohne Anmeldung. Das ist die Idee für Makler und für Pinterest.",
+      zeigen: ["Alles steckt im Link, es gibt keinen Server"],
+      speicher: imHaus, aktionen: [], url: TEILEN },
+    { kap: "Fazit", titel: "Was echt ist und was Demo", art: "teil",
+      sprich: "ReRoom ist ein Schulprojekt im Fach Wirtschaftskunde. Die App zeigt, wie es funktioniert. Wo echtes Geld, ein Server oder ein Vertrag nötig wäre, ist es eine Demo, und die App sagt das auch.",
+      tabelle: [
+        ["echt", "Grundriss, Passt-Check, Stil-Finder, Chat-Logik, Verkaufen, 3D-Rundgang, Video, Wohnung teilen, Übergabe mit zwei Handys"],
+        ["teil", "Chatbot (KI vorbereitet, nicht eingeschaltet), Messen (AR ungetestet auf Android)"],
+        ["demo", "Bezahlung, Auszahlung, Partner-Shops und Provision, Transport-Partner, Konten, Preisalarm-Meldungen"],
+      ],
+      speicher: imHaus, aktionen: [] },
+  ];
+
+  const NAMEN = { echt: "Funktioniert", teil: "Teilweise", demo: "Demo" };
+  const seite = document.getElementById("seite");
+  let aktuell = 0;
+  let rahmen;
+
+  function leere() { Object.keys(localStorage).filter(k => k.startsWith("reroom.")).forEach(k => localStorage.removeItem(k)); }
+  const warte = ms => new Promise(r => setTimeout(r, ms));
+
+  async function ausfuehren(a, fenster) {
+    const dok = fenster.document;
+    if (a.warte) return warte(a.warte);
+    if (a.tab !== undefined) { dok.querySelectorAll(".tabs button")[a.tab]?.click(); return warte(400); }
+    if (a.css) { dok.querySelector(a.css)?.click(); return warte(400); }
+    if (a.aria) { dok.querySelector(`[aria-label="${a.aria}"]`)?.click(); return warte(400); }
+    if (a.klickText) {
+      const knoepfe = [...dok.querySelectorAll("button, a, [role=button]")];
+      let ziel = a.genau ? knoepfe.find(e => e.textContent.trim() === a.klickText) : undefined;
+      if (!ziel) ziel = [...dok.querySelectorAll("main *")].find(e => e.children.length === 0 && e.textContent.includes(a.klickText));
+      if (!ziel) ziel = knoepfe.find(e => e.textContent.includes(a.klickText));
+      ziel?.click();
+      return warte(500);
+    }
+    if (a.tippe) {
+      const feld = dok.querySelector(a.tippe[0]);
+      if (!feld) return;
+      const setter = Object.getOwnPropertyDescriptor(fenster.HTMLInputElement.prototype, "value").set;
+      setter.call(feld, a.tippe[1]);
+      feld.dispatchEvent(new fenster.Event("input", { bubbles: true }));
+      await warte(250);
+      feld.form?.requestSubmit();
+      return warte(700);
+    }
+  }
+
+  async function zeige(i) {
+    aktuell = Math.max(0, Math.min(SCHRITTE.length - 1, i));
+    const s = SCHRITTE[aktuell];
+    zeichne();
+    leere();
+    Object.entries(s.speicher).forEach(([k, v]) => localStorage.setItem(k, JSON.stringify(v)));
+    const ziel = APP + (s.url ?? "");
+    rahmen.src = "about:blank";
+    await warte(30);
+    rahmen.src = ziel;
+    await new Promise(r => { rahmen.onload = () => r(); });
+    await warte(1100);
+    for (const a of s.aktionen) { if (aktuell !== SCHRITTE.indexOf(s)) return; try { await ausfuehren(a, rahmen.contentWindow); } catch (e) { console.warn(e); } }
+  }
+
+  function zeichne() {
+    const s = SCHRITTE[aktuell];
+    seite.innerHTML = `
+      <div class="telefon"><iframe id="rahmen" title="ReRoom App" src="about:blank"></iframe></div>
+      <div class="buehne">
+        <span class="marke">ReRoom<i></i></span>
+        <div class="fortschritt" role="group" aria-label="Schritte">${SCHRITTE.map((x, j) => `<button type="button" data-j="${j}" class="${j < aktuell ? "fertig" : ""}" ${j === aktuell ? 'aria-current="step"' : ""} aria-label="Schritt ${j + 1}: ${x.titel}"></button>`).join("")}</div>
+        <span class="zaehler">Schritt ${aktuell + 1} von ${SCHRITTE.length}</span>
+        <span class="kap">Businessplan: ${s.kap}</span>
+        <h1>${s.titel}</h1>
+        <div><span class="pille p-${s.art}">${NAMEN[s.art]}</span></div>
+        <div class="sprich"><b>Sagen:</b> ${s.sprich}</div>
+        ${s.zeigen ? `<ul class="zeigen" aria-label="Zeigen">${s.zeigen.map(z => `<li>${z}</li>`).join("")}</ul>` : ""}
+        ${s.achtung ? `<div class="achtung" role="note"><b>Ehrlich sagen:</b> ${s.achtung}</div>` : ""}
+        ${s.tabelle ? `<table>${s.tabelle.map(t => `<tr><td><span class="pille p-${t[0]}">${NAMEN[t[0]]}</span></td><td>${t[1]}</td></tr>`).join("")}</table>` : ""}
+        <div class="knoepfe">
+          <button class="knopf leise" id="zurueck" ${aktuell === 0 ? "disabled" : ""}>Zurück</button>
+          <button class="knopf" id="weiter" ${aktuell === SCHRITTE.length - 1 ? "disabled" : ""}>Weiter</button>
+          <button class="knopf leise" id="nochmal">Schritt neu starten</button>
+        </div>
+      </div>`;
+    rahmen = document.getElementById("rahmen");
+    document.getElementById("zurueck").onclick = () => zeige(aktuell - 1);
+    document.getElementById("weiter").onclick = () => zeige(aktuell + 1);
+    document.getElementById("nochmal").onclick = () => zeige(aktuell);
+    seite.querySelectorAll(".fortschritt button").forEach(b => b.onclick = () => zeige(Number(b.dataset.j)));
+  }
+
+  document.getElementById("los").onclick = () => zeige(0);
+  addEventListener("keydown", e => {
+    if (!rahmen) return;
+    if (e.key === "ArrowRight" || e.key === "PageDown") zeige(aktuell + 1);
+    if (e.key === "ArrowLeft" || e.key === "PageUp") zeige(aktuell - 1);
+  });
+</script>
+</body>
+</html>

@@ -49,6 +49,8 @@
 >
 > **Eigene Inspo-Bilder und Verschieben (umgesetzt):** Im Stil-Finder liest `farbenAusBild` (`src/services/foto.ts`, `src/logic/farbanalyse.ts`) die Farben aus dem Bild, den Stil wählt der Nutzer selbst (keine KI, so steht es auch im Text). Möbel im Grundriss der Startseite lassen sich ziehen (5-cm-Raster, Prüfung mit `kannStehen`, rot wenn kein Platz, Speicher `reroom.positionen`, „Anordnung zurücksetzen“).
 >
+> **Vorführung (umgesetzt):** `public/vorfuehrung.html` (live: `/reroom/vorfuehrung.html`). Links läuft die echte App im Handyrahmen, rechts stehen Sprechertext, Zeigen, ehrliche Hinweise und das Kapitel des Businessplans. „Weiter“ oder Pfeiltaste führt die App selbst durch zwölf Schritte (Klicks und Beispieldaten). Beim Start werden die `reroom.*`-Daten im Browser zurückgesetzt.
+>
 > **Zweck des Entwurfs:** Schulprojekt im Fach Wirtschaftskunde, zum Anschauen, wie ReRoom funktioniert. Darum zählt „zeigt den Ablauf ehrlich“ mehr als „ist echt“. Alles, was einen Server brauchen würde, ist eine Demo und sagt das auch in der App.
 >
 > **Ergänzt nach dem Businessplan-Abgleich (`docs/businessplan-abgleich.html`):** Datenschutz und Impressum (`src/views/Rechtliches.tsx`, aus dem Konto erreichbar), Demo-Profil mit Name, Bewertungen (`src/logic/bewertung.ts`: Beispielwerte je Verkäufer, Käufer bewertet nach der Übergabe als Demo), Wohnung als Link teilen (`src/logic/teilen.ts`, `src/views/GeteilteWohnung.tsx`; alles steckt im Link, der Empfänger sieht Grundriss, Möbel, Preise und 3D), Schritt Farben im Stil-Finder (mag ich / mag ich nicht), Preisalarm-Demo im Konto, 15-%-Anteil beim Transport sichtbar.
