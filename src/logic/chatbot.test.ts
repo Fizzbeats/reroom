@@ -126,7 +126,12 @@ describe("Chatbot beantwortet andere Fragen", () => {
   });
 
   it("Erklärung zum Cashback und Käuferschutz mit richtigen Beträgen", () => {
-    expect(antworte("Wie funktioniert der Cashback?", katalog).text).toContain("25,96");
+    const ohneAktion = new Date(2027, 5, 1); // nach der Start-Aktion: 4 %
+    const mitAktion = new Date(2026, 11, 1); // in der Start-Aktion: 6 %
+    expect(antworte("Wie funktioniert der Cashback?", katalog, undefined, {}, ohneAktion).text).toContain("4 %");
+    expect(antworte("Wie funktioniert der Cashback?", katalog, undefined, {}, ohneAktion).text).toContain("25,96");
+    expect(antworte("Wie funktioniert der Cashback?", katalog, undefined, {}, mitAktion).text).toContain("6 %");
+    expect(antworte("Wie funktioniert der Cashback?", katalog, undefined, {}, mitAktion).text).toContain("38,94");
     expect(antworte("Was ist der Käuferschutz?", katalog).text).toContain("7,70");
   });
 

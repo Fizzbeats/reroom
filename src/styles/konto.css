@@ -1,0 +1,18 @@
+/* Konto und Preise */
+.kopf-rechts { display: flex; gap: 8px; align-items: center; }
+.konto-karte { background: var(--raumkarte); color: #fff; border-radius: 22px; padding: 18px 20px; margin-top: 16px; display: grid; gap: 2px; }
+.konto-karte small { color: #B5B5B5; }
+.konto-karte strong { font: 800 1.6rem var(--titel); letter-spacing: -.02em; }
+.konto-karte span { color: #D8D8D8; font-size: .9rem; }
+.aktion-banner { margin: 10px 0 0; background: var(--akzent); color: var(--auf-akzent); border-radius: 12px; padding: 9px 14px; font: 700 .84rem var(--schrift); }
+.tarif-karte { border: 1.5px solid var(--linie); border-radius: var(--radius); padding: 16px; margin: 12px 0; display: grid; gap: 8px; }
+.tarif-karte.aktiv { border-color: var(--gruen); background: var(--gruen-bg); }
+.tarif-preis { margin: 0; font: 700 1rem var(--titel); }
+.tarif-features { margin: 0; padding: 0; list-style: none; display: grid; gap: 6px; }
+.tarif-features li { padding-left: 24px; position: relative; font-size: .92rem; }
+.tarif-features li::before { content: ""; position: absolute; left: 3px; top: .38em; width: 11px; height: 6px; border-left: 2.5px solid var(--gruen); border-bottom: 2.5px solid var(--gruen); transform: rotate(-45deg); }
+.einladung { display: flex; gap: 10px; align-items: center; }
+.code-pille { flex: 1; background: var(--hintergrund); border: 1.5px dashed var(--text-gedaempft); border-radius: 12px; padding: 12px 14px; font: 800 1.15rem var(--titel); letter-spacing: .12em; text-align: center; }
+.position-block { border-bottom: 1px solid var(--linie); padding-bottom: 10px; }
+.position-block .position { border-bottom: 0; padding-bottom: 6px; }
+.transport-wahl { margin: 0; padding: 0; flex-wrap: wrap; overflow: visible; }

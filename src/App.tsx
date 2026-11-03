@@ -12,9 +12,11 @@ import Willkommen from "./views/Willkommen";
 import Chat, { type Nachricht } from "./views/Chat";
 import Warenkorb from "./views/Warenkorb";
 import Verkaufen from "./views/Verkaufen";
+import KontoSeite from "./views/Konto";
 import { Icon, type IconName } from "./views/ui";
-import type { Platzierung } from "./logic/einrichten";
+import type { FestePlatz, Platzierung } from "./logic/einrichten";
 import { inseratZuMoebel, type Inserat } from "./logic/verkaufen";
+import { aktiverTarif, darfRaumSpeichern, neuesKonto, preisalarmUmschalten, type Konto } from "./logic/tarif";
 import { NEU as KEIN_VERBRAUCH, type Verbrauch } from "./logic/chatLimit";
 
 // Die 3D-Bibliothek ist groß und wird erst geladen, wenn jemand den Rundgang öffnet
@@ -32,12 +34,15 @@ const TABS: { id: Tab; icon: IconName; mitte?: boolean }[] = [
 ];
 
 const repository = new LokalesMoebelRepository();
+const START_KONTO: Konto = neuesKonto();
 
 export default function App() {
   const [tab, setTab] = useState<Tab>("Start");
   const [detailId, setDetailId] = useState<string>();
   const [stilFinderOffen, setStilFinderOffen] = useState(false);
   const [chatOffen, setChatOffen] = useState(false);
+  const [kontoOffen, setKontoOffen] = useState(false);
+  const [konto, setKonto] = useLokal<Konto>("reroom.konto", START_KONTO);
   const [nachrichten, setNachrichten] = useState<Nachricht[]>([]);
   const [verbrauch, setVerbrauch] = useLokal<Verbrauch>("reroom.chat", KEIN_VERBRAUCH);
   const [rundgang, setRundgang] = useState<Platzierung[]>();
@@ -56,6 +61,8 @@ export default function App() {
   const [stile, setStile] = useLokal<Stil[]>("reroom.stile", []);
   // Möbel, die der Nutzer in einen Raum gestellt hat, je Raum-ID
   const [moebelImRaum, setMoebelImRaum] = useLokal<Record<string, string[]>>("reroom.imRaum", {});
+  // Vom Nutzer verschobene Möbel, je Raum
+  const [festePlaetze, setFestePlaetze] = useLokal<Record<string, Record<string, FestePlatz>>>("reroom.positionen", {});
   const [willkommenGesehen, setWillkommenGesehen] = useLokal<boolean>("reroom.willkommenGesehen", false);
 
   useEffect(() => {
@@ -66,6 +73,13 @@ export default function App() {
     window.scrollTo(0, 0);
   }, [tab]);
 
+  const tarif = aktiverTarif(konto, new Date());
+  const limitErreicht = !darfRaumSpeichern(raeume.length, tarif);
+  const tarifeOeffnen = () => {
+    setChatOffen(false);
+    setDetailId(undefined);
+    setKontoOffen(true);
+  };
   const raum = [...raeume, ...BEISPIELRAEUME].find((r) => r.id === aktiverRaum);
   const imRaum = raum ? moebelImRaum[raum.id] ?? [] : [];
   const detail = katalog.find((m) => m.id === detailId);
@@ -91,11 +105,21 @@ export default function App() {
             onStile={setStile} onWaehlen={setAktiverRaum} onOeffnen={setDetailId}
             onAlleInKorb={(ids) => { inKorb(ids); gehe("Warenkorb"); }}
             onMessen={() => gehe("Messen")} onEntdecken={() => gehe("Entdecken")} onStilFinder={() => setStilFinderOffen(true)}
-            onRundgang={setRundgang}
+            onRundgang={setRundgang} onKonto={() => setKontoOffen(true)}
+            feste={raum ? festePlaetze[raum.id] ?? {} : {}}
+            onFeste={(f) => raum && setFestePlaetze({ ...festePlaetze, [raum.id]: f })}
           />
         )}
         {tab === "Messen" && (
           <Scannen
+            limitErreicht={limitErreicht}
+            tarifName={tarif.name}
+            maxRaeume={tarif.maxRaeume}
+            onTarife={tarifeOeffnen}
+            onErsetzen={() => {
+              setRaeume([]);
+              setAktiverRaum("");
+            }}
             onSpeichern={(r) => {
               setRaeume([...raeume, r]);
               setAktiverRaum(r.id);
@@ -129,6 +153,13 @@ export default function App() {
           onKorb={() => korbUmschalten(detail.id)}
           onImRaum={() => imRaumUmschalten(detail.id)}
           onZurueck={() => setDetailId(undefined)}
+          feste={raum ? festePlaetze[raum.id] : undefined}
+          preisalarm={{
+            erlaubt: tarif.preisalarm,
+            an: konto.preisalarm.includes(detail.id),
+            onUmschalten: () => setKonto(preisalarmUmschalten(konto, detail.id)),
+            onTarife: tarifeOeffnen,
+          }}
         />
       )}
 
@@ -162,12 +193,17 @@ export default function App() {
           onVerbrauch={setVerbrauch}
           onOeffnen={setDetailId}
           onSchliessen={() => setChatOffen(false)}
+          unbegrenzt={tarif.chatUnbegrenzt}
+          onTarife={tarifeOeffnen}
         />
       )}
 
+      {kontoOffen && <KontoSeite konto={konto} katalog={katalog} onKonto={setKonto} onSchliessen={() => setKontoOffen(false)} />}
+
       {rundgang && raum && (
         <Suspense fallback={<div className="vollbild rundgang"><p className="rundgang-laden">3D wird geladen …</p></div>}>
-          <Rundgang3D raum={raum} platziert={rundgang} onSchliessen={() => setRundgang(undefined)} />
+          <Rundgang3D raum={raum} platziert={rundgang} onSchliessen={() => setRundgang(undefined)}
+            videoErlaubt={tarif.video} onTarife={() => { setRundgang(undefined); setKontoOffen(true); }} />
         </Suspense>
       )}
 

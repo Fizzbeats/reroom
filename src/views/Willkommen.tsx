@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { INSPO_KARTEN } from "../data/inspo";
 import { arPruefen } from "../services/arSitzung";
 import { istApple } from "../logic/arStatus";
+import { cashbackProzent } from "../logic/aktion";
 import { DEMO_HINWEIS, messArt, SLOGAN, willkommenMessText, type MessArt } from "../logic/texte";
 import { Moodboard } from "./Moodboard";
 import { FARBE, Icon, MoebelZeichnung } from "./ui";
@@ -33,7 +34,7 @@ function BildMessen() {
 }
 
 // Bild 3: Preisschild mit Cashback
-function BildSparen() {
+function BildSparen({ prozent }: { prozent: number }) {
   return (
     <svg viewBox="0 0 340 300" role="img" aria-label="Sofa mit Preisschild: 800 Euro, mit ReRoom 768 Euro">
       <rect width="340" height="300" rx="24" fill="var(--karte)" />
@@ -42,17 +43,17 @@ function BildSparen() {
         <rect width="120" height="92" rx="14" fill="#fff" stroke="#111" strokeWidth="2" />
         <circle cx="18" cy="18" r="6" fill="none" stroke="#111" strokeWidth="2" />
         <text x="60" y="40" textAnchor="middle" className="bild-preis alt">800 €</text>
-        <text x="60" y="72" textAnchor="middle" className="bild-preis">768 €</text>
+        <text x="60" y="72" textAnchor="middle" className="bild-preis">{Math.round(800 * (100 - prozent)) / 100} €</text>
       </g>
       <g transform="translate(36 214)">
         <rect width="150" height="44" rx="22" fill="#111" />
-        <text x="75" y="23" textAnchor="middle" dominantBaseline="middle" className="bild-text hell">− 4 % Cashback</text>
+        <text x="75" y="23" textAnchor="middle" dominantBaseline="middle" className="bild-text hell">− {prozent} % Cashback</text>
       </g>
     </svg>
   );
 }
 
-const SEITEN = [
+const baueSeiten = (prozent: number) => [
   {
     bild: <BildMessen />,
     ...willkommenMessText("sonst"), // wird je Gerät ersetzt, siehe unten
@@ -63,9 +64,9 @@ const SEITEN = [
     text: "Wisch durch Einrichtungsbilder. ReRoom erkennt deinen Stil und stellt ein Set fürs ganze Zimmer zusammen, passend zu deinem Budget.",
   },
   {
-    bild: <BildSparen />,
-    titel: "Neu und gebraucht. Mit 4 % zurück.",
-    text: "Neue Möbel von Partner-Shops und gebrauchte aus deiner Nähe in Chemnitz. Bei neuen Möbeln bekommst du 4 % zurück.",
+    bild: <BildSparen prozent={prozent} />,
+    titel: `Neu und gebraucht. Mit ${prozent}\u00a0% zurück.`,
+    text: `Neue Möbel von Partner-Shops und gebrauchte aus deiner Nähe in Chemnitz. Bei neuen Möbeln bekommst du ${prozent}\u00a0% zurück.`,
   },
 ];
 
@@ -77,7 +78,7 @@ export default function Willkommen({ onMessen, onStilFinder, onStoebern }: Props
     arPruefen().then((status) => setArt(messArt(status.ok, istApple(navigator.userAgent))));
   }, []);
   // Die Mess-Karte verspricht die Kamera nur, wo sie wirklich misst
-  const seiten = SEITEN.map((x, i) => (i === 0 ? { ...x, ...willkommenMessText(art) } : x));
+  const seiten = baueSeiten(cashbackProzent()).map((x, i) => (i === 0 ? { ...x, ...willkommenMessText(art) } : x));
   const s = seiten[seite]!;
   const letzte = seite === seiten.length - 1;
 

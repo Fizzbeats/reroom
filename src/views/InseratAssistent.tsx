@@ -1,12 +1,14 @@
 import { useRef, useState } from "react";
 import { ALLE_FARBEN, type Kategorie } from "../models/types";
 import { bildVerkleinern } from "../services/foto";
+import { kameraMoeglich } from "../services/kamera";
 import { preisVorschlag } from "../logic/verkaufsPreis";
 import { alsCent, euro } from "../logic/preisRechner";
 import {
   euroAusText, guthabenCent, HERVORHEBEN_CENT, kaeuferZahltCent, LEERER_ENTWURF, MAX_FOTOS, pruefeSchritt, TRANSPORT_AB_CENT, ZUSTAENDE,
   type Entwurf,
 } from "../logic/verkaufen";
+import FotoAufnahme from "./FotoAufnahme";
 import KameraMesser from "./KameraMesser";
 import { FARBE, Icon } from "./ui";
 
@@ -21,6 +23,31 @@ const KATEGORIEN: [Kategorie, string][] = [
 ];
 const MASS_ZIELE = [{ id: "breite" as const, name: "Breite" }, { id: "tiefe" as const, name: "Tiefe" }, { id: "hoehe" as const, name: "Höhe" }];
 
+/** Drei kleine Skizzen: so wird ein gutes Foto. */
+function TippGanz() {
+  return (
+    <svg viewBox="0 0 90 70" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="2" strokeLinejoin="round">
+      <path d="M8 22V8h14M68 8h14v14M82 48v14H68M22 62H8V48" stroke="var(--orange)" strokeWidth="3" strokeLinecap="round" />
+      <rect x="22" y="30" width="46" height="16" rx="5" /><rect x="17" y="38" width="9" height="14" rx="4" /><rect x="64" y="38" width="9" height="14" rx="4" />
+    </svg>
+  );
+}
+function TippLicht() {
+  return (
+    <svg viewBox="0 0 90 70" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="2" strokeLinejoin="round">
+      <circle cx="70" cy="18" r="8" stroke="var(--orange)" strokeWidth="3" /><path d="M70 4v4M70 28v4M56 18h4M80 18h4" stroke="var(--orange)" strokeWidth="3" strokeLinecap="round" />
+      <rect x="14" y="38" width="46" height="16" rx="5" /><path d="M8 62h74" />
+    </svg>
+  );
+}
+function TippDetail() {
+  return (
+    <svg viewBox="0 0 90 70" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="2" strokeLinejoin="round">
+      <rect x="8" y="34" width="40" height="16" rx="5" /><circle cx="56" cy="30" r="15" stroke="var(--orange)" strokeWidth="3" /><path d="m67 41 12 12" stroke="var(--orange)" strokeWidth="3" strokeLinecap="round" />
+    </svg>
+  );
+}
+
 /** Möbel einstellen in vier Schritten: Fotos, Angaben, Maße, Preis. Kostenlos, laut Businessplan. */
 export default function InseratAssistent({ onFertig, onSchliessen }: Props) {
   const [nr, setNr] = useState(0);
@@ -28,25 +55,31 @@ export default function InseratAssistent({ onFertig, onSchliessen }: Props) {
   const [hinweis, setHinweis] = useState("");
   const [laedt, setLaedt] = useState(false);
   const [foto, setFoto] = useState(false);
+  const [kamera, setKamera] = useState(false);
   const datei = useRef<HTMLInputElement>(null);
+  const kameraGeht = kameraMoeglich();
 
   const aendern = (teil: Partial<Entwurf>) => { setE((alt) => ({ ...alt, ...teil })); setHinweis(""); };
 
-  async function fotosWaehlen(liste: FileList | null) {
-    if (!liste?.length) return;
-    setLaedt(true);
-    setHinweis("");
+  /** Verkleinert ein Foto und hängt es an. Kamera und Galerie benutzen denselben Weg. */
+  async function fotoHinzufuegen(datei: File) {
     try {
-      const frei = MAX_FOTOS - e.fotos.length;
-      const neu = await Promise.all([...liste].slice(0, frei).map((d) => bildVerkleinern(d)));
-      aendern({ fotos: [...e.fotos, ...neu] });
-      if (liste.length > frei) setHinweis(`Mehr als ${MAX_FOTOS} Fotos sind nicht möglich.`);
+      const neu = await bildVerkleinern(datei);
+      setE((alt) => (alt.fotos.length >= MAX_FOTOS ? alt : { ...alt, fotos: [...alt.fotos, neu] }));
+      setHinweis("");
     } catch (fehler) {
       setHinweis(fehler instanceof Error ? fehler.message : "Das Foto konnte nicht gelesen werden.");
-    } finally {
-      setLaedt(false);
-      if (datei.current) datei.current.value = "";
     }
+  }
+
+  async function ausGalerie(liste: FileList | null) {
+    const dateien = [...(liste ?? [])].slice(0, MAX_FOTOS - e.fotos.length);
+    if (dateien.length === 0) return;
+    setLaedt(true);
+    for (const d of dateien) await fotoHinzufuegen(d);
+    setLaedt(false);
+    if (datei.current) datei.current.value = "";
+    if (liste && liste.length > dateien.length) setHinweis(`Mehr als ${MAX_FOTOS} Fotos sind nicht möglich.`);
   }
 
   function weiter() {
@@ -73,23 +106,42 @@ export default function InseratAssistent({ onFertig, onSchliessen }: Props) {
         {nr === 0 && (
           <div className="assistent">
             <h1 style={{ marginTop: 18 }}>Zeig dein Möbel</h1>
-            <p className="gedaempft" style={{ margin: 0 }}>Das erste Foto zeigt das ganze Möbel, am besten vor hellem Hintergrund. Einstellen ist kostenlos.</p>
-            <div className="fotos">
-              {e.fotos.map((f, i) => (
-                <div key={i} className="foto-kachel">
-                  <img src={f} alt={`Foto ${i + 1}`} />
-                  <button className="rund" onClick={() => aendern({ fotos: e.fotos.filter((_, j) => j !== i) })} aria-label={`Foto ${i + 1} entfernen`}><Icon name="schliessen" groesse={14} /></button>
-                  {i === 0 && <span className="foto-titel">Titelbild</span>}
-                </div>
-              ))}
-              {e.fotos.length < MAX_FOTOS && (
-                <label className="foto-neu">
-                  <Icon name="foto" groesse={26} />
-                  <span>{laedt ? "Lädt …" : e.fotos.length === 0 ? "Foto aufnehmen oder auswählen" : "Weiteres Foto"}</span>
-                  <input ref={datei} type="file" accept="image/*" multiple onChange={(ev) => void fotosWaehlen(ev.target.files)} disabled={laedt} />
-                </label>
-              )}
+            <p className="gedaempft" style={{ margin: 0 }}>Gute Fotos verkaufen schneller. Das erste Foto ist dein Titelbild. Einstellen ist kostenlos.</p>
+
+            <div className="foto-tipps" aria-label="Tipps für gute Fotos">
+              <div className="foto-tipp"><TippGanz /><span>Das ganze Möbel im Bild</span></div>
+              <div className="foto-tipp"><TippLicht /><span>Helles Licht, ruhiger Hintergrund</span></div>
+              <div className="foto-tipp"><TippDetail /><span>Dazu ein Foto der Details</span></div>
             </div>
+
+            {e.fotos.length > 0 && (
+              <div className="fotos">
+                {e.fotos.map((f, i) => (
+                  <div key={i} className="foto-kachel">
+                    <img src={f} alt={`Foto ${i + 1}`} />
+                    <button className="rund" onClick={() => aendern({ fotos: e.fotos.filter((_, j) => j !== i) })} aria-label={`Foto ${i + 1} entfernen`}><Icon name="schliessen" groesse={14} /></button>
+                    {i === 0
+                      ? <span className="foto-titel">Titelbild</span>
+                      : <button className="foto-aktion" onClick={() => aendern({ fotos: [f, ...e.fotos.filter((_, j) => j !== i)] })}>Als Titelbild</button>}
+                  </div>
+                ))}
+              </div>
+            )}
+
+            {e.fotos.length < MAX_FOTOS && (
+              <div className="foto-knoepfe">
+                {kameraGeht ? (
+                  <button className="knopf" onClick={() => setKamera(true)}>
+                    <Icon name="kamera" groesse={22} /> {e.fotos.length === 0 ? "Foto aufnehmen" : "Weiteres Foto aufnehmen"}
+                  </button>
+                ) : null}
+                <label className={kameraGeht ? "knopf leise" : "knopf"}>
+                  <Icon name="foto" groesse={20} /> {laedt ? "Lädt …" : "Aus der Galerie wählen"}
+                  <input ref={datei} type="file" accept="image/*" multiple onChange={(ev) => void ausGalerie(ev.target.files)} disabled={laedt} />
+                </label>
+              </div>
+            )}
+            <p className="foto-zahl">{e.fotos.length} von {MAX_FOTOS} Fotos</p>
           </div>
         )}
 
@@ -183,6 +235,17 @@ export default function InseratAssistent({ onFertig, onSchliessen }: Props) {
           <button className="knopf" onClick={weiter} disabled={laedt}>{letzter ? "Jetzt einstellen" : "Weiter"}</button>
         </div>
       </div>
+
+      {kamera && (
+        <FotoAufnahme
+          rahmen="moebel"
+          titel="Foto von deinem Möbel"
+          mehrere
+          max={MAX_FOTOS - e.fotos.length}
+          onFoto={fotoHinzufuegen}
+          onSchliessen={() => setKamera(false)}
+        />
+      )}
     </div>
   );
 }

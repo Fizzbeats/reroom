@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import type { Moebel, Raum } from "../models/types";
 import { antworte, type Kontext } from "../logic/chatbot";
-import { FRAGEN_PRO_TAG, mitPass, tagVon, verbleibend, verbrauche, type Verbrauch } from "../logic/chatLimit";
+import { FRAGEN_PRO_TAG, tagVon, verbleibend, verbrauche, type Verbrauch } from "../logic/chatLimit";
 import { pruefeMoebel } from "../logic/passtCheck";
 import { alsCent, euro } from "../logic/preisRechner";
 import { chatBegruessung } from "../logic/texte";
@@ -24,6 +24,9 @@ interface Props {
   onVerbrauch: (v: Verbrauch) => void;
   onOeffnen: (id: string) => void;
   onSchliessen: () => void;
+  /** Der Tarif erlaubt unbegrenzt Fragen */
+  unbegrenzt: boolean;
+  onTarife: () => void;
 }
 
 const VORSCHLAEGE = [
@@ -34,12 +37,12 @@ const VORSCHLAEGE = [
 ];
 
 /** Chat als Sheet von unten. Lokaler Ersatz-Bot, später austauschbar gegen die Claude-API über eine Cloud-Funktion. */
-export default function Chat({ katalog, raum, nachrichten, onNachrichten, verbrauch, onVerbrauch, onOeffnen, onSchliessen }: Props) {
+export default function Chat({ katalog, raum, nachrichten, onNachrichten, verbrauch, onVerbrauch, onOeffnen, onSchliessen, unbegrenzt, onTarife }: Props) {
   const [eingabe, setEingabe] = useState("");
   const ende = useRef<HTMLDivElement>(null);
   const feld = useRef<HTMLInputElement>(null);
   const heute = tagVon(new Date());
-  const rest = verbleibend(verbrauch, heute);
+  const rest = unbegrenzt ? Infinity : verbleibend(verbrauch, heute);
 
   useEffect(() => {
     feld.current?.focus();
@@ -89,7 +92,7 @@ export default function Chat({ katalog, raum, nachrichten, onNachrichten, verbra
           <div>
             <strong className="titel-schrift">Assistent</strong>
             <small className="gedaempft" style={{ display: "block" }}>
-              {rest === Infinity ? "Unbegrenzt mit Umzugs-Pass" : `Noch ${rest} von ${FRAGEN_PRO_TAG} Fragen heute`}
+              {rest === Infinity ? "Unbegrenzt mit deinem Tarif" : `Noch ${rest} von ${FRAGEN_PRO_TAG} Fragen heute`}
             </small>
           </div>
           <button className="rund" onClick={onSchliessen} aria-label="Chat schließen"><Icon name="schliessen" groesse={18} /></button>
@@ -123,7 +126,7 @@ export default function Chat({ katalog, raum, nachrichten, onNachrichten, verbra
             </div>
           ))}
           {gesperrt && (
-            <button className="knopf breit" onClick={() => onVerbrauch(mitPass(verbrauch))}>Umzugs-Pass freischalten (Demo, ohne Zahlung)</button>
+            <button className="knopf breit" onClick={onTarife}>Tarife ansehen</button>
           )}
           <div ref={ende} />
         </div>

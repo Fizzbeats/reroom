@@ -9,10 +9,16 @@ interface Props {
   raum: Raum;
   platziert: Platzierung[];
   onSchliessen: () => void;
+  /** Der Tarif (Umzugs-Pass, Premium) enthält das Rundgang-Video */
+  videoErlaubt: boolean;
+  onTarife: () => void;
 }
 
 /** 3D-Ansicht des eingerichteten Raums: im Überblick mit dem Finger drehen, im Rundgang durch den Raum gehen. */
-export default function Rundgang3D({ raum, platziert, onSchliessen }: Props) {
+export default function Rundgang3D({ raum, platziert, onSchliessen, videoErlaubt, onTarife }: Props) {
+  const [aufnahme, setAufnahme] = useState<"bereit" | "laeuft">("bereit");
+  const [video, setVideo] = useState<{ url: string; endung: string; blob: Blob }>();
+  const [videoFehler, setVideoFehler] = useState("");
   const host = useRef<HTMLDivElement>(null);
   const szene = useRef<Szene3D | null>(null);
   const [modus, setModus] = useState<Modus>("ueberblick");
@@ -42,6 +48,39 @@ export default function Rundgang3D({ raum, platziert, onSchliessen }: Props) {
     setModus(neu);
     szene.current?.setModus(neu);
   };
+  useEffect(() => () => { if (video) URL.revokeObjectURL(video.url); }, [video]);
+
+  async function aufnehmen() {
+    if (!videoErlaubt) return onTarife();
+    setVideoFehler("");
+    setAufnahme("laeuft");
+    setModus("rundgang");
+    try {
+      const r = await szene.current?.aufnehmen();
+      if (r) setVideo({ ...r, url: URL.createObjectURL(r.blob) });
+    } catch (e) {
+      setVideoFehler(e instanceof Error ? e.message : "Aufnahme fehlgeschlagen.");
+    }
+    setAufnahme("bereit");
+  }
+
+  async function speichern() {
+    if (!video) return;
+    const datei = new File([video.blob], `reroom-rundgang.${video.endung}`, { type: video.blob.type });
+    if (navigator.canShare?.({ files: [datei] })) {
+      try {
+        await navigator.share({ files: [datei], title: "Mein Raum mit ReRoom" });
+        return;
+      } catch {
+        /* abgebrochen: dann laden wir herunter */
+      }
+    }
+    const a = document.createElement("a");
+    a.href = video.url;
+    a.download = datei.name;
+    a.click();
+  }
+
   const summe = platziert.reduce((s, p) => s + alsCent(p.moebel.preis), 0);
 
   return (
@@ -61,6 +100,20 @@ export default function Rundgang3D({ raum, platziert, onSchliessen }: Props) {
         <strong>{raum.name}</strong>
         <span>{platziert.length} Möbel · {euro(summe)}</span>
         <small>{modus === "ueberblick" ? "Mit dem Finger drehen, mit zwei Fingern zoomen." : "Du gehst einmal durch den Raum."}</small>
+        {videoFehler && <small role="alert">{videoFehler}</small>}
+        {!video && (
+          <button className="knopf leise" disabled={aufnahme === "laeuft" || !!fehler} onClick={() => void aufnehmen()}>
+            <Icon name="video" groesse={16} />{" "}
+            {aufnahme === "laeuft" ? "Nimmt auf … ca. 30 Sekunden" : videoErlaubt ? "Als Video aufnehmen" : "Als Video (Umzugs-Pass)"}
+          </button>
+        )}
+        {video && (
+          <>
+            <video src={video.url} controls playsInline muted style={{ width: "100%", borderRadius: 12 }} />
+            <button className="knopf" onClick={() => void speichern()}>Video speichern oder teilen</button>
+            <button className="link" onClick={() => setVideo(undefined)}>Neu aufnehmen</button>
+          </>
+        )}
       </div>
     </div>
   );

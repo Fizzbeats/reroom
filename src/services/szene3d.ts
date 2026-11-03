@@ -8,6 +8,7 @@ export type Modus = "ueberblick" | "rundgang";
 
 export interface Szene3D {
   setModus: (modus: Modus) => void;
+  aufnehmen: () => Promise<{ blob: Blob; endung: string }>;
   zerstoeren: () => void;
 }
 
@@ -260,5 +261,27 @@ export function starteSzene(host: HTMLElement, raum: Raum, platziert: Platzierun
     renderer.domElement.remove();
   };
 
-  return { setModus, zerstoeren };
+  /** Nimmt einen vollen Rundgang als Video auf (Safari: mp4, sonst webm). */
+  const aufnehmen = async (): Promise<{ blob: Blob; endung: string }> => {
+    if (typeof MediaRecorder === "undefined" || !renderer.domElement.captureStream) {
+      throw new Error("Video-Aufnahme wird hier nicht unterstützt.");
+    }
+    const typ = ["video/mp4", "video/webm;codecs=vp9", "video/webm"].find((t) => MediaRecorder.isTypeSupported(t));
+    const rekorder = new MediaRecorder(renderer.domElement.captureStream(30), {
+      ...(typ ? { mimeType: typ } : {}),
+      videoBitsPerSecond: 2_500_000,
+    });
+    const teile: Blob[] = [];
+    rekorder.ondataavailable = (e) => e.data.size > 0 && teile.push(e.data);
+    const fertig = new Promise<void>((ok) => (rekorder.onstop = () => ok()));
+    setModus("rundgang");
+    rekorder.start(500);
+    await new Promise((ok) => setTimeout(ok, RUNDGANG_SEKUNDEN * 1000));
+    rekorder.stop();
+    await fertig;
+    const mime = rekorder.mimeType || typ || "video/webm";
+    return { blob: new Blob(teile, { type: mime }), endung: mime.includes("mp4") ? "mp4" : "webm" };
+  };
+
+  return { setModus, aufnehmen, zerstoeren };
 }

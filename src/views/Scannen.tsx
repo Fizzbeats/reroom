@@ -14,7 +14,17 @@ const LEER: Felder = { name: "", breite: "", tiefe: "", hoehe: "", tuerB: "", tu
  * Raum messen. Auf Android mit Chrome misst die AR-Kamera von allein.
  * Überall sonst (z. B. iPhone) führt der Assistent durch die Maße, mit Foto oder Maßband-App.
  */
-export default function Scannen({ onSpeichern }: { onSpeichern: (r: Raum) => void }) {
+interface Props {
+  onSpeichern: (r: Raum) => void;
+  /** Der Tarif erlaubt keinen weiteren Raum */
+  limitErreicht: boolean;
+  tarifName: string;
+  maxRaeume: number;
+  onErsetzen: () => void;
+  onTarife: () => void;
+}
+
+export default function Scannen({ onSpeichern, limitErreicht, tarifName, maxRaeume, onErsetzen, onTarife }: Props) {
   const [ar, setAr] = useState<ArStatus>();
   const [f, setF] = useState<Felder>(LEER);
   const [fertigGemessen, setFertigGemessen] = useState(false);
@@ -44,6 +54,20 @@ export default function Scannen({ onSpeichern }: { onSpeichern: (r: Raum) => voi
       </label>
     );
   };
+
+  if (limitErreicht) {
+    return (
+      <section>
+        <h1>Raum messen</h1>
+        <div className="flaeche">
+          <h2 style={{ margin: 0 }}>{tarifName} hat Platz für {maxRaeume} {maxRaeume === 1 ? "Raum" : "Räume"}</h2>
+          <p className="gedaempft" style={{ margin: 0 }}>Du kannst deinen gespeicherten Raum ersetzen oder einen Tarif mit mehr Räumen wählen. Die Beispielräume bleiben immer frei.</p>
+          <button className="knopf breit" onClick={onErsetzen}>Gespeicherten Raum ersetzen</button>
+          <button className="knopf leise breit" onClick={onTarife}>Tarife ansehen</button>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section>

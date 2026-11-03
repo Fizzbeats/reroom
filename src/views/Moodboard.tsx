@@ -16,6 +16,9 @@ const STIMMUNG: Record<Stil, { wand: string; boden: string; rahmen: string }> = 
 export function Moodboard({ karte, beschriftet = true }: { karte: InspoKarte; beschriftet?: boolean }) {
   const st = STIMMUNG[karte.stil];
   const [f1 = "grau", f2 = "holz"] = karte.farben;
+  if (karte.bildUrl) {
+    return <img src={karte.bildUrl} alt={`Dein Bild, Stil ${STIL_INFO[karte.stil].name}`} className="moodboard eigenes-bild" draggable={false} />;
+  }
   return (
     <svg viewBox="0 0 330 400" role="img" aria-label={`Einrichtungsbeispiel im Stil ${STIL_INFO[karte.stil].name}`} className="moodboard">
       <rect width="330" height="400" fill={st.wand} />

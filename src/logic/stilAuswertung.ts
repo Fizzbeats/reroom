@@ -8,6 +8,8 @@ export interface InspoKarte {
   id: string;
   stil: Stil;
   farben: string[];
+  /** Eigenes Bild des Nutzers (data-URL) statt der gezeichneten Szene */
+  bildUrl?: string;
 }
 
 export interface StilErgebnis {

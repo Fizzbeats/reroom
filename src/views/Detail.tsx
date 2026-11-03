@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import type { Moebel, Raum } from "../models/types";
 import { ampelFuer, pruefeMoebel } from "../logic/passtCheck";
-import { einrichten } from "../logic/einrichten";
+import { einrichten, type FestePlatz } from "../logic/einrichten";
 import { alsCent, euro, kaeuferschutzCent } from "../logic/preisRechner";
 import { STIL_INFO } from "./Start";
 import { AMPEL_TEXT, Grundriss, Icon, MitReRoom, MoebelBild } from "./ui";
@@ -15,6 +15,10 @@ interface Props {
   onKorb: () => void;
   onImRaum: () => void;
   onZurueck: () => void;
+  /** Vom Nutzer verschobene Möbel, damit der Grundriss hier derselbe ist wie auf der Startseite */
+  feste?: Record<string, FestePlatz>;
+  /** Preisalarm (Premium): erlaubt, an oder aus, und wohin ohne Premium */
+  preisalarm?: { erlaubt: boolean; an: boolean; onUmschalten: () => void; onTarife: () => void };
 }
 
 const BALKEN_MAX_CM = 60; // ab hier ist der Balken voll
@@ -32,7 +36,7 @@ function Balken({ name, cm }: { name: string; cm: number }) {
 }
 
 /** Möbel-Detail: Foto oder „In meinem Raum“, Passt-Check als Balken, Maße, Kaufleiste unten. */
-export default function Detail({ moebel: m, katalog, raum, imRaum, imKorb, onKorb, onImRaum, onZurueck }: Props) {
+export default function Detail({ moebel: m, katalog, raum, imRaum, imKorb, onKorb, onImRaum, onZurueck, preisalarm, feste }: Props) {
   const [ansicht, setAnsicht] = useState<"foto" | "raum">("foto");
   const passt = raum ? pruefeMoebel(m, raum) : undefined;
   const cent = alsCent(m.preis);
@@ -46,7 +50,7 @@ export default function Detail({ moebel: m, katalog, raum, imRaum, imKorb, onKor
 
   // Dieses Möbel zusammen mit dem, was schon im Raum steht
   const andere = imRaum.filter((id) => id !== m.id).map((id) => katalog.find((k) => k.id === id)).filter((k): k is Moebel => Boolean(k));
-  const plan = raum ? einrichten(raum, [m, ...andere]) : undefined;
+  const plan = raum ? einrichten(raum, [m, ...andere], feste) : undefined;
   const findetPlatz = plan?.platziert.some((p) => p.moebel.id === m.id) ?? false;
   const wegText = passt && (passt.details.tuerCm < 0 ? "Passt nicht durch die Tür" : `Tür: ${passt.details.tuerCm} cm Luft`);
 
@@ -83,6 +87,16 @@ export default function Detail({ moebel: m, katalog, raum, imRaum, imKorb, onKor
           <p className="gedaempft" style={{ margin: 0 }}>
             {m.anbieter}{m.entfernungKm !== undefined && ` · ${m.entfernungKm} km`}{m.zustand === "gebraucht" && " · Abholung"}
           </p>
+          {preisalarm && (
+            <button
+              className="chip"
+              style={{ marginTop: 10 }}
+              aria-pressed={preisalarm.an}
+              onClick={preisalarm.erlaubt ? preisalarm.onUmschalten : preisalarm.onTarife}
+            >
+              <Icon name="glocke" groesse={14} /> {preisalarm.an ? "Preisalarm ist an" : "Preisalarm"}{!preisalarm.erlaubt && " (Premium)"}
+            </button>
+          )}
 
           {passt && raum ? (
             <div className="passt">

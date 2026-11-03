@@ -5,7 +5,7 @@
 
 import type { Kategorie, Masse, Moebel } from "../models/types";
 import { liesCm } from "./messSchritte";
-import { alsCent, kaeuferschutzCent } from "./preisRechner";
+import { alsCent, kaeuferschutzCent, TRANSPORT_CENT } from "./preisRechner";
 
 export type Status = "online" | "verkauft" | "uebergeben";
 export type Erloesart = "auszahlung" | "guthaben";
@@ -16,7 +16,7 @@ export type ZustandText = (typeof ZUSTAENDE)[number];
 
 export const HERVORHEBEN_CENT = 149; // Inserat hervorheben: 1,49 €
 export const GUTHABEN_BONUS_PROZENT = 5;
-export const TRANSPORT_AB_CENT = 4000; // Transport-Partner ab 40 €
+export const TRANSPORT_AB_CENT = TRANSPORT_CENT; // Transport-Partner ab 40 €
 export const TRANSPORT_ANTEIL_PROZENT = 15; // davon erhält ReRoom
 
 export interface Inserat {

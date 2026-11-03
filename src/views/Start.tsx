@@ -1,10 +1,12 @@
+import { useState } from "react";
 import type { Moebel, Raum, Stil } from "../models/types";
 import { BEISPIELRAEUME } from "../data/raeume";
 import { findePassende } from "../logic/stilFinder";
 import { pruefeMoebel } from "../logic/passtCheck";
-import { einrichten, type Platzierung } from "../logic/einrichten";
+import { einrichten, kannStehen, type FestePlatz, type Platzierung } from "../logic/einrichten";
 import { zimmerSet } from "../logic/stilAuswertung";
 import { alsCent, euro } from "../logic/preisRechner";
+import { aktionText } from "../logic/aktion";
 import { START_MESSEN_TEXT, SLOGAN, DEMO_HINWEIS } from "../logic/texte";
 import { Grundriss, Icon, ProduktKarte } from "./ui";
 
@@ -32,18 +34,23 @@ interface Props {
   onEntdecken: () => void;
   onStilFinder: () => void;
   onRundgang: (platziert: Platzierung[]) => void;
+  onKonto: () => void;
+  /** Vom Nutzer verschobene Möbel dieses Raums */
+  feste: Record<string, FestePlatz>;
+  onFeste: (feste: Record<string, FestePlatz>) => void;
 }
 
 /** Startseite: der eigene Raum als Grundriss mit Möbeln, dazu Stil und weitere Vorschläge. */
 export default function Start(props: Props) {
-  const { katalog, raeume, raum, imRaum, stile, onStile, onWaehlen, onOeffnen, onAlleInKorb, onMessen, onEntdecken, onStilFinder, onRundgang } = props;
+  const { katalog, raeume, raum, imRaum, stile, onStile, onWaehlen, onOeffnen, onAlleInKorb, onMessen, onEntdecken, onStilFinder, onRundgang, onKonto, feste, onFeste } = props;
+  const [platzHinweis, setPlatzHinweis] = useState("");
   const alleRaeume = [...raeume, ...BEISPIELRAEUME];
 
   // Eigene Auswahl im Raum, sonst ein automatischer Vorschlag
   const eigene = imRaum.map((id) => katalog.find((m) => m.id === id)).filter((m): m is Moebel => Boolean(m));
   const vorschlag = raum && eigene.length === 0 ? zimmerSet(katalog, { stile, farben: [] }, VORSCHLAG_BUDGET, raum).moebel : [];
   const imPlan = eigene.length > 0 ? eigene : vorschlag;
-  const plan = raum ? einrichten(raum, imPlan) : undefined;
+  const plan = raum ? einrichten(raum, imPlan, feste) : undefined;
   const summe = imPlan.reduce((s, m) => s + alsCent(m.preis), 0);
 
   const imPlanIds = new Set(imPlan.map((m) => m.id));
@@ -61,9 +68,13 @@ export default function Start(props: Props) {
     <section>
       <div className="kopf">
         <p className="marke">ReRoom<i /></p>
-        {raum && <button className="chip" onClick={onMessen}><Icon name="kamera" groesse={16} /> Neu messen</button>}
+        <span className="kopf-rechts">
+          {raum && <button className="chip" onClick={onMessen}><Icon name="kamera" groesse={16} /> Neu messen</button>}
+          <button className="rund" onClick={onKonto} aria-label="Dein Konto und Preise"><Icon name="person" groesse={20} /></button>
+        </span>
       </div>
       <p className="slogan" style={{ margin: "-6px 0 14px" }}>{SLOGAN}</p>
+      {aktionText() && <button className="aktion-banner" style={{ width: "100%", border: 0, textAlign: "left", margin: "0 0 14px" }} onClick={onKonto}>{aktionText()}</button>}
 
       {raum && plan ? (
         <div className="raumkarte">
@@ -74,7 +85,25 @@ export default function Start(props: Props) {
             </div>
             <span className="passt-zahl">{plan.platziert.length} Möbel passen</span>
           </div>
-          <Grundriss raum={raum} platziert={plan.platziert} onMoebel={onOeffnen} />
+          <Grundriss
+            raum={raum}
+            platziert={plan.platziert}
+            onMoebel={onOeffnen}
+            darfStehen={(id, x, y) => {
+              const p = plan.platziert.find((q) => q.moebel.id === id);
+              return !p || kannStehen(raum, plan.platziert, p.moebel, { x, y, w: p.w, h: p.h });
+            }}
+            onVerschieben={(id, x, y) => {
+              const p = plan.platziert.find((q) => q.moebel.id === id);
+              if (!p) return;
+              if (!kannStehen(raum, plan.platziert, p.moebel, { x, y, w: p.w, h: p.h })) {
+                setPlatzHinweis("Dort ist kein Platz (Wand, Tür oder anderes Möbel).");
+                return;
+              }
+              setPlatzHinweis("");
+              onFeste({ ...feste, [id]: { x, y, gedreht: p.w !== p.moebel.masseCm.breite } });
+            }}
+          />
           {imPlan.length > 0 && (
             <div className="plan-leiste">
               <span>Zusammen <b>{euro(summe)}</b></span>
@@ -84,7 +113,8 @@ export default function Start(props: Props) {
               </span>
             </div>
           )}
-          <p className="plan-tipp">Tippe auf ein Möbel im Grundriss, um es anzusehen.</p>
+          <p className="plan-tipp" role="status">{platzHinweis || "Ziehe ein Möbel mit dem Finger, tippe darauf, um es anzusehen."}</p>
+          {Object.keys(feste).length > 0 && <button className="chip hell" onClick={() => { setPlatzHinweis(""); onFeste({}); }}>Anordnung zurücksetzen</button>}
           {alleRaeume.length > 1 && (
             <div className="raumwahl" aria-label="Raum wechseln">
               {alleRaeume.map((r) => (

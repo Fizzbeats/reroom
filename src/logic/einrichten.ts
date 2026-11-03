@@ -19,6 +19,14 @@ export interface Rechteck {
   h: number;
 }
 
+/** Vom Nutzer festgelegter Platz (Möbel mit dem Finger verschoben), in cm. */
+export interface FestePlatz {
+  x: number;
+  y: number;
+  /** true = um 90° gedreht (Breite und Tiefe vertauscht) */
+  gedreht: boolean;
+}
+
 export const TUER_ABSTAND_CM = 20; // Tür beginnt 20 cm neben der linken Ecke
 const WANDABSTAND_CM = 5;
 const RASTER_CM = 10;
@@ -67,13 +75,27 @@ function frei(r: Rechteck, k: Kategorie, raum: Raum, belegt: Platzierung[]): boo
  * Platziert die Möbel nacheinander: erst am bevorzugten Platz, sonst an der ersten freien Stelle im Raster.
  * Das Möbel darf um 90° gedreht werden. Was nirgends passt, landet in `nichtPlatziert`.
  */
-export function einrichten(raum: Raum, moebel: Moebel[]): { platziert: Platzierung[]; nichtPlatziert: Moebel[] } {
+export function einrichten(raum: Raum, moebel: Moebel[], feste: Record<string, FestePlatz> = {}): { platziert: Platzierung[]; nichtPlatziert: Moebel[] } {
   const platziert: Platzierung[] = [];
   const nichtPlatziert: Moebel[] = [];
   // Teppiche zuerst, damit Tisch und Sofa darauf stehen können
   const reihenfolge = [...moebel].sort((a, b) => Number(amBoden(b.kategorie)) - Number(amBoden(a.kategorie)));
 
+  // Was der Nutzer festgelegt hat, steht zuerst. Passt der Platz nicht mehr (Raum wurde geändert), sucht die App neu.
+  const gesetzt = new Set<string>();
   for (const m of reihenfolge) {
+    const f = feste[m.id];
+    if (!f) continue;
+    const w = f.gedreht ? m.masseCm.tiefe : m.masseCm.breite;
+    const h = f.gedreht ? m.masseCm.breite : m.masseCm.tiefe;
+    if (frei({ x: f.x, y: f.y, w, h }, m.kategorie, raum, platziert)) {
+      platziert.push({ moebel: m, x: f.x, y: f.y, w, h });
+      gesetzt.add(m.id);
+    }
+  }
+
+  for (const m of reihenfolge) {
+    if (gesetzt.has(m.id)) continue;
     const lagen = [
       { w: m.masseCm.breite, h: m.masseCm.tiefe },
       { w: m.masseCm.tiefe, h: m.masseCm.breite },
@@ -94,4 +116,12 @@ export function einrichten(raum: Raum, moebel: Moebel[]): { platziert: Platzieru
     else nichtPlatziert.push(m);
   }
   return { platziert, nichtPlatziert };
+}
+
+/**
+ * Darf das Möbel an dieser Stelle stehen? Im Raum, nicht im Schwenkbereich der Tür,
+ * nicht auf einem anderen Möbel (Teppiche dürfen unter Möbeln liegen).
+ */
+export function kannStehen(raum: Raum, platziert: Platzierung[], moebel: Moebel, rect: Rechteck): boolean {
+  return frei(rect, moebel.kategorie, raum, platziert.filter((p) => p.moebel.id !== moebel.id));
 }

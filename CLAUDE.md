@@ -41,7 +41,15 @@
 > - Stil-Finder zum Wischen (`src/views/StilFinder.tsx`, Karten in `src/data/inspo.ts`, Auswertung und Zimmer-Set in `src/logic/stilAuswertung.ts`) mit Budget fürs ganze Zimmer.
 > - Teppiche werden im Passt-Check für Tür und Treppe gerollt gerechnet (`pruefeMoebel`).
 >
-> **Noch offen (laut Businessplan):** eigene Inspo-Bilder hochladen, Möbel im Grundriss per Finger verschieben, Transport-Partner buchen (bisher nur als Auswahl beim Inserat), echte Zahlung und Auszahlung (bisher Demo), zweites Gerät für den Käufer, Free = 1 Raum, Möbel-Detailseite, Möbelbilder.
+> **Kamera im Entwurf (umgesetzt):** Eingebaute Kamera `src/views/FotoAufnahme.tsx` (`getUserMedia`, Dienst `src/services/kamera.ts`, Fehlertexte `src/logic/kameraText.ts`) mit Rahmen, Auslöser, Kamerawechsel und Galerie als Ausweg. Genutzt beim Inserat (mehrere Fotos), beim Foto-Messen mit Bankkarte und für eigene Inspo-Bilder.
+>
+> **Tarife und Konto (umgesetzt, Businessplan):** `src/logic/tarif.ts` (Free 1 Raum und 5 Chatfragen/Tag, Umzugs-Pass 7,99 € einmalig 3 Monate, Premium 24,99 €/Jahr mit Preisalarm, Business Starter/Pro für Makler), Seite `src/views/Konto.tsx` über den Personen-Knopf auf der Startseite. „Freischalten“ ist eine Demo ohne Zahlung. Empfehlungsprogramm: Freund einladen gibt den Umzugs-Pass (Demo-Knopf „Ein Freund tritt bei“). Free = 1 Raum: Scannen zeigt eine Limit-Karte. Start-Aktion 6 % Cashback bis 31.1.2027, danach 4 % (`src/logic/aktion.ts`, überall dynamisch). Transport ab 40 € im Warenkorb wählbar (`TRANSPORT_CENT`). Preisalarm-Chip auf der Detailseite (nur Premium, Benachrichtigungen gibt es noch nicht).
+>
+> **3D-Rundgang als Video (umgesetzt):** `aufnehmen()` in `src/services/szene3d.ts` nimmt per `MediaRecorder` einen vollen Rundgang auf (Safari mp4, sonst webm), Teilen über `navigator.share` oder Download. Nur mit Umzugs-Pass/Premium (`tarif.video`).
+>
+> **Eigene Inspo-Bilder und Verschieben (umgesetzt):** Im Stil-Finder liest `farbenAusBild` (`src/services/foto.ts`, `src/logic/farbanalyse.ts`) die Farben aus dem Bild, den Stil wählt der Nutzer selbst (keine KI, so steht es auch im Text). Möbel im Grundriss der Startseite lassen sich ziehen (5-cm-Raster, Prüfung mit `kannStehen`, rot wenn kein Platz, Speicher `reroom.positionen`, „Anordnung zurücksetzen“).
+>
+> **Noch offen (laut Businessplan):** echte Zahlung und Auszahlung (bisher Demo), zweites Gerät für den Käufer, echte Partner-Shops und Produktfotos, KI im Chatbot, Kamera-Scan als eigene App (Ausbaustufe), AR am echten Android-Handy testen.
 >
 > **Befehle:** `npm install`, `npm run dev` (Entwicklung), `npm test`, `npm run build`.
 > **CI:** `.github/workflows/ci.yml` (Typen, Tests, Build bei jedem Push und Pull Request).

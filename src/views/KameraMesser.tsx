@@ -1,5 +1,8 @@
 import { useEffect, useRef, useState } from "react";
 import { abstandPx, messHinweis, messeCm, REFERENZEN, skalierung, type Punkt } from "../logic/messen";
+import { kameraMoeglich } from "../services/kamera";
+import FotoAufnahme from "./FotoAufnahme";
+import { Icon } from "./ui";
 
 export type Ziel = "breite" | "tiefe" | "hoehe" | "tuerB" | "tuerH" | "treppe";
 
@@ -28,6 +31,8 @@ export default function KameraMesser({ onWert, festesZiel, ziele }: Props) {
   const [refPunkte, setRefPunkte] = useState<Punkt[]>([]);
   const [messPunkte, setMessPunkte] = useState<Punkt[]>([]);
   const [meldung, setMeldung] = useState("");
+  const [kamera, setKamera] = useState(false);
+  const kameraGeht = kameraMoeglich();
   const leinwand = useRef<HTMLCanvasElement>(null);
 
   const referenz = REFERENZEN.find((r) => r.id === referenzId)!;
@@ -104,11 +109,18 @@ export default function KameraMesser({ onWert, festesZiel, ziele }: Props) {
           {REFERENZEN.map((r) => <option key={r.id} value={r.id}>{r.name}</option>)}
         </select>
       </label>
-      {/* capture öffnet auf dem Handy direkt die Kamera, am PC die Dateiauswahl */}
-      <label>
-        Foto aufnehmen
-        <input type="file" accept="image/*" capture="environment" onChange={(e) => fotoWaehlen(e.target.files?.[0])} />
-      </label>
+      <div className="foto-knoepfe">
+        {kameraGeht && (
+          <button className="knopf" onClick={() => setKamera(true)}><Icon name="kamera" groesse={22} /> Foto aufnehmen</button>
+        )}
+        <label className={kameraGeht ? "knopf leise" : "knopf"}>
+          <Icon name="foto" groesse={20} /> Aus der Galerie wählen
+          <input type="file" accept="image/*" onChange={(e) => fotoWaehlen(e.target.files?.[0])} />
+        </label>
+      </div>
+      {kamera && (
+        <FotoAufnahme rahmen="karte" titel="Foto zum Messen" onFoto={fotoWaehlen} onSchliessen={() => setKamera(false)} />
+      )}
 
       {bild && (
         <>

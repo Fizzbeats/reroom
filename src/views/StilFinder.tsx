@@ -1,11 +1,16 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { Moebel, Raum } from "../models/types";
 import { INSPO_KARTEN } from "../data/inspo";
+import type { InspoKarte } from "../logic/stilAuswertung";
+import { bildVerkleinern, farbenAusBild } from "../services/foto";
+import FotoAufnahme from "./FotoAufnahme";
 import { werteAus, zimmerSet, type StilErgebnis } from "../logic/stilAuswertung";
 import { pruefeMoebel } from "../logic/passtCheck";
+import { cashbackProzent } from "../logic/aktion";
 import { alsCent, berechneWarenkorb, euro } from "../logic/preisRechner";
 import { Moodboard } from "./Moodboard";
 import { STIL_INFO } from "./Start";
+import type { Stil } from "../models/types";
 import { AMPEL_TEXT, FARBE, Icon, MoebelBild, kurzInfo } from "./ui";
 
 interface Props {
@@ -23,6 +28,52 @@ export default function StilFinder({ katalog, raum, onFertig, onSchliessen }: Pr
   const [budget, setBudget] = useState(300);
   const [zug, setZug] = useState(0); // horizontale Verschiebung beim Wischen
   const start = useRef<number | null>(null);
+  // Eigene Inspo-Bilder: Farben liest ReRoom aus dem Bild, den Stil wählt der Nutzer selbst
+  const [eigene, setEigene] = useState<InspoKarte[]>([]);
+  const [kameraOffen, setKameraOffen] = useState(false);
+  const [entwurf, setEntwurf] = useState<{ bildUrl: string; farben: string[] }>();
+  const [bildFehler, setBildFehler] = useState("");
+
+  async function bildAnnehmen(datei: File) {
+    try {
+      const bildUrl = await bildVerkleinern(datei, 700, 0.7);
+      setEntwurf({ bildUrl, farben: await farbenAusBild(bildUrl) });
+      setBildFehler("");
+    } catch (e) {
+      setBildFehler(e instanceof Error ? e.message : "Das Bild konnte nicht gelesen werden.");
+    }
+    setKameraOffen(false);
+  }
+  const stilWaehlen = (stil: Stil) => {
+    if (!entwurf) return;
+    setEigene((a) => [...a, { id: `eigen-${a.length}`, stil, farben: entwurf.farben, bildUrl: entwurf.bildUrl }]);
+    setEntwurf(undefined);
+  };
+  const eigenesBildKnopf = (
+    <button className="knopf leise breit" style={{ marginTop: 12 }} onClick={() => setKameraOffen(true)}>
+      <Icon name="kamera" groesse={18} /> Eigenes Inspirationsbild hinzufügen
+    </button>
+  );
+  const eigeneUeberlagerungen = (
+    <>
+      {kameraOffen && <FotoAufnahme rahmen="bild" titel="Inspirationsbild" onFoto={bildAnnehmen} onSchliessen={() => setKameraOffen(false)} />}
+      {entwurf && (
+        <div className="vollbild" role="dialog" aria-modal="true" aria-label="Stil deines Bildes">
+          <div className="vollbild-innen">
+            <h1 style={{ margin: "0 0 12px" }}>Welcher Stil ist das?</h1>
+            <img src={entwurf.bildUrl} alt="Dein Inspirationsbild" style={{ width: "100%", maxHeight: "45vh", objectFit: "cover", borderRadius: 18 }} />
+            <p className="gedaempft">
+              {entwurf.farben.length > 0 ? `ReRoom erkennt diese Farben: ${entwurf.farben.join(", ")}.` : "Farben konnte ReRoom hier nicht erkennen."} Den Stil wählst du selbst.
+            </p>
+            <div className="chips" style={{ padding: 0, flexWrap: "wrap" }}>
+              {(Object.keys(STIL_INFO) as Stil[]).map((st) => <button key={st} className="chip" onClick={() => stilWaehlen(st)}>{STIL_INFO[st].name}</button>)}
+            </div>
+            <button className="link" onClick={() => setEntwurf(undefined)}>Verwerfen</button>
+          </div>
+        </div>
+      )}
+    </>
+  );
 
   const index = antworten.length;
   const fertig = index >= INSPO_KARTEN.length;
@@ -43,9 +94,9 @@ export default function StilFinder({ katalog, raum, onFertig, onSchliessen }: Pr
     return () => removeEventListener("keydown", tasten);
   }, [fertig, onSchliessen]);
 
-  const ergebnis = useMemo(() => werteAus(INSPO_KARTEN, antworten), [antworten]);
+  const ergebnis = useMemo(() => werteAus([...INSPO_KARTEN, ...eigene], [...antworten, ...eigene.map(() => true)]), [antworten, eigene]);
   const set = useMemo(() => zimmerSet(katalog, ergebnis, budget, raum), [katalog, ergebnis, budget, raum]);
-  const korb = berechneWarenkorb(set.moebel);
+  const korb = berechneWarenkorb(set.moebel, cashbackProzent());
 
   if (!fertig && karte) {
     return (
@@ -83,6 +134,10 @@ export default function StilFinder({ katalog, raum, onFertig, onSchliessen }: Pr
             <button className="wisch-ja" onClick={() => antworte(true)} aria-label="Gefällt mir"><Icon name="herz" groesse={28} gefuellt /></button>
           </div>
           <p className="gedaempft" style={{ textAlign: "center" }}>Nach links wischen: nicht mein Stil · nach rechts: gefällt mir</p>
+          {eigenesBildKnopf}
+          {bildFehler && <p className="hinweis" role="alert">{bildFehler}</p>}
+          {eigene.length > 0 && <p className="gedaempft" style={{ textAlign: "center" }}>{eigene.length} eigene{eigene.length === 1 ? "s Bild" : " Bilder"} zählt als „gefällt mir“.</p>}
+          {eigeneUeberlagerungen}
         </div>
       </div>
     );
@@ -104,6 +159,14 @@ export default function StilFinder({ katalog, raum, onFertig, onSchliessen }: Pr
             {ergebnis.farben.map((f) => <span key={f} className="chip"><i className="punkt" style={{ background: FARBE[f] }} />{f}</span>)}
           </div>
         )}
+
+        {eigene.length > 0 && (
+          <div className="chips" style={{ margin: "12px 0 0", padding: 0 }}>
+            {eigene.map((k) => <img key={k.id} src={k.bildUrl} alt="" style={{ width: 54, height: 54, objectFit: "cover", borderRadius: 12 }} />)}
+          </div>
+        )}
+        {eigenesBildKnopf}
+        {eigeneUeberlagerungen}
 
         <div className="flaeche">
           <label style={{ margin: 0 }}>

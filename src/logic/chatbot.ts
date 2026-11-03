@@ -3,6 +3,7 @@
 // Dieselbe Schnittstelle kann später von der Claude-API über eine Cloud-Funktion bedient werden.
 
 import type { Kategorie, Moebel, Raum, Stil, Zustand } from "../models/types";
+import { cashbackProzent } from "./aktion";
 import { alsCent, cashbackCent, euro, kaeuferschutzCent } from "./preisRechner";
 import { liesCm } from "./messSchritte";
 import { pruefeMoebel } from "./passtCheck";
@@ -191,7 +192,7 @@ function raumHinweis(raum?: Raum): string {
 }
 
 /** Beantwortet eine Frage. `vorher` ist der Stand aus der letzten Antwort (für Rückfragen). */
-export function antworte(frage: string, katalog: Moebel[], raum?: Raum, vorher: Kontext = {}): ChatAntwort {
+export function antworte(frage: string, katalog: Moebel[], raum?: Raum, vorher: Kontext = {}, jetzt: Date = new Date()): ChatAntwort {
   const t = normal(frage).trim();
 
   if (vorher.rueckfrage === "nische") {
@@ -214,7 +215,8 @@ export function antworte(frage: string, katalog: Moebel[], raum?: Raum, vorher: 
     return { text: `${wissen} Frag mich zum Beispiel ${HILFE_BEISPIELE}.`, treffer: [] };
   }
   if (/cashback|zurueck ?bekomm|rueckerstatt/.test(t)) {
-    return { text: `Bei neuen Möbeln bekommst du 4 % vom Kaufpreis zurück, zum Beispiel ${euro(cashbackCent(alsCent(649)))} bei einem Sofa für 649 €.`, treffer: [] };
+    const prozent = cashbackProzent(jetzt);
+    return { text: `Bei neuen Möbeln bekommst du ${prozent} % vom Kaufpreis zurück, zum Beispiel ${euro(cashbackCent(alsCent(649), prozent))} bei einem Sofa für 649 €.`, treffer: [] };
   }
   if (/kaeuferschutz|käuferschutz/.test(t)) {
     return { text: `Bei gebrauchten Möbeln zahlst du 4 % plus 0,50 € Käuferschutz, zum Beispiel ${euro(kaeuferschutzCent(alsCent(180)))} bei einem Sofa für 180 €.`, treffer: [] };

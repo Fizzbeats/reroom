@@ -1,7 +1,8 @@
-import type { ReactNode } from "react";
+import { useRef, useState, type ReactNode } from "react";
 import type { Kategorie, Moebel, Raum } from "../models/types";
 import type { Ampel } from "../logic/passtCheck";
 import { TUER_ABSTAND_CM, type Platzierung } from "../logic/einrichten";
+import { cashbackProzent } from "../logic/aktion";
 import { alsCent, cashbackCent, euro } from "../logic/preisRechner";
 
 // ---------- Icons (eigene Strich-Icons statt Emojis) ----------
@@ -21,6 +22,10 @@ const PFADE = {
   foto: <><rect x="3" y="5" width="18" height="14" rx="2" /><circle cx="9" cy="10" r="1.5" /><path d="m21 16-5-5-8 8" strokeLinejoin="round" /></>,
   chat: <path d="M4 5h16v11H9l-5 4z" strokeLinejoin="round" />,
   wuerfel: <path d="M12 3 4 7.5v9L12 21l8-4.5v-9zM4 7.5l8 4.5 8-4.5M12 12v9" strokeLinejoin="round" />,
+  wechseln: <path d="M4 9a8 8 0 0 1 14-3l2 2M20 15a8 8 0 0 1-14 3l-2-2M20 4v4h-4M4 20v-4h4" strokeLinecap="round" strokeLinejoin="round" />,
+  person: <><circle cx="12" cy="8" r="4" /><path d="M4 21c1-4.5 4.5-6.5 8-6.5s7 2 8 6.5" strokeLinecap="round" /></>,
+  glocke: <path d="M6 17h12l-1.5-2.5V10a4.5 4.5 0 0 0-9 0v4.5zM10 20a2 2 0 0 0 4 0" strokeLinejoin="round" />,
+  video: <><rect x="3" y="6" width="13" height="12" rx="2" /><path d="m16 10 5-3v10l-5-3z" strokeLinejoin="round" /></>,
   funkeln: <path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5 18 18M6 18l2.5-2.5M15.5 8.5 18 6" strokeLinecap="round" />,
 };
 export type IconName = keyof typeof PFADE;
@@ -140,7 +145,7 @@ export function AmpelSchild({ ampel }: { ampel: Ampel }) {
 export function MitReRoom({ moebel }: { moebel: Moebel }) {
   if (moebel.zustand !== "neu") return null;
   const cent = alsCent(moebel.preis);
-  return <span className="mit-reroom">mit ReRoom {euro(cent - cashbackCent(cent))}</span>;
+  return <span className="mit-reroom">mit ReRoom {euro(cent - cashbackCent(cent, cashbackProzent()))}</span>;
 }
 
 export function kurzInfo(m: Moebel): string {
@@ -173,10 +178,19 @@ interface GrundrissProps {
   /** Gestrichelter Weg von der Tür zum hervorgehobenen Möbel, mit Hinweis zum Spielraum */
   weg?: string;
   onMoebel?: (id: string) => void;
+  /** Möbel lassen sich mit dem Finger verschieben; Position in cm (obere linke Ecke), schon auf 5 cm gerastet */
+  onVerschieben?: (id: string, xCm: number, yCm: number) => void;
+  /** Prüft live, ob das Möbel dort stehen darf (sonst wird es rot) */
+  darfStehen?: (id: string, xCm: number, yCm: number) => boolean;
 }
 
+const RASTER_VERSCHIEBEN_CM = 5;
+
 /** Maßstäblicher Grundriss (Draufsicht) mit Tür unten links und optional platzierten Möbeln. */
-export function Grundriss({ raum, platziert = [], hervorheben, weg, onMoebel }: GrundrissProps) {
+export function Grundriss({ raum, platziert = [], hervorheben, weg, onMoebel, onVerschieben, darfStehen }: GrundrissProps) {
+  const svgRef = useRef<SVGSVGElement>(null);
+  // Beim Ziehen: aktuelle Lage in cm, und ob schon wirklich gezogen wurde (sonst ist es ein Tippen)
+  const [zug, setZug] = useState<{ id: string; x: number; y: number; dx: number; dy: number; bewegt: boolean }>();
   const FLAECHE = 230;
   const s = Math.min(FLAECHE / raum.breiteCm, FLAECHE / raum.tiefeCm);
   const w = raum.breiteCm * s, h = raum.tiefeCm * s;
@@ -189,7 +203,7 @@ export function Grundriss({ raum, platziert = [], hervorheben, weg, onMoebel }: 
   const reihenfolge = [...platziert].sort((a, b) => Number(b.moebel.kategorie === "teppich") - Number(a.moebel.kategorie === "teppich"));
 
   return (
-    <svg className="grundriss" viewBox={`0 0 300 ${h + 44}`} role="img" aria-label={`Grundriss ${m(raum.breiteCm)} mal ${m(raum.tiefeCm)} mit ${platziert.length} Möbeln`}>
+    <svg ref={svgRef} className="grundriss" style={onVerschieben ? { touchAction: "none" } : undefined} viewBox={`0 0 300 ${h + 44}`} role="img" aria-label={`Grundriss ${m(raum.breiteCm)} mal ${m(raum.tiefeCm)} mit ${platziert.length} Möbeln`}>
       <defs>
         <marker id="pfeil" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0 10 5 0 10z" fill="var(--orange)" /></marker>
       </defs>
@@ -199,7 +213,9 @@ export function Grundriss({ raum, platziert = [], hervorheben, weg, onMoebel }: 
       <line x1={tx} y1={ty} x2={tx} y2={ty - tuer} stroke="var(--orange)" strokeWidth="2.5" />
 
       {reihenfolge.map((p) => {
-        const px = x0 + p.x * s, py = y0 + p.y * s, pw = p.w * s, ph = p.h * s;
+        const gezogen = zug?.id === p.moebel.id && zug.bewegt ? zug : undefined;
+        const px = x0 + (gezogen?.x ?? p.x) * s, py = y0 + (gezogen?.y ?? p.y) * s, pw = p.w * s, ph = p.h * s;
+        const verboten = gezogen && darfStehen ? !darfStehen(p.moebel.id, gezogen.x, gezogen.y) : false;
         const aktiv = p.moebel.id === hervorheben;
         const leise = hervorheben !== undefined && !aktiv;
         const titel = p.moebel.name.split(" ")[0]!;
@@ -208,9 +224,38 @@ export function Grundriss({ raum, platziert = [], hervorheben, weg, onMoebel }: 
             key={p.moebel.id}
             className={onMoebel ? "fussabdruck klickbar" : "fussabdruck"}
             opacity={leise ? 0.35 : 1}
-            onClick={onMoebel ? () => onMoebel(p.moebel.id) : undefined}
+            style={onVerschieben ? { cursor: "grab" } : undefined}
+            onClick={onMoebel && !onVerschieben ? () => onMoebel(p.moebel.id) : undefined}
+            onPointerDown={onVerschieben ? (e) => {
+              const svg = svgRef.current;
+              if (!svg) return;
+              const ctm = svg.getScreenCTM();
+              if (!ctm) return;
+              // Abstand zwischen Finger und Möbel-Ecke merken, damit das Möbel nicht springt
+              const fx = (e.clientX - ctm.e) / ctm.a, fy = (e.clientY - ctm.f) / ctm.d;
+              try { e.currentTarget.setPointerCapture(e.pointerId); } catch { /* ohne aktiven Zeiger egal */ }
+              setZug({ id: p.moebel.id, x: p.x, y: p.y, dx: fx / s - x0 / s - p.x, dy: fy / s - y0 / s - p.y, bewegt: false });
+            } : undefined}
+            onPointerMove={onVerschieben ? (e) => {
+              if (!zug || zug.id !== p.moebel.id) return;
+              const ctm = svgRef.current?.getScreenCTM();
+              if (!ctm) return;
+              const fx = (e.clientX - ctm.e) / ctm.a, fy = (e.clientY - ctm.f) / ctm.d;
+              const raster = (v: number) => Math.round(v / RASTER_VERSCHIEBEN_CM) * RASTER_VERSCHIEBEN_CM;
+              const x = Math.min(Math.max(0, raster(fx / s - x0 / s - zug.dx)), raum.breiteCm - p.w);
+              const y = Math.min(Math.max(0, raster(fy / s - y0 / s - zug.dy)), raum.tiefeCm - p.h);
+              setZug({ ...zug, x, y, bewegt: zug.bewegt || x !== p.x || y !== p.y });
+            } : undefined}
+            onPointerUp={onVerschieben ? () => {
+              if (zug?.id === p.moebel.id) {
+                if (zug.bewegt) onVerschieben(p.moebel.id, zug.x, zug.y);
+                else onMoebel?.(p.moebel.id);
+              }
+              setZug(undefined);
+            } : undefined}
+            onPointerCancel={onVerschieben ? () => setZug(undefined) : undefined}
           >
-            <rect x={px} y={py} width={pw} height={ph} rx="4" fill={farbeVon(p.moebel)} stroke={aktiv ? "var(--orange)" : "rgb(0 0 0 / .25)"} strokeWidth={aktiv ? 2.5 : 1} />
+            <rect x={px} y={py} width={pw} height={ph} rx="4" fill={farbeVon(p.moebel)} stroke={verboten ? "#D93025" : aktiv ? "var(--orange)" : "rgb(0 0 0 / .25)"} strokeWidth={aktiv || gezogen ? 2.5 : 1} />
             {pw > 30 && ph > 14 && (
               <text x={px + pw / 2} y={py + ph / 2} textAnchor="middle" dominantBaseline="middle" className="fuss-text" fill={p.moebel.farben[0] === "weiss" ? "#111" : "#fff"}>
                 {titel}

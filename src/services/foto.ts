@@ -1,3 +1,4 @@
+import { farbenAusPixeln } from "../logic/farbanalyse";
 /**
  * Verkleinert ein Foto auf höchstens `max` Pixel Kantenlänge und gibt es als JPEG-Text (data-URL) zurück.
  * Handyfotos sind mehrere Megabyte groß und passen sonst nicht in den Speicher des Browsers.
@@ -40,4 +41,22 @@ async function laden(datei: File): Promise<Geladen> {
     bild.src = url;
   });
   return { bild, breite: bild.naturalWidth, hoehe: bild.naturalHeight, freigeben: () => URL.revokeObjectURL(url) };
+}
+
+/** Liest die zwei häufigsten Farben eines Bildes (data-URL) und ordnet sie den ReRoom-Farben zu. */
+export async function farbenAusBild(url: string): Promise<string[]> {
+  const bild = new Image();
+  await new Promise<void>((ok, fehler) => {
+    bild.onload = () => ok();
+    bild.onerror = () => fehler(new Error("Dieses Bild kann nicht gelesen werden."));
+    bild.src = url;
+  });
+  const seite = 64;
+  const leinwand = document.createElement("canvas");
+  leinwand.width = seite;
+  leinwand.height = seite;
+  const kontext = leinwand.getContext("2d", { willReadFrequently: true });
+  if (!kontext) return [];
+  kontext.drawImage(bild, 0, 0, seite, seite);
+  return farbenAusPixeln(kontext.getImageData(0, 0, seite, seite).data);
 }
