@@ -37,7 +37,9 @@ export default function Entdecken({ katalog, raum, stile, onStile, onOeffnen }: 
       .map((t) => ({ ...t, passt: raum ? pruefeMoebel(t.moebel, raum) : undefined }))
       .filter((t) => zustand === "alle" || t.moebel.zustand === zustand)
       .filter((t) => !s || `${t.moebel.name} ${t.moebel.kategorie} ${t.moebel.farben.join(" ")}`.toLowerCase().includes(s))
-      .filter((t) => !raum || !nurPassend || t.passt?.ampel !== "rot");
+      .filter((t) => !raum || !nurPassend || t.passt?.ampel !== "rot")
+      // Hervorgehobene Inserate stehen oben (Sortierung bleibt sonst stabil)
+      .sort((a, b) => Number(Boolean(b.moebel.hervorgehoben)) - Number(Boolean(a.moebel.hervorgehoben)));
   }, [katalog, budget, stile, farben, zustand, suche, raum, nurPassend]);
 
   return (

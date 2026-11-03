@@ -153,6 +153,7 @@ export function ProduktKarte({ moebel, ampel, onOeffnen }: { moebel: Moebel; amp
       <span className="produkt-bild">
         <MoebelBild moebel={moebel} />
         {ampel && <AmpelSchild ampel={ampel} />}
+        {moebel.hervorgehoben && <span className="hervorgehoben-schild">Oben</span>}
       </span>
       <span className="produkt-preis">{euro(alsCent(moebel.preis))}</span>
       <MitReRoom moebel={moebel} />

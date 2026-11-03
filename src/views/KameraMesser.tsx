@@ -16,13 +16,15 @@ interface Props {
   onWert: (ziel: Ziel, cm: number) => void;
   /** Wenn gesetzt, wird genau dieses Maß gemessen und die Auswahl ausgeblendet */
   festesZiel?: Ziel;
+  /** Eigene Auswahl statt der Maße für Raum und Tür, z. B. Breite, Tiefe und Höhe eines Möbels */
+  ziele?: { id: Ziel; name: string }[];
 }
 
 /** Foto mit der Kamera aufnehmen, Referenzobjekt antippen, dann beliebige Strecken messen. */
-export default function KameraMesser({ onWert, festesZiel }: Props) {
+export default function KameraMesser({ onWert, festesZiel, ziele }: Props) {
   const [bild, setBild] = useState<HTMLImageElement>();
   const [referenzId, setReferenzId] = useState(REFERENZEN[0]!.id);
-  const [ziel, setZiel] = useState<Ziel>(festesZiel ?? "tuerB");
+  const [ziel, setZiel] = useState<Ziel>(festesZiel ?? ziele?.[0]?.id ?? "tuerB");
   const [refPunkte, setRefPunkte] = useState<Punkt[]>([]);
   const [messPunkte, setMessPunkte] = useState<Punkt[]>([]);
   const [meldung, setMeldung] = useState("");
@@ -127,7 +129,7 @@ export default function KameraMesser({ onWert, festesZiel }: Props) {
                 <label>
                   Das ist
                   <select value={ziel} onChange={(e) => setZiel(e.target.value as Ziel)}>
-                    {ZIELE.map((z) => <option key={z.id} value={z.id}>{z.name}</option>)}
+                    {(ziele ?? ZIELE).map((z) => <option key={z.id} value={z.id}>{z.name}</option>)}
                   </select>
                 </label>
               )}

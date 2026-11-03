@@ -40,3 +40,9 @@ export function berechneWarenkorb(positionen: Moebel[]): Warenkorb {
 
 export const euro = (cent: number): string =>
   new Intl.NumberFormat("de-DE", { style: "currency", currency: "EUR" }).format(cent / 100);
+
+/** Guthaben vom Endpreis abziehen: höchstens so viel, wie der Endpreis hoch ist. */
+export function mitGuthaben(endpreisCent: number, guthabenCent: number): { abzugCent: number; zuZahlenCent: number } {
+  const abzugCent = Math.max(0, Math.min(endpreisCent, guthabenCent));
+  return { abzugCent, zuZahlenCent: endpreisCent - abzugCent };
+}

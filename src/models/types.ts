@@ -23,6 +23,8 @@ export interface Moebel {
   beschreibung: string;
   /** Produktfoto des Anbieters. Fehlt es, zeigt die App eine Zeichnung der Kategorie. */
   bildUrl?: string;
+  /** Hervorgehobene Inserate (1,49 €) stehen in der Liste oben */
+  hervorgehoben?: boolean;
 }
 
 export interface Raum {

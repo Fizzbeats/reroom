@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useMemo, useState } from "react";
 import type { Moebel, Raum, Stil } from "./models/types";
 import { BEISPIELRAEUME } from "./data/raeume";
 import { LokalesMoebelRepository } from "./data/moebelRepository";
@@ -14,6 +14,7 @@ import Warenkorb from "./views/Warenkorb";
 import Verkaufen from "./views/Verkaufen";
 import { Icon, type IconName } from "./views/ui";
 import type { Platzierung } from "./logic/einrichten";
+import { inseratZuMoebel, type Inserat } from "./logic/verkaufen";
 import { NEU as KEIN_VERBRAUCH, type Verbrauch } from "./logic/chatLimit";
 
 // Die 3D-Bibliothek ist groß und wird erst geladen, wenn jemand den Rundgang öffnet
@@ -40,7 +41,15 @@ export default function App() {
   const [nachrichten, setNachrichten] = useState<Nachricht[]>([]);
   const [verbrauch, setVerbrauch] = useLokal<Verbrauch>("reroom.chat", KEIN_VERBRAUCH);
   const [rundgang, setRundgang] = useState<Platzierung[]>();
-  const [katalog, setKatalog] = useState<Moebel[]>([]);
+  const [basisKatalog, setKatalog] = useState<Moebel[]>([]);
+  // Eigene Inserate und Guthaben aus verkauften Möbeln (in Cent)
+  const [inserate, setInserate] = useLokal<Inserat[]>("reroom.inserate2", []);
+  const [guthaben, setGuthaben] = useLokal<number>("reroom.guthaben", 0);
+  // Online stehende Inserate sehen Käufer wie jedes andere gebrauchte Möbel
+  const katalog = useMemo(
+    () => [...inserate.filter((i) => i.status === "online").map(inseratZuMoebel), ...basisKatalog],
+    [inserate, basisKatalog],
+  );
   const [raeume, setRaeume] = useLokal<Raum[]>("reroom.raeume", []);
   const [aktiverRaum, setAktiverRaum] = useLokal<string>("reroom.aktiverRaum", "");
   const [korb, setKorb] = useLokal<string[]>("reroom.korb", []);
@@ -98,12 +107,16 @@ export default function App() {
         {tab === "Warenkorb" && (
           <Warenkorb
             positionen={katalog.filter((m) => korb.includes(m.id))}
+            guthabenCent={guthaben}
+            onGuthabenVerbraucht={(cent) => setGuthaben(Math.max(0, guthaben - cent))}
             onEntfernen={korbUmschalten}
             onLeeren={() => setKorb([])}
             onOeffnen={setDetailId}
           />
         )}
-        {tab === "Verkaufen" && <Verkaufen />}
+        {tab === "Verkaufen" && (
+          <Verkaufen inserate={inserate} onInserate={setInserate} guthabenCent={guthaben} onGuthaben={setGuthaben} onOeffnen={setDetailId} />
+        )}
       </main>
 
       {detail && (

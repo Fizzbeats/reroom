@@ -26,13 +26,20 @@
 > - Chatbot als Sheet (`src/views/Chat.tsx`), erreichbar über den runden Knopf rechts unten (nicht oben rechts, dort liegen schon Filter und „Neu messen“). Logik in `src/logic/chatbot.ts`: versteht Möbelart, Farbe, Stil, Preis, Zustand, Entfernung und Nische, fragt bei „Nische“ nach der Breite, lockert Wünsche und sagt was weggelassen wurde, beantwortet „Passt das Sofa Lund durch meine Tür?“. Schlägt nur Möbel vor, die im Passt-Check nicht rot sind. Free-Tarif: 5 Fragen pro Tag (`src/logic/chatLimit.ts`), Umzugs-Pass-Knopf ist eine Demo ohne Zahlung. Später austauschbar gegen die Claude-API über eine Cloud-Funktion (Stufe 2).
 > - 3D-Rundgang (`src/views/Rundgang3D.tsx`, `src/services/szene3d.ts`, Berechnung in `src/logic/ausrichtung.ts`): Knopf „3D“ auf der Raumkarte. Überblick (drehen und zoomen) und Rundgang (Kamera geht durch den Raum). three.js wird erst beim Öffnen geladen.
 >
+> **Verkaufen (umgesetzt, laut Businessplan „Gebrauchte Möbel: ohne Lager“):**
+> - Einstell-Assistent in 4 Schritten (`src/views/InseratAssistent.tsx`): Fotos (werden auf 900 px verkleinert, `src/services/foto.ts`), Name/Art/Farbe/Zustand, Maße (auch per Foto mit Bankkarte), Preis mit Vorschlag (Neupreis × 0,4). Inserat hervorheben 1,49 € (Demo) steht in der Liste oben.
+> - Meine Inserate (`src/views/Verkaufen.tsx`) mit Status Online → Bezahlt → Übergeben. Käufer zahlt Preis + Käuferschutz (4 % + 0,50 €), Verkäufer bekommt den vollen Preis.
+> - Übergabe per QR-Code (`src/views/QrCode.tsx`, Regeln in `src/logic/verkaufen.ts`): erst nach dem Scan bekommt der Verkäufer sein Geld. Der Code ist von einem unabhängigen QR-Leser prüfbar (`src/logic/qr.test.ts`).
+> - Erlös als Guthaben mit 5 % Bonus oder Auszahlung. Guthaben wird im Warenkorb abgezogen. Online stehende Inserate sehen Käufer in Entdecken und im Chatbot wie andere gebrauchte Möbel.
+> - **Bezahlung, Auszahlung und der „Käufer kauft“-Schritt sind eine Demo** (kein Zahlungsdienstleister, kein zweites Gerät).
+>
 > **Erlebnis für neue Kunden (umgesetzt):**
 > - Willkommen-Karten beim ersten Besuch (`src/views/Willkommen.tsx`): Messen, Stil finden, Sparen.
 > - Möbel im eigenen Grundriss: automatische Platzierung (`src/logic/einrichten.ts`), Startseite zeigt „So könnte es aussehen“, Detailseite hat „Foto / In meinem Raum“ mit Weg durch die Tür. Eigene Auswahl je Raum in `reroom.imRaum`.
 > - Stil-Finder zum Wischen (`src/views/StilFinder.tsx`, Karten in `src/data/inspo.ts`, Auswertung und Zimmer-Set in `src/logic/stilAuswertung.ts`) mit Budget fürs ganze Zimmer.
 > - Teppiche werden im Passt-Check für Tür und Treppe gerollt gerechnet (`pruefeMoebel`).
 >
-> **Noch offen (laut Businessplan):** eigene Inspo-Bilder hochladen, Möbel im Grundriss per Finger verschieben, Verkaufserlös als Guthaben mit 5 % Bonus, QR-Übergabe, Transport-Partner, Free = 1 Raum, Möbel-Detailseite, Möbelbilder.
+> **Noch offen (laut Businessplan):** eigene Inspo-Bilder hochladen, Möbel im Grundriss per Finger verschieben, Transport-Partner buchen (bisher nur als Auswahl beim Inserat), echte Zahlung und Auszahlung (bisher Demo), zweites Gerät für den Käufer, Free = 1 Raum, Möbel-Detailseite, Möbelbilder.
 >
 > **Befehle:** `npm install`, `npm run dev` (Entwicklung), `npm test`, `npm run build`.
 > **CI:** `.github/workflows/ci.yml` (Typen, Tests, Build bei jedem Push und Pull Request).
