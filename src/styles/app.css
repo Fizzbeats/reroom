@@ -1,5 +1,7 @@
 /* Weiß und Schwarz als Basis, Bilder im Vordergrund, Orange nur als Marken-Akzent */
 * { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; -webkit-tap-highlight-color: transparent; }
+button, a, input, select, label { touch-action: manipulation; } /* kein Verzögern und kein Zoomen beim Doppeltippen */
 body {
   margin: 0;
   background: var(--hintergrund);
@@ -160,7 +162,9 @@ input[type="file"] { padding: 10px; }
 
 /* AR-Messung: Overlay liegt über dem Kamerabild */
 .ar-overlay { position: fixed; inset: 0; pointer-events: none; display: flex; align-items: flex-end; padding: 16px; padding-bottom: calc(16px + env(safe-area-inset-bottom)); z-index: 30; }
-.ar-overlay[hidden] { display: none; }
+.ar-overlay { visibility: hidden; }
+.ar-overlay.aktiv { visibility: visible; }
+.ar-overlay:xr-overlay { visibility: visible; }
 .ar-panel { pointer-events: auto; width: 100%; max-width: 520px; margin: 0 auto; background: var(--hintergrund); color: var(--text); border-radius: 22px; padding: 18px; box-shadow: 0 10px 40px rgb(0 0 0 / .35); }
 .ar-panel p { margin: 6px 0; }
 .ar-kopf { display: flex; justify-content: space-between; align-items: center; }

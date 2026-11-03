@@ -1,12 +1,15 @@
 import type { Punkt3D } from "../logic/arMessung";
+import { arStatusAus, type ArStatus } from "../logic/arStatus";
 
-/** Prüft, ob der Browser AR mit der Kamera kann (WebXR, z. B. Chrome auf Android). */
-export async function arVerfuegbar(): Promise<boolean> {
+/** Prüft, ob dieses Gerät AR mit der Kamera kann, und erklärt sonst warum. */
+export async function arPruefen(): Promise<ArStatus> {
+  let unterstuetzt: boolean | undefined;
   try {
-    return (await navigator.xr?.isSessionSupported("immersive-ar")) ?? false;
+    unterstuetzt = (await navigator.xr?.isSessionSupported("immersive-ar")) ?? false;
   } catch {
-    return false;
+    unterstuetzt = undefined;
   }
+  return arStatusAus({ sicher: window.isSecureContext, hatXr: Boolean(navigator.xr), unterstuetzt, userAgent: navigator.userAgent });
 }
 
 /**

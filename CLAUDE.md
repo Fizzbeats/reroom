@@ -18,6 +18,8 @@
 >
 > **Design:** Marktplatz-Stil nach Entwurf `public/design/index.html`: Weiß/Schwarz, Bilder im 2er-Raster, Orange `#FF5B2E` nur als Marken-Akzent, Grün nur für „mit ReRoom“, Schrift Bricolage Grotesque für Titel und Preise, eigene Strich-Icons (`src/views/ui.tsx`). Möbelbilder: Produktfoto des Anbieters (`bildUrl`), sonst Zeichnung je Kategorie. Kein Blau, kein Creme/Serif-Look. Alte Entwürfe unter `public/entwuerfe/` sind verworfen.
 >
+> **Handy (umgesetzt):** Installierbar als App (`public/manifest.webmanifest`, Symbole in `public/icons/`, erzeugt mit `node scripts/symbole.mjs`), Sicherheitsabstände für Notch und Home-Leiste (`viewport-fit=cover`), Hell/Dunkel-Farbe der Browserleiste. AR-Status mit Erklärung, warum die Kamera ggf. nicht geht (`src/logic/arStatus.ts`). Das AR-Overlay darf nie `display: none` sein, sonst sind Anleitung und Knöpfe in der Kamera unsichtbar. **Die AR-Messung ist noch nicht an einem echten Android-Handy getestet.**
+>
 > **Erlebnis für neue Kunden (umgesetzt):**
 > - Willkommen-Karten beim ersten Besuch (`src/views/Willkommen.tsx`): Messen, Stil finden, Sparen.
 > - Möbel im eigenen Grundriss: automatische Platzierung (`src/logic/einrichten.ts`), Startseite zeigt „So könnte es aussehen“, Detailseite hat „Foto / In meinem Raum“ mit Weg durch die Tür. Eigene Auswahl je Raum in `reroom.imRaum`.

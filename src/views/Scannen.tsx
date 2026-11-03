@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import type { Raum } from "../models/types";
-import { arVerfuegbar } from "../services/arSitzung";
+import { arPruefen } from "../services/arSitzung";
+import type { ArStatus } from "../logic/arStatus";
 import ArMesser from "./ArMesser";
 import KameraMesser, { type Ziel } from "./KameraMesser";
 
@@ -11,12 +12,12 @@ const LEER: Felder = { name: "", breite: "", tiefe: "", hoehe: "", tuerB: "", tu
 // Mit AR-Kamera (Android) misst die App selbst. Ohne AR (z. B. iPhone im Browser)
 // gibt es die Foto-Messung mit Bankkarte oder Eintippen.
 export default function Scannen({ onSpeichern }: { onSpeichern: (r: Raum) => void }) {
-  const [ar, setAr] = useState<boolean>();
+  const [ar, setAr] = useState<ArStatus>();
   const [f, setF] = useState<Felder>(LEER);
   const [gemessen, setGemessen] = useState(false);
 
   useEffect(() => {
-    arVerfuegbar().then(setAr);
+    arPruefen().then(setAr);
   }, []);
 
   const zahl = (s: string) => Number(s.replace(",", "."));
@@ -33,7 +34,7 @@ export default function Scannen({ onSpeichern }: { onSpeichern: (r: Raum) => voi
     <section>
       <h1>Raum messen</h1>
 
-      {ar === true && (
+      {ar?.ok === true && (
         <ArMesser
           onFertig={(werte) => {
             setF((alt) => ({ ...alt, ...Object.fromEntries(Object.entries(werte).map(([k, v]) => [k, String(v)])) }));
@@ -42,11 +43,9 @@ export default function Scannen({ onSpeichern }: { onSpeichern: (r: Raum) => voi
         />
       )}
 
-      {ar === false && (
+      {ar && !ar.ok && (
         <>
-          <p className="hinweis">
-            Dieses Gerät kann im Browser nicht live mit der Kamera messen (das betrifft z. B. iPhones). Du kannst mit einem Foto messen oder die Maße eintippen.
-          </p>
+          <p className="hinweis" role="status">{ar.text}</p>
           <KameraMesser onWert={(ziel, cm) => setF({ ...f, [ziel]: String(cm) })} />
         </>
       )}

@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import type { Ziel } from "./KameraMesser";
 import { abstandCm, hoeheCm, raumAusEcken, type Punkt3D } from "../logic/arMessung";
 import { ArSitzung } from "../services/arSitzung";
+import { arFehlerText } from "../logic/arStatus";
 
 export type Werte = Partial<Record<Ziel, number>>;
 
@@ -106,7 +107,7 @@ export default function ArMesser({ onFertig }: { onFertig: (werte: Werte) => voi
       await s.starten(overlay.current!);
     } catch (e) {
       setAktiv(false);
-      setFehler(e instanceof Error ? `Die Kamera konnte nicht starten: ${e.message}` : "Die Kamera konnte nicht starten.");
+      setFehler(arFehlerText(e));
     }
   }
 
@@ -133,7 +134,7 @@ export default function ArMesser({ onFertig }: { onFertig: (werte: Werte) => voi
       </div>
 
       {/* Wird während der AR-Sitzung über das Kamerabild gelegt */}
-      <div ref={overlay} className="ar-overlay" hidden={!aktiv}>
+      <div ref={overlay} className={`ar-overlay${aktiv ? " aktiv" : ""}`}>
         <div className="ar-panel">
           <div className="ar-kopf">
             <span className="gedaempft">Schritt {schritt + 1} von {SCHRITTE.length}</span>
