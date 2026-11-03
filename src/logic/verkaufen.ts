@@ -36,6 +36,8 @@ export interface Inserat {
   /** Sechsstelliger Code, steckt im QR-Code der Übergabe */
   code: string;
   erloesart?: Erloesart;
+  /** Sterne (1 bis 5), die der Käufer nach der Übergabe gegeben hat */
+  bewertung?: number;
   erstelltAm: string;
 }
 

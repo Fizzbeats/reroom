@@ -16,3 +16,7 @@
 .position-block { border-bottom: 1px solid var(--linie); padding-bottom: 10px; }
 .position-block .position { border-bottom: 0; padding-bottom: 6px; }
 .transport-wahl { margin: 0; padding: 0; flex-wrap: wrap; overflow: visible; }
+.profil-feld { display: grid; gap: 6px; margin-top: 14px; font-size: .9rem; }
+.stern-wahl { display: flex; gap: 6px; flex-wrap: wrap; }
+.bewertung { display: inline-flex; gap: 6px; align-items: center; font-size: .86rem; color: var(--text-gedaempft); }
+.bewertung b { color: var(--akzent); }

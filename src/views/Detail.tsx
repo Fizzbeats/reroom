@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import type { Moebel, Raum } from "../models/types";
 import { ampelFuer, pruefeMoebel } from "../logic/passtCheck";
 import { einrichten, type FestePlatz } from "../logic/einrichten";
+import { beispielBewertung, bewertungText } from "../logic/bewertung";
 import { alsCent, euro, kaeuferschutzCent } from "../logic/preisRechner";
 import { STIL_INFO } from "./Start";
 import { AMPEL_TEXT, Grundriss, Icon, MitReRoom, MoebelBild } from "./ui";
@@ -87,6 +88,11 @@ export default function Detail({ moebel: m, katalog, raum, imRaum, imKorb, onKor
           <p className="gedaempft" style={{ margin: 0 }}>
             {m.anbieter}{m.entfernungKm !== undefined && ` · ${m.entfernungKm} km`}{m.zustand === "gebraucht" && " · Abholung"}
           </p>
+          {m.zustand === "gebraucht" && (
+            <p className="bewertung" style={{ margin: "4px 0 0" }}>
+              <b aria-hidden="true">★</b> {bewertungText(beispielBewertung(m.anbieter))} <small>(Beispieldaten)</small>
+            </p>
+          )}
           {preisalarm && (
             <button
               className="chip"

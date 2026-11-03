@@ -4,6 +4,7 @@ import {
   type Entwurf, type Erloesart, type Inserat,
 } from "../logic/verkaufen";
 import { alsCent, euro } from "../logic/preisRechner";
+import { ausSternen, bewertungText } from "../logic/bewertung";
 import InseratAssistent from "./InseratAssistent";
 import QrCode from "./QrCode";
 import { Icon, Leer } from "./ui";
@@ -73,6 +74,10 @@ export default function Verkaufen({ inserate, onInserate, guthabenCent: guthaben
         ))}
       </ol>
 
+      {(() => {
+        const b = ausSternen(inserate.flatMap((i) => (i.bewertung ? [i.bewertung] : [])));
+        return b ? <p className="bewertung" style={{ margin: "12px 0 0" }}><b aria-hidden="true">★</b> Deine Bewertung: {bewertungText(b)}</p> : null;
+      })()}
       <h2>Meine Inserate</h2>
       {inserate.length === 0 && <Leer titel="Noch nichts eingestellt">Tippe oben auf „Möbel einstellen“. Das dauert etwa eine Minute.</Leer>}
 
@@ -117,6 +122,16 @@ export default function Verkaufen({ inserate, onInserate, guthabenCent: guthaben
                   ? <>Übergeben. <b>{euro(guthabenCent(erloesCent(i.preis)))}</b> Guthaben sind gutgeschrieben (mit 5 % Bonus).</>
                   : <>Übergeben. <b>{euro(erloesCent(i.preis))}</b> werden auf dein Konto ausgezahlt (Demo).</>}
               </p>
+              {i.bewertung ? (
+                <p className="bewertung" style={{ margin: 0 }}><b aria-hidden="true">{"★".repeat(i.bewertung)}</b> Der Käufer hat dich bewertet.</p>
+              ) : (
+                <div>
+                  <p className="gedaempft" style={{ margin: "0 0 6px", fontSize: ".84rem" }}>Demo: So bewertet dich der Käufer.</p>
+                  <div className="stern-wahl" role="group" aria-label="Bewertung des Käufers">
+                    {[1, 2, 3, 4, 5].map((n) => <button key={n} className="chip" onClick={() => aendern(i.id, { bewertung: n })}>{n} ★</button>)}
+                  </div>
+                </div>
+              )}
             </div>
           )}
         </article>

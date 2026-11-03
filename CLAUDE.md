@@ -49,7 +49,11 @@
 >
 > **Eigene Inspo-Bilder und Verschieben (umgesetzt):** Im Stil-Finder liest `farbenAusBild` (`src/services/foto.ts`, `src/logic/farbanalyse.ts`) die Farben aus dem Bild, den Stil wählt der Nutzer selbst (keine KI, so steht es auch im Text). Möbel im Grundriss der Startseite lassen sich ziehen (5-cm-Raster, Prüfung mit `kannStehen`, rot wenn kein Platz, Speicher `reroom.positionen`, „Anordnung zurücksetzen“).
 >
-> **Noch offen (laut Businessplan):** echte Zahlung und Auszahlung (bisher Demo), zweites Gerät für den Käufer, echte Partner-Shops und Produktfotos, KI im Chatbot, Kamera-Scan als eigene App (Ausbaustufe), AR am echten Android-Handy testen.
+> **Zweck des Entwurfs:** Schulprojekt im Fach Wirtschaftskunde, zum Anschauen, wie ReRoom funktioniert. Darum zählt „zeigt den Ablauf ehrlich“ mehr als „ist echt“. Alles, was einen Server brauchen würde, ist eine Demo und sagt das auch in der App.
+>
+> **Ergänzt nach dem Businessplan-Abgleich (`docs/businessplan-abgleich.html`):** Datenschutz und Impressum (`src/views/Rechtliches.tsx`, aus dem Konto erreichbar), Demo-Profil mit Name, Bewertungen (`src/logic/bewertung.ts`: Beispielwerte je Verkäufer, Käufer bewertet nach der Übergabe als Demo), Wohnung als Link teilen (`src/logic/teilen.ts`, `src/views/GeteilteWohnung.tsx`; alles steckt im Link, der Empfänger sieht Grundriss, Möbel, Preise und 3D), Schritt Farben im Stil-Finder (mag ich / mag ich nicht), Preisalarm-Demo im Konto, 15-%-Anteil beim Transport sichtbar.
+>
+> **Noch offen (laut Businessplan):** echte Zahlung und Auszahlung (bisher Demo), zweites Gerät für den Käufer (braucht Server), echte Konten, echte Partner-Shops und Produktfotos, KI im Chatbot und beim Erkennen des Stils, Kamera-Scan als eigene App (Ausbaustufe), AR am echten Android-Handy testen.
 >
 > **Befehle:** `npm install`, `npm run dev` (Entwicklung), `npm test`, `npm run build`.
 > **CI:** `.github/workflows/ci.yml` (Typen, Tests, Build bei jedem Push und Pull Request).

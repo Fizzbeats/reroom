@@ -25,6 +25,14 @@ const WISCH_SCHWELLE_PX = 90;
 /** Stil-Finder: durch Inspo-Karten wischen, Budget fürs Zimmer wählen, fertiges Set bekommen. */
 export default function StilFinder({ katalog, raum, onFertig, onSchliessen }: Props) {
   const [antworten, setAntworten] = useState<boolean[]>([]);
+  // Schritt Farben: Tippen wechselt zwischen neutral, „mag ich“ und „mag ich nicht“
+  const [farbWahl, setFarbWahl] = useState<Record<string, "mag" | "nicht">>({});
+  const [farbenFertig, setFarbenFertig] = useState(false);
+  const farbeWechseln = (f: string) =>
+    setFarbWahl((w) => {
+      const { [f]: alt, ...rest } = w;
+      return alt === undefined ? { ...rest, [f]: "mag" } : alt === "mag" ? { ...rest, [f]: "nicht" } : rest;
+    });
   const [budget, setBudget] = useState(300);
   const [zug, setZug] = useState(0); // horizontale Verschiebung beim Wischen
   const start = useRef<number | null>(null);
@@ -87,16 +95,50 @@ export default function StilFinder({ katalog, raum, onFertig, onSchliessen }: Pr
   useEffect(() => {
     const tasten = (e: KeyboardEvent) => {
       if (e.key === "Escape") onSchliessen();
-      if (!fertig && e.key === "ArrowLeft") antworte(false);
-      if (!fertig && e.key === "ArrowRight") antworte(true);
+      if (farbenFertig && !fertig && e.key === "ArrowLeft") antworte(false);
+      if (farbenFertig && !fertig && e.key === "ArrowRight") antworte(true);
     };
     addEventListener("keydown", tasten);
     return () => removeEventListener("keydown", tasten);
-  }, [fertig, onSchliessen]);
+  }, [fertig, farbenFertig, onSchliessen]);
 
-  const ergebnis = useMemo(() => werteAus([...INSPO_KARTEN, ...eigene], [...antworten, ...eigene.map(() => true)]), [antworten, eigene]);
+  const ergebnis = useMemo(() => {
+    const e = werteAus([...INSPO_KARTEN, ...eigene], [...antworten, ...eigene.map(() => true)]);
+    const mag = Object.keys(farbWahl).filter((f) => farbWahl[f] === "mag");
+    const nicht = Object.keys(farbWahl).filter((f) => farbWahl[f] === "nicht");
+    // Ausdrücklich gewählte Farben gehen vor, was aus den Bildern kommt, füllt auf
+    return {
+      ...e,
+      farben: [...new Set([...mag, ...e.farben.filter((f) => !nicht.includes(f))])].slice(0, 3),
+      nichtGemocht: [...new Set([...nicht, ...e.nichtGemocht.filter((f) => !mag.includes(f))])],
+    };
+  }, [antworten, eigene, farbWahl]);
   const set = useMemo(() => zimmerSet(katalog, ergebnis, budget, raum), [katalog, ergebnis, budget, raum]);
   const korb = berechneWarenkorb(set.moebel, cashbackProzent());
+
+  if (!farbenFertig) {
+    return (
+      <div className="vollbild" role="dialog" aria-modal="true" aria-label="Farben wählen">
+        <div className="vollbild-innen">
+          <div className="reihe">
+            <span className="gedaempft">Schritt 1: Farben</span>
+            <button className="rund" onClick={onSchliessen} aria-label="Schließen"><Icon name="schliessen" groesse={18} /></button>
+          </div>
+          <h1 style={{ margin: "18px 0 8px" }}>Welche Farben magst du?</h1>
+          <p className="gedaempft">Tippe einmal für „mag ich“, zweimal für „mag ich nicht“, dreimal zum Zurücksetzen. Du kannst auch alles offen lassen.</p>
+          <div className="chips" style={{ margin: "16px 0", padding: 0, flexWrap: "wrap" }}>
+            {Object.keys(FARBE).map((f) => (
+              <button key={f} className="chip" aria-pressed={farbWahl[f] === "mag"} onClick={() => farbeWechseln(f)} style={farbWahl[f] === "nicht" ? { textDecoration: "line-through", opacity: 0.7 } : undefined}>
+                <i className="punkt" style={{ background: FARBE[f] }} />
+                {f}{farbWahl[f] === "mag" ? " ✓" : farbWahl[f] === "nicht" ? " ✕" : ""}
+              </button>
+            ))}
+          </div>
+          <button className="knopf breit" onClick={() => setFarbenFertig(true)}>Weiter zu den Bildern</button>
+        </div>
+      </div>
+    );
+  }
 
   if (!fertig && karte) {
     return (

@@ -82,6 +82,7 @@ export default function Warenkorb({ positionen, guthabenCent, onGuthabenVerbrauc
           <div className="summe"><span>Zwischensumme</span><span>{euro(k.zwischensummeCent)}</span></div>
           {k.kaeuferschutzCent > 0 && <div className="summe"><span>Käuferschutz (gebraucht)</span><span>{euro(k.kaeuferschutzCent)}</span></div>}
           {transportCent > 0 && <div className="summe"><span>Transport in Chemnitz ({anzahlTransport}×)</span><span>{euro(transportCent)}</span></div>}
+          {transportCent > 0 && <p className="gedaempft" style={{ margin: 0, fontSize: ".8rem" }}>Davon gehen 15 % ({euro(Math.round((transportCent * 15) / 100))}) an ReRoom, den Rest bekommt der Transport-Partner. Die Buchung ist eine Demo.</p>}
           {g.abzugCent > 0 && <div className="summe gruen"><span>Dein Guthaben</span><span>− {euro(g.abzugCent)}</span></div>}
           <div className="summe gross"><span>Du zahlst</span><span>{euro(g.zuZahlenCent)}</span></div>
           {k.cashbackCent > 0 && (

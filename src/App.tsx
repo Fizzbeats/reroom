@@ -13,6 +13,8 @@ import Chat, { type Nachricht } from "./views/Chat";
 import Warenkorb from "./views/Warenkorb";
 import Verkaufen from "./views/Verkaufen";
 import KontoSeite from "./views/Konto";
+import GeteilteWohnung from "./views/GeteilteWohnung";
+import { leseTeilLink, teilLink, type Teilen } from "./logic/teilen";
 import { Icon, type IconName } from "./views/ui";
 import type { FestePlatz, Platzierung } from "./logic/einrichten";
 import { inseratZuMoebel, type Inserat } from "./logic/verkaufen";
@@ -42,6 +44,9 @@ export default function App() {
   const [stilFinderOffen, setStilFinderOffen] = useState(false);
   const [chatOffen, setChatOffen] = useState(false);
   const [kontoOffen, setKontoOffen] = useState(false);
+  // Wer einen Wohnungs-Link öffnet, sieht zuerst die geteilte Wohnung
+  const [geteilt, setGeteilt] = useState<Teilen | undefined>(() => leseTeilLink(location.hash));
+  const [geteiltRundgang, setGeteiltRundgang] = useState<Platzierung[]>();
   const [konto, setKonto] = useLokal<Konto>("reroom.konto", START_KONTO);
   const [nachrichten, setNachrichten] = useState<Nachricht[]>([]);
   const [verbrauch, setVerbrauch] = useLokal<Verbrauch>("reroom.chat", KEIN_VERBRAUCH);
@@ -107,6 +112,24 @@ export default function App() {
             onMessen={() => gehe("Messen")} onEntdecken={() => gehe("Entdecken")} onStilFinder={() => setStilFinderOffen(true)}
             onRundgang={setRundgang} onKonto={() => setKontoOffen(true)}
             feste={raum ? festePlaetze[raum.id] ?? {} : {}}
+            onTeilen={async (ids) => {
+              if (!raum) return "";
+              const link = teilLink({ raum, moebelIds: ids, feste: festePlaetze[raum.id] ?? {} }, location.origin + location.pathname);
+              if (navigator.share) {
+                try {
+                  await navigator.share({ title: `Meine Wohnung mit ReRoom: ${raum.name}`, url: link });
+                  return "";
+                } catch {
+                  /* abgebrochen: dann kopieren wir den Link */
+                }
+              }
+              try {
+                await navigator.clipboard.writeText(link);
+                return "Link kopiert. Wer ihn öffnet, sieht deine Wohnung.";
+              } catch {
+                return "Der Link konnte nicht kopiert werden.";
+              }
+            }}
             onFeste={(f) => raum && setFestePlaetze({ ...festePlaetze, [raum.id]: f })}
           />
         )}
@@ -198,6 +221,15 @@ export default function App() {
         />
       )}
 
+      {geteilt && basisKatalog.length > 0 && !geteiltRundgang && (
+        <GeteilteWohnung
+          daten={geteilt}
+          katalog={katalog}
+          onRundgang={setGeteiltRundgang}
+          onSchliessen={() => { setGeteilt(undefined); history.replaceState(null, "", location.pathname + location.search); }}
+        />
+      )}
+
       {kontoOffen && <KontoSeite konto={konto} katalog={katalog} onKonto={setKonto} onSchliessen={() => setKontoOffen(false)} />}
 
       {rundgang && raum && (
@@ -207,7 +239,13 @@ export default function App() {
         </Suspense>
       )}
 
-      {!willkommenGesehen && (
+      {geteilt && geteiltRundgang && (
+        <Suspense fallback={null}>
+          <Rundgang3D raum={geteilt.raum} platziert={geteiltRundgang} onSchliessen={() => setGeteiltRundgang(undefined)} videoErlaubt={tarif.video} onTarife={() => { setGeteiltRundgang(undefined); setKontoOffen(true); }} />
+        </Suspense>
+      )}
+
+      {!willkommenGesehen && !geteilt && (
         <Willkommen
           onMessen={() => { setWillkommenGesehen(true); gehe("Messen"); }}
           onStilFinder={() => { setWillkommenGesehen(true); setStilFinderOffen(true); }}

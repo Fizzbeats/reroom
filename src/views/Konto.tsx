@@ -6,6 +6,7 @@ import {
   type Konto as KontoDaten, type Tarif,
 } from "../logic/tarif";
 import { Icon } from "./ui";
+import Rechtliches, { type RechtlichesSeite } from "./Rechtliches";
 
 interface Props {
   konto: KontoDaten;
@@ -37,6 +38,8 @@ export default function Konto({ konto, katalog, onKonto, onSchliessen }: Props) 
   const aktiv = aktiverTarif(konto, jetzt);
   const aktion = aktionText(jetzt);
   const [hinweis, setHinweis] = useState("");
+  const [recht, setRecht] = useState<RechtlichesSeite>();
+  const [alarmMeldung, setAlarmMeldung] = useState("");
 
   useEffect(() => {
     const esc = (e: KeyboardEvent) => e.key === "Escape" && onSchliessen();
@@ -74,12 +77,17 @@ export default function Konto({ konto, katalog, onKonto, onSchliessen }: Props) 
         </div>
 
         <div className="konto-karte">
-          <small>Dein Tarif</small>
+          <small>{konto.name ? `Hallo ${konto.name}` : "Dein Tarif"}</small>
           <strong>{aktiv.name}</strong>
           <span>{gueltigBisText(konto, jetzt)}</span>
         </div>
         {aktion && <p className="aktion-banner">{aktion}</p>}
         <p className="gedaempft" style={{ fontSize: ".84rem", margin: "4px 0 0" }}>In dieser Demo wird nichts bezahlt. „Freischalten“ zeigt, wie es später aussieht.</p>
+
+        <label className="profil-feld">
+          Dein Name (Demo-Profil, bleibt auf diesem Gerät)
+          <input value={konto.name ?? ""} maxLength={30} autoComplete="off" placeholder="z. B. Alex" onChange={(e) => onKonto({ ...konto, name: e.target.value })} />
+        </label>
 
         <h2>Tarife</h2>
         {TARIFE.filter((t) => !t.fuerMakler).map((t) => (
@@ -113,14 +121,24 @@ export default function Konto({ konto, katalog, onKonto, onSchliessen }: Props) 
               {alarme.map((m) => (
                 <div className="reihe" key={m.id}>
                   <span>{m.name}</span>
-                  <button className="chip" onClick={() => onKonto(preisalarmUmschalten(konto, m.id))}>Entfernen</button>
+                  <span className="reihe" style={{ gap: 8 }}>
+                    <button className="chip" onClick={() => setAlarmMeldung(`Preisalarm: ${m.name} kostet jetzt ${Math.round(m.preis * 0.9).toLocaleString("de-DE")} € statt ${m.preis.toLocaleString("de-DE")} €. (Demo, −10 %)`)}>Demo: Preis sinkt</button>
+                    <button className="chip" onClick={() => onKonto(preisalarmUmschalten(konto, m.id))}>Entfernen</button>
+                  </span>
                 </div>
               ))}
-              <p className="gedaempft" style={{ margin: 0, fontSize: ".82rem" }}>Benachrichtigungen gibt es in dieser Demo noch nicht.</p>
+              {alarmMeldung && <p role="status" className="hinweis" style={{ margin: 0 }}>{alarmMeldung}</p>}
+              <p className="gedaempft" style={{ margin: 0, fontSize: ".82rem" }}>Echte Benachrichtigungen braucht ein Server. Hier zeigt „Demo: Preis sinkt“, wie sie später aussehen.</p>
             </div>
           </>
         )}
+
+        <p className="gedaempft" style={{ marginTop: 28, display: "flex", gap: 16 }}>
+          <button className="link" onClick={() => setRecht("datenschutz")}>Datenschutz</button>
+          <button className="link" onClick={() => setRecht("impressum")}>Impressum</button>
+        </p>
       </div>
+      {recht && <Rechtliches seite={recht} onSchliessen={() => setRecht(undefined)} />}
     </div>
   );
 }

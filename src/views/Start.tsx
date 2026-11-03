@@ -38,11 +38,13 @@ interface Props {
   /** Vom Nutzer verschobene Möbel dieses Raums */
   feste: Record<string, FestePlatz>;
   onFeste: (feste: Record<string, FestePlatz>) => void;
+  /** Teilt die Wohnung per Link; gibt eine Meldung für den Nutzer zurück */
+  onTeilen: (moebelIds: string[]) => Promise<string>;
 }
 
 /** Startseite: der eigene Raum als Grundriss mit Möbeln, dazu Stil und weitere Vorschläge. */
 export default function Start(props: Props) {
-  const { katalog, raeume, raum, imRaum, stile, onStile, onWaehlen, onOeffnen, onAlleInKorb, onMessen, onEntdecken, onStilFinder, onRundgang, onKonto, feste, onFeste } = props;
+  const { katalog, raeume, raum, imRaum, stile, onStile, onWaehlen, onOeffnen, onAlleInKorb, onMessen, onEntdecken, onStilFinder, onRundgang, onKonto, feste, onFeste, onTeilen } = props;
   const [platzHinweis, setPlatzHinweis] = useState("");
   const alleRaeume = [...raeume, ...BEISPIELRAEUME];
 
@@ -109,6 +111,7 @@ export default function Start(props: Props) {
               <span>Zusammen <b>{euro(summe)}</b></span>
               <span className="plan-knoepfe">
                 <button className="chip hell" onClick={() => onRundgang(plan.platziert)}><Icon name="wuerfel" groesse={16} /> 3D</button>
+                <button className="chip hell" onClick={() => void onTeilen(imPlan.map((m) => m.id)).then(setPlatzHinweis)}>Teilen</button>
                 <button className="chip hell" onClick={() => onAlleInKorb(imPlan.map((m) => m.id))}>Alle in den Korb</button>
               </span>
             </div>

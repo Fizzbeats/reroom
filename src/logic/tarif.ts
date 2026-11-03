@@ -49,6 +49,8 @@ export const TARIFE: Tarif[] = [
 export const tarifVon = (id: TarifId): Tarif => TARIFE.find((t) => t.id === id)!;
 
 export interface Konto {
+  /** Demo-Profil: nur ein Name, keine Anmeldung */
+  name?: string;
   tarif: TarifId;
   /** Ende der Laufzeit als ISO-Datum, leer bei Free */
   bis?: string;
