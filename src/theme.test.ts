@@ -1,0 +1,43 @@
+import { readFileSync } from "node:fs";
+import { describe, expect, it } from "vitest";
+import { FARBEN, kontrast } from "./theme";
+
+const css = readFileSync(new URL("./styles/tokens.css", import.meta.url), "utf8");
+const [hellCss, dunkelCss] = css.split("@media");
+
+const cssName = (k: string) => "--" + k.replace(/[A-Z]/g, (c) => "-" + c.toLowerCase());
+
+describe("Farben", () => {
+  it("Vorgabefarben aus dem Konzept", () => {
+    expect(FARBEN.hell.hintergrund).toBe("#F7F4EF");
+    expect(FARBEN.hell.primaer).toBe("#2F6B5E");
+    expect(FARBEN.hell.akzent).toBe("#E07A5F");
+  });
+
+  it.each(["hell", "dunkel"] as const)("tokens.css stimmt mit theme.ts überein (%s)", (modus) => {
+    const quelle = modus === "hell" ? hellCss : dunkelCss;
+    for (const [name, wert] of Object.entries(FARBEN[modus])) {
+      expect(quelle, `${cssName(name)} im Modus ${modus}`).toContain(`${cssName(name)}: ${wert};`);
+    }
+  });
+
+  it.each(["hell", "dunkel"] as const)("Texte haben mindestens Kontrast 4,5 (%s)", (modus) => {
+    const f = FARBEN[modus];
+    expect(kontrast(f.text, f.hintergrund)).toBeGreaterThanOrEqual(4.5);
+    expect(kontrast(f.text, f.karte)).toBeGreaterThanOrEqual(4.5);
+    expect(kontrast(f.textGedaempft, f.hintergrund)).toBeGreaterThanOrEqual(4.5);
+    expect(kontrast(f.aufPrimaer, f.primaer)).toBeGreaterThanOrEqual(4.5);
+  });
+
+  it("Ampelfarben sind auf der Karte erkennbar (Kontrast ab 3)", () => {
+    for (const f of [FARBEN.hell, FARBEN.dunkel]) {
+      for (const a of [f.ampelGruen, f.ampelGelb, f.ampelRot]) {
+        expect(kontrast(a, f.karte)).toBeGreaterThanOrEqual(3);
+      }
+    }
+  });
+
+  it("Kontrastberechnung: Schwarz auf Weiß = 21", () => {
+    expect(kontrast("#000000", "#FFFFFF")).toBeCloseTo(21, 5);
+  });
+});

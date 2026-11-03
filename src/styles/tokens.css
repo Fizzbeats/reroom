@@ -1,0 +1,27 @@
+:root {
+  --hintergrund: #F7F4EF;
+  --karte: #FFFFFF;
+  --text: #1F2A27;
+  --text-gedaempft: #55625E;
+  --primaer: #2F6B5E;
+  --auf-primaer: #FFFFFF;
+  --akzent: #E07A5F;
+  --ampel-gruen: #2E8B57;
+  --ampel-gelb: #B07F00;
+  --ampel-rot: #C0392B;
+  --radius: 16px;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --hintergrund: #16201D;
+    --karte: #1F2B28;
+    --text: #EDEBE6;
+    --text-gedaempft: #A9B4B0;
+    --primaer: #6FBFAE;
+    --auf-primaer: #0F1A17;
+    --akzent: #E8917B;
+    --ampel-gruen: #4CAF7A;
+    --ampel-gelb: #F0BE2E;
+    --ampel-rot: #E8604F;
+  }
+}

@@ -1,0 +1,639 @@
+[
+  {
+    "id": "sofa-01",
+    "name": "Sofa Lund",
+    "kategorie": "sofa",
+    "zustand": "gebraucht",
+    "preis": 180,
+    "anbieter": "Privat, Chemnitz-Kaßberg",
+    "entfernungKm": 1,
+    "masseCm": {
+      "breite": 200,
+      "tiefe": 85,
+      "hoehe": 80
+    },
+    "stile": [
+      "skandi"
+    ],
+    "farben": [
+      "grau"
+    ],
+    "beschreibung": "Gemütliches Zweisitzer-Sofa, kaum benutzt."
+  },
+  {
+    "id": "sofa-02",
+    "name": "Sofa Vik",
+    "kategorie": "sofa",
+    "zustand": "neu",
+    "preis": 649,
+    "anbieter": "Stilhaus Elbe",
+    "masseCm": {
+      "breite": 220,
+      "tiefe": 95,
+      "hoehe": 82
+    },
+    "stile": [
+      "modern"
+    ],
+    "farben": [
+      "grau",
+      "schwarz"
+    ],
+    "beschreibung": "Dreisitzer mit festem Polster und schlanken Metallfüßen."
+  },
+  {
+    "id": "sofa-03",
+    "name": "Sofa Dahl",
+    "kategorie": "sofa",
+    "zustand": "neu",
+    "preis": 799,
+    "anbieter": "Möbelmanufaktur Sonnenberg",
+    "masseCm": {
+      "breite": 240,
+      "tiefe": 100,
+      "hoehe": 78
+    },
+    "stile": [
+      "boho",
+      "vintage"
+    ],
+    "farben": [
+      "terrakotta"
+    ],
+    "beschreibung": "Weiches Samtsofa in warmem Terrakotta."
+  },
+  {
+    "id": "sofa-04",
+    "name": "Sofa Bruk",
+    "kategorie": "sofa",
+    "zustand": "gebraucht",
+    "preis": 260,
+    "anbieter": "Privat, Chemnitz-Gablenz",
+    "entfernungKm": 7,
+    "masseCm": {
+      "breite": 190,
+      "tiefe": 90,
+      "hoehe": 75
+    },
+    "stile": [
+      "industrial"
+    ],
+    "farben": [
+      "schwarz",
+      "braun"
+    ],
+    "beschreibung": "Lederoptik-Sofa mit Patina, abholbereit."
+  },
+  {
+    "id": "bett-01",
+    "name": "Bett Fjord",
+    "kategorie": "bett",
+    "zustand": "neu",
+    "preis": 449,
+    "anbieter": "Stilhaus Elbe",
+    "masseCm": {
+      "breite": 160,
+      "tiefe": 210,
+      "hoehe": 95
+    },
+    "stile": [
+      "skandi"
+    ],
+    "farben": [
+      "holz",
+      "weiss"
+    ],
+    "beschreibung": "Bett mit Kopfteil aus heller Kiefer, 140 × 200 cm Matratze."
+  },
+  {
+    "id": "bett-02",
+    "name": "Bett Stahl",
+    "kategorie": "bett",
+    "zustand": "neu",
+    "preis": 529,
+    "anbieter": "Möbelmanufaktur Sonnenberg",
+    "masseCm": {
+      "breite": 180,
+      "tiefe": 215,
+      "hoehe": 90
+    },
+    "stile": [
+      "industrial"
+    ],
+    "farben": [
+      "schwarz"
+    ],
+    "beschreibung": "Metallbett mit schlichtem Rahmen, 160 × 200 cm Matratze."
+  },
+  {
+    "id": "bett-03",
+    "name": "Bett Moos",
+    "kategorie": "bett",
+    "zustand": "gebraucht",
+    "preis": 120,
+    "anbieter": "Privat, Chemnitz-Kaßberg",
+    "entfernungKm": 15,
+    "masseCm": {
+      "breite": 100,
+      "tiefe": 205,
+      "hoehe": 85
+    },
+    "stile": [
+      "vintage",
+      "boho"
+    ],
+    "farben": [
+      "holz"
+    ],
+    "beschreibung": "Einzelbett aus Massivholz, 90 × 200 cm Matratze."
+  },
+  {
+    "id": "schrank-01",
+    "name": "Kleiderschrank Nord",
+    "kategorie": "schrank",
+    "zustand": "neu",
+    "preis": 389,
+    "anbieter": "Stilhaus Elbe",
+    "masseCm": {
+      "breite": 200,
+      "tiefe": 60,
+      "hoehe": 210
+    },
+    "stile": [
+      "skandi",
+      "modern"
+    ],
+    "farben": [
+      "weiss"
+    ],
+    "beschreibung": "Zweitüriger Schrank mit Kleiderstange und Fächern."
+  },
+  {
+    "id": "schrank-02",
+    "name": "Kleiderschrank Eiche",
+    "kategorie": "schrank",
+    "zustand": "gebraucht",
+    "preis": 150,
+    "anbieter": "Privat, Chemnitz-Schloßchemnitz",
+    "entfernungKm": 3,
+    "masseCm": {
+      "breite": 150,
+      "tiefe": 55,
+      "hoehe": 195
+    },
+    "stile": [
+      "vintage"
+    ],
+    "farben": [
+      "holz"
+    ],
+    "beschreibung": "Massiver Eichenschrank, ein Fuß leicht abgenutzt."
+  },
+  {
+    "id": "schrank-03",
+    "name": "Schiebetürschrank Linie",
+    "kategorie": "schrank",
+    "zustand": "neu",
+    "preis": 679,
+    "anbieter": "Wohnwerk Nord",
+    "masseCm": {
+      "breite": 250,
+      "tiefe": 65,
+      "hoehe": 230
+    },
+    "stile": [
+      "modern"
+    ],
+    "farben": [
+      "grau",
+      "weiss"
+    ],
+    "beschreibung": "Großer Schrank mit Schiebetüren."
+  },
+  {
+    "id": "schrank-04",
+    "name": "Sideboard Wiese",
+    "kategorie": "schrank",
+    "zustand": "gebraucht",
+    "preis": 90,
+    "anbieter": "Privat, Chemnitz-Hilbersdorf",
+    "entfernungKm": 7,
+    "masseCm": {
+      "breite": 140,
+      "tiefe": 40,
+      "hoehe": 75
+    },
+    "stile": [
+      "skandi",
+      "boho"
+    ],
+    "farben": [
+      "holz",
+      "weiss"
+    ],
+    "beschreibung": "Niedriges Sideboard mit drei Schubladen."
+  },
+  {
+    "id": "tisch-01",
+    "name": "Esstisch Birke",
+    "kategorie": "tisch",
+    "zustand": "neu",
+    "preis": 299,
+    "anbieter": "Möbelmanufaktur Sonnenberg",
+    "masseCm": {
+      "breite": 160,
+      "tiefe": 90,
+      "hoehe": 75
+    },
+    "stile": [
+      "skandi"
+    ],
+    "farben": [
+      "holz"
+    ],
+    "beschreibung": "Esstisch für vier bis sechs Personen."
+  },
+  {
+    "id": "tisch-02",
+    "name": "Esstisch Rohr",
+    "kategorie": "tisch",
+    "zustand": "neu",
+    "preis": 359,
+    "anbieter": "Wohnwerk Nord",
+    "masseCm": {
+      "breite": 180,
+      "tiefe": 90,
+      "hoehe": 76
+    },
+    "stile": [
+      "industrial"
+    ],
+    "farben": [
+      "schwarz",
+      "holz"
+    ],
+    "beschreibung": "Tischplatte aus Holz auf Stahlgestell."
+  },
+  {
+    "id": "tisch-03",
+    "name": "Couchtisch Rund",
+    "kategorie": "tisch",
+    "zustand": "gebraucht",
+    "preis": 45,
+    "anbieter": "Privat, Chemnitz-Sonnenberg",
+    "entfernungKm": 15,
+    "masseCm": {
+      "breite": 80,
+      "tiefe": 80,
+      "hoehe": 40
+    },
+    "stile": [
+      "vintage",
+      "boho"
+    ],
+    "farben": [
+      "holz"
+    ],
+    "beschreibung": "Kleiner runder Couchtisch."
+  },
+  {
+    "id": "tisch-04",
+    "name": "Schreibtisch Klar",
+    "kategorie": "tisch",
+    "zustand": "neu",
+    "preis": 199,
+    "anbieter": "Möbelmanufaktur Sonnenberg",
+    "masseCm": {
+      "breite": 140,
+      "tiefe": 70,
+      "hoehe": 74
+    },
+    "stile": [
+      "modern",
+      "skandi"
+    ],
+    "farben": [
+      "weiss"
+    ],
+    "beschreibung": "Schlanker Schreibtisch mit Kabeldurchlass."
+  },
+  {
+    "id": "tisch-05",
+    "name": "Schreibtisch Werk",
+    "kategorie": "tisch",
+    "zustand": "gebraucht",
+    "preis": 70,
+    "anbieter": "Privat, Chemnitz-Gablenz",
+    "entfernungKm": 3,
+    "masseCm": {
+      "breite": 120,
+      "tiefe": 60,
+      "hoehe": 75
+    },
+    "stile": [
+      "industrial"
+    ],
+    "farben": [
+      "grau"
+    ],
+    "beschreibung": "Stabiler Arbeitstisch, leichte Kratzer."
+  },
+  {
+    "id": "stuhl-01",
+    "name": "Stuhl Ahorn",
+    "kategorie": "stuhl",
+    "zustand": "neu",
+    "preis": 69,
+    "anbieter": "Stilhaus Elbe",
+    "masseCm": {
+      "breite": 45,
+      "tiefe": 50,
+      "hoehe": 82
+    },
+    "stile": [
+      "skandi"
+    ],
+    "farben": [
+      "holz"
+    ],
+    "beschreibung": "Klassischer Holzstuhl."
+  },
+  {
+    "id": "stuhl-02",
+    "name": "Stuhl Kurve",
+    "kategorie": "stuhl",
+    "zustand": "neu",
+    "preis": 89,
+    "anbieter": "Möbelmanufaktur Sonnenberg",
+    "masseCm": {
+      "breite": 50,
+      "tiefe": 55,
+      "hoehe": 80
+    },
+    "stile": [
+      "modern"
+    ],
+    "farben": [
+      "grau"
+    ],
+    "beschreibung": "Gepolsterter Stuhl mit geschwungener Lehne."
+  },
+  {
+    "id": "stuhl-03",
+    "name": "Stuhl Schule",
+    "kategorie": "stuhl",
+    "zustand": "gebraucht",
+    "preis": 20,
+    "anbieter": "Privat, Chemnitz-Kaßberg",
+    "entfernungKm": 9,
+    "masseCm": {
+      "breite": 40,
+      "tiefe": 42,
+      "hoehe": 85
+    },
+    "stile": [
+      "vintage",
+      "industrial"
+    ],
+    "farben": [
+      "holz",
+      "schwarz"
+    ],
+    "beschreibung": "Alter Schulstuhl, robust."
+  },
+  {
+    "id": "stuhl-04",
+    "name": "Sessel Pilz",
+    "kategorie": "stuhl",
+    "zustand": "gebraucht",
+    "preis": 95,
+    "anbieter": "Privat, Chemnitz-Sonnenberg",
+    "entfernungKm": 12,
+    "masseCm": {
+      "breite": 75,
+      "tiefe": 80,
+      "hoehe": 85
+    },
+    "stile": [
+      "boho",
+      "vintage"
+    ],
+    "farben": [
+      "terrakotta",
+      "braun"
+    ],
+    "beschreibung": "Bequemer Sessel mit hoher Lehne."
+  },
+  {
+    "id": "regal-01",
+    "name": "Regal Leiter",
+    "kategorie": "regal",
+    "zustand": "neu",
+    "preis": 129,
+    "anbieter": "Möbelmanufaktur Sonnenberg",
+    "masseCm": {
+      "breite": 60,
+      "tiefe": 35,
+      "hoehe": 180
+    },
+    "stile": [
+      "boho",
+      "skandi"
+    ],
+    "farben": [
+      "holz"
+    ],
+    "beschreibung": "Offenes Leiterregal mit fünf Böden."
+  },
+  {
+    "id": "regal-02",
+    "name": "Regal Raster",
+    "kategorie": "regal",
+    "zustand": "neu",
+    "preis": 169,
+    "anbieter": "Wohnwerk Nord",
+    "masseCm": {
+      "breite": 100,
+      "tiefe": 35,
+      "hoehe": 190
+    },
+    "stile": [
+      "industrial",
+      "modern"
+    ],
+    "farben": [
+      "schwarz"
+    ],
+    "beschreibung": "Metallregal mit Holzböden."
+  },
+  {
+    "id": "regal-03",
+    "name": "Bücherregal Alt",
+    "kategorie": "regal",
+    "zustand": "gebraucht",
+    "preis": 55,
+    "anbieter": "Privat, Chemnitz-Hilbersdorf",
+    "entfernungKm": 3,
+    "masseCm": {
+      "breite": 90,
+      "tiefe": 30,
+      "hoehe": 200
+    },
+    "stile": [
+      "vintage"
+    ],
+    "farben": [
+      "holz",
+      "braun"
+    ],
+    "beschreibung": "Hohes Bücherregal mit verstellbaren Böden."
+  },
+  {
+    "id": "regal-04",
+    "name": "Wandregal Linie",
+    "kategorie": "regal",
+    "zustand": "neu",
+    "preis": 39,
+    "anbieter": "Möbelmanufaktur Sonnenberg",
+    "masseCm": {
+      "breite": 80,
+      "tiefe": 20,
+      "hoehe": 25
+    },
+    "stile": [
+      "modern",
+      "skandi"
+    ],
+    "farben": [
+      "weiss"
+    ],
+    "beschreibung": "Schmales Wandregal zum Schrauben."
+  },
+  {
+    "id": "lampe-01",
+    "name": "Stehlampe Bogen",
+    "kategorie": "lampe",
+    "zustand": "neu",
+    "preis": 79,
+    "anbieter": "Wohnwerk Nord",
+    "masseCm": {
+      "breite": 40,
+      "tiefe": 40,
+      "hoehe": 170
+    },
+    "stile": [
+      "modern"
+    ],
+    "farben": [
+      "schwarz"
+    ],
+    "beschreibung": "Bogenlampe mit warmem Licht."
+  },
+  {
+    "id": "lampe-02",
+    "name": "Tischlampe Pilz",
+    "kategorie": "lampe",
+    "zustand": "gebraucht",
+    "preis": 15,
+    "anbieter": "Privat, Chemnitz-Sonnenberg",
+    "entfernungKm": 9,
+    "masseCm": {
+      "breite": 25,
+      "tiefe": 25,
+      "hoehe": 40
+    },
+    "stile": [
+      "vintage"
+    ],
+    "farben": [
+      "weiss"
+    ],
+    "beschreibung": "Kleine Tischlampe, funktioniert einwandfrei."
+  },
+  {
+    "id": "lampe-03",
+    "name": "Stehlampe Rohr",
+    "kategorie": "lampe",
+    "zustand": "neu",
+    "preis": 99,
+    "anbieter": "Möbelmanufaktur Sonnenberg",
+    "masseCm": {
+      "breite": 35,
+      "tiefe": 35,
+      "hoehe": 160
+    },
+    "stile": [
+      "industrial"
+    ],
+    "farben": [
+      "schwarz",
+      "grau"
+    ],
+    "beschreibung": "Stehlampe im Rohr-Stil."
+  },
+  {
+    "id": "teppich-01",
+    "name": "Teppich Wolke",
+    "kategorie": "teppich",
+    "zustand": "neu",
+    "preis": 149,
+    "anbieter": "Wohnwerk Nord",
+    "masseCm": {
+      "breite": 200,
+      "tiefe": 140,
+      "hoehe": 2
+    },
+    "stile": [
+      "skandi",
+      "modern"
+    ],
+    "farben": [
+      "grau",
+      "weiss"
+    ],
+    "beschreibung": "Weicher Hochflorteppich."
+  },
+  {
+    "id": "teppich-02",
+    "name": "Teppich Wüste",
+    "kategorie": "teppich",
+    "zustand": "neu",
+    "preis": 119,
+    "anbieter": "Stilhaus Elbe",
+    "masseCm": {
+      "breite": 170,
+      "tiefe": 120,
+      "hoehe": 1
+    },
+    "stile": [
+      "boho"
+    ],
+    "farben": [
+      "terrakotta"
+    ],
+    "beschreibung": "Gewebter Teppich mit Muster."
+  },
+  {
+    "id": "teppich-03",
+    "name": "Teppich Kelim",
+    "kategorie": "teppich",
+    "zustand": "gebraucht",
+    "preis": 35,
+    "anbieter": "Privat, Chemnitz-Altchemnitz",
+    "entfernungKm": 3,
+    "masseCm": {
+      "breite": 160,
+      "tiefe": 230,
+      "hoehe": 1
+    },
+    "stile": [
+      "boho",
+      "vintage"
+    ],
+    "farben": [
+      "terrakotta",
+      "braun"
+    ],
+    "beschreibung": "Gebrauchter Kelim, gut erhalten."
+  }
+]

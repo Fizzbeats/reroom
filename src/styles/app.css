@@ -1,0 +1,52 @@
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--hintergrund);
+  color: var(--text);
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  line-height: 1.45;
+}
+.app { max-width: 720px; margin: 0 auto; padding: 16px 16px 96px; }
+h1 { margin: 8px 0 4px; }
+h2 { margin: 24px 0 8px; font-size: 1.15rem; }
+.slogan, .gedaempft { color: var(--text-gedaempft); }
+.karte {
+  background: var(--karte);
+  border-radius: var(--radius);
+  padding: 16px;
+  margin: 12px 0;
+  box-shadow: 0 1px 3px rgb(0 0 0 / 0.08);
+}
+.reihe { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; justify-content: space-between; }
+button, select, input {
+  font: inherit;
+  color: inherit;
+  border-radius: 12px;
+  border: 1px solid var(--text-gedaempft);
+  background: var(--karte);
+  padding: 8px 12px;
+  min-height: 44px;
+}
+button.primaer { background: var(--primaer); color: var(--auf-primaer); border-color: var(--primaer); font-weight: 600; }
+button.chip[aria-pressed="true"] { background: var(--primaer); color: var(--auf-primaer); border-color: var(--primaer); }
+button:focus-visible, input:focus-visible, select:focus-visible { outline: 3px solid var(--akzent); outline-offset: 2px; }
+label { display: block; margin: 8px 0; }
+label input { display: block; width: 100%; }
+input[type="range"] { padding: 0; }
+.chips { display: flex; gap: 8px; flex-wrap: wrap; }
+.ampel { display: inline-flex; align-items: center; gap: 6px; font-weight: 600; }
+.ampel::before { content: ""; width: 12px; height: 12px; border-radius: 50%; background: currentColor; }
+.ampel.gruen { color: var(--ampel-gruen); }
+.ampel.gelb { color: var(--ampel-gelb); }
+.ampel.rot { color: var(--ampel-rot); }
+.badge { background: var(--akzent); color: #1F2A27; border-radius: 999px; padding: 2px 10px; font-size: 0.85rem; font-weight: 600; }
+.tabs {
+  position: fixed; left: 0; right: 0; bottom: 0;
+  display: flex; background: var(--karte);
+  border-top: 1px solid rgb(128 128 128 / 0.3);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.tabs button { flex: 1; border: 0; border-radius: 0; background: transparent; padding: 10px 4px; font-size: 0.85rem; }
+.tabs button[aria-current="page"] { color: var(--primaer); font-weight: 700; }
+.summe { display: flex; justify-content: space-between; margin: 4px 0; }
+.summe.gross { font-weight: 700; font-size: 1.1rem; border-top: 1px solid rgb(128 128 128 / 0.4); padding-top: 8px; }
