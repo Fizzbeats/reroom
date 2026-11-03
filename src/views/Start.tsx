@@ -1,5 +1,6 @@
 import type { Raum } from "../models/types";
 import { BEISPIELRAEUME } from "../data/raeume";
+import Szene from "./Szene";
 
 interface Props {
   raeume: Raum[];
@@ -14,6 +15,7 @@ export default function Start({ raeume, aktiverRaum, onWaehlen, onScannen }: Pro
     <section>
       <h1>ReRoom</h1>
       <p className="slogan">Scannen, Stil wählen, günstiger einrichten.</p>
+      <Szene />
       <h2>Meine Räume</h2>
       {alle.map((r) => (
         <div className="karte reihe" key={r.id}>

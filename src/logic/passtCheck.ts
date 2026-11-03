@@ -78,6 +78,6 @@ export function pruefePasst(m: Masse, raum: Raum): PasstErgebnis {
   const ampel = ampelFuer(knappste.spielraumCm);
   const hinweis = ampel === "gelb" ? " Bitte nachmessen." : "";
   const begruendung =
-    ampel === "gruen" ? "Passt: Tür, Treppenhaus und Raum haben genug Platz." : knappste.text + hinweis;
+    ampel === "gruen" ? "Tür, Treppenhaus und Raum haben genug Platz." : knappste.text + hinweis;
   return { ampel, spielraumCm: knappste.spielraumCm, begruendung };
 }

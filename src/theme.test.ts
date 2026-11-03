@@ -8,10 +8,14 @@ const [hellCss, dunkelCss] = css.split("@media");
 const cssName = (k: string) => "--" + k.replace(/[A-Z]/g, (c) => "-" + c.toLowerCase());
 
 describe("Farben", () => {
-  it("Vorgabefarben aus dem Konzept", () => {
-    expect(FARBEN.hell.hintergrund).toBe("#F7F4EF");
-    expect(FARBEN.hell.primaer).toBe("#2F6B5E");
-    expect(FARBEN.hell.akzent).toBe("#E07A5F");
+  it("Vorgabefarben aus dem gewählten Entwurf „Wohnstube“", () => {
+    expect(FARBEN.hell.hintergrund).toBe("#F4E8CC");
+    expect(FARBEN.hell.primaer).toBe("#3F5B3A");
+    expect(FARBEN.hell.akzent).toBe("#D9A11E");
+  });
+
+  it.each(["hell", "dunkel"] as const)("Text auf Akzent-Badges ist lesbar (%s)", (modus) => {
+    expect(kontrast(FARBEN[modus].aufAkzent, FARBEN[modus].akzent)).toBeGreaterThanOrEqual(4.5);
   });
 
   it.each(["hell", "dunkel"] as const)("tokens.css stimmt mit theme.ts überein (%s)", (modus) => {

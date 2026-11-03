@@ -50,7 +50,7 @@ describe("PasstCheck", () => {
   it("grün bei viel Platz", () => {
     const r = pruefePasst({ breite: 45, tiefe: 50, hoehe: 82 }, wohn);
     expect(r.ampel).toBe("gruen");
-    expect(r.begruendung).toContain("Passt");
+    expect(r.begruendung).toContain("genug Platz");
   });
 
   it("rot mit Begründung, wenn es nicht durch die Tür passt", () => {

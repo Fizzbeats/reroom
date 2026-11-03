@@ -75,12 +75,12 @@ export default function Entdecken({ katalog, raum, korb, onKorb }: Props) {
               {m.entfernungKm !== undefined && ` · ${m.entfernungKm} km`} · {m.masseCm.breite} × {m.masseCm.tiefe} × {m.masseCm.hoehe} cm
             </div>
             <p>{m.beschreibung}</p>
-            <div className="reihe">
+            <div className="reihe trenner">
               <strong>{euro(alsCent(m.preis))}</strong>
               {m.zustand === "neu" && <span className="gedaempft">4 % Cashback: {euro(cashbackCent(alsCent(m.preis)))}</span>}
             </div>
             {passt && (
-              <p>
+              <p className="trenner">
                 <span className={`ampel ${passt.ampel}`}>{AMPEL_TEXT[passt.ampel]}</span>
                 <br />
                 <span className="gedaempft">{passt.begruendung}</span>

@@ -14,7 +14,7 @@
 >
 > **Design-Entwürfe:** 5 Stilrichtungen mit bewegter Deko unter `public/entwuerfe/` (im Browser: `/entwuerfe/`).
 >
-> **Noch offen im Web-Entwurf:** Entscheidung für einen Design-Entwurf, 3D-Raum, Stil-Finder mit Wisch-Karten, Möbel-Detailseite, Chatbot, Live-Messung per AR (WebXR, nur Android).
+> **Noch offen im Web-Entwurf:** 3D-Raum, Stil-Finder mit Wisch-Karten, Möbel-Detailseite, Chatbot, Live-Messung per AR (WebXR, nur Android).
 >
 > **Befehle:** `npm install`, `npm run dev` (Entwicklung), `npm test`, `npm run build`.
 > **CI:** `.github/workflows/ci.yml` (Typen, Tests, Build bei jedem Push und Pull Request).
@@ -151,11 +151,12 @@ TabView unten mit: **Start**, **Scannen**, **Entdecken**, **Warenkorb**, **Verka
 
 ## Design
 
-- Hell und ruhig, viel Weißraum, abgerundete Karten (Eckenradius 16).
+- Stil „Wohnstube" (Vintage, gewählt aus 5 Entwürfen): warm, viel Weißraum, feine Linien, Karten mit Eckenradius 10, Serifenschrift (Georgia).
+- Bewegte Deko-Szene auf der Startseite (Pendeluhr, Plattenspieler, Dampf, Katze), bewegt sich leicht mit dem Finger mit und hält bei „Bewegung reduzieren" still.
 - Farben im Asset-Katalog (jeweils mit Dark-Mode-Variante):
-  - Hintergrund `#F7F4EF`
-  - Primär Dunkelgrün `#2F6B5E`
-  - Akzent Terrakotta `#E07A5F`
+  - Hintergrund `#F4E8CC`, Karten `#FBF3DE`
+  - Primär Waldgrün `#3F5B3A`
+  - Akzent Senfgelb `#D9A11E`
   - Ampel: grün, gelb, rot
 - SF Symbols für Icons, Systemschrift.
 

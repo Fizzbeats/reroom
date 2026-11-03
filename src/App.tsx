@@ -11,6 +11,7 @@ import Verkaufen from "./views/Verkaufen";
 
 const TABS = ["Start", "Scannen", "Entdecken", "Warenkorb", "Verkaufen"] as const;
 type Tab = (typeof TABS)[number];
+const ICONS: Record<Tab, string> = { Start: "🏠", Scannen: "📐", Entdecken: "🔍", Warenkorb: "🛒", Verkaufen: "🏷️" };
 
 const repository = new LokalesMoebelRepository();
 
@@ -54,6 +55,7 @@ export default function App() {
       <nav className="tabs" aria-label="Hauptmenü">
         {TABS.map((t) => (
           <button key={t} aria-current={tab === t ? "page" : undefined} onClick={() => setTab(t)}>
+            <b aria-hidden="true">{ICONS[t]}</b>
             {t === "Warenkorb" && korb.length > 0 ? `${t} (${korb.length})` : t}
           </button>
         ))}
