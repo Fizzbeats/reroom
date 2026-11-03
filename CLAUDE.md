@@ -22,13 +22,17 @@
 >
 > **Messen auf dem iPhone (umgesetzt):** Safari kann kein WebXR, also keine Live-Messung im Browser. Stattdessen führt `src/views/MessAssistent.tsx` durch 6 Maße (ein Maß pro Bildschirm, Skizze, Prüfung in `src/logic/messSchritte.ts`), misst auf Wunsch per Foto mit Bankkarte oder verweist auf die Maßband-App des iPhones (`measure://`). Ein vollautomatischer Scan auf dem iPhone geht nur mit einer eigenen App (RoomPlan, nur iPhone 12 Pro und neuer mit LiDAR, Apple-Entwicklerkonto 99 €/Jahr).
 >
+> **Chatbot und 3D (umgesetzt, laut Businessplan):**
+> - Chatbot als Sheet (`src/views/Chat.tsx`), erreichbar über den runden Knopf rechts unten (nicht oben rechts, dort liegen schon Filter und „Neu messen“). Logik in `src/logic/chatbot.ts`: versteht Möbelart, Farbe, Stil, Preis, Zustand, Entfernung und Nische, fragt bei „Nische“ nach der Breite, lockert Wünsche und sagt was weggelassen wurde, beantwortet „Passt das Sofa Lund durch meine Tür?“. Schlägt nur Möbel vor, die im Passt-Check nicht rot sind. Free-Tarif: 5 Fragen pro Tag (`src/logic/chatLimit.ts`), Umzugs-Pass-Knopf ist eine Demo ohne Zahlung. Später austauschbar gegen die Claude-API über eine Cloud-Funktion (Stufe 2).
+> - 3D-Rundgang (`src/views/Rundgang3D.tsx`, `src/services/szene3d.ts`, Berechnung in `src/logic/ausrichtung.ts`): Knopf „3D“ auf der Raumkarte. Überblick (drehen und zoomen) und Rundgang (Kamera geht durch den Raum). three.js wird erst beim Öffnen geladen.
+>
 > **Erlebnis für neue Kunden (umgesetzt):**
 > - Willkommen-Karten beim ersten Besuch (`src/views/Willkommen.tsx`): Messen, Stil finden, Sparen.
 > - Möbel im eigenen Grundriss: automatische Platzierung (`src/logic/einrichten.ts`), Startseite zeigt „So könnte es aussehen“, Detailseite hat „Foto / In meinem Raum“ mit Weg durch die Tür. Eigene Auswahl je Raum in `reroom.imRaum`.
 > - Stil-Finder zum Wischen (`src/views/StilFinder.tsx`, Karten in `src/data/inspo.ts`, Auswertung und Zimmer-Set in `src/logic/stilAuswertung.ts`) mit Budget fürs ganze Zimmer.
 > - Teppiche werden im Passt-Check für Tür und Treppe gerollt gerechnet (`pruefeMoebel`).
 >
-> **Noch offen (laut Businessplan):** eigene Inspo-Bilder hochladen, Möbel im Grundriss per Finger verschieben, 3D-Rundgang, Chatbot, Verkaufserlös als Guthaben mit 5 % Bonus, QR-Übergabe, Transport-Partner, Free = 1 Raum, Möbel-Detailseite, Möbelbilder.
+> **Noch offen (laut Businessplan):** eigene Inspo-Bilder hochladen, Möbel im Grundriss per Finger verschieben, 3D-Rundgang, Verkaufserlös als Guthaben mit 5 % Bonus, QR-Übergabe, Transport-Partner, Free = 1 Raum, Möbel-Detailseite, Möbelbilder.
 >
 > **Befehle:** `npm install`, `npm run dev` (Entwicklung), `npm test`, `npm run build`.
 > **CI:** `.github/workflows/ci.yml` (Typen, Tests, Build bei jedem Push und Pull Request).

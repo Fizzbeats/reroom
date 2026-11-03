@@ -2,7 +2,7 @@ import type { Moebel, Raum, Stil } from "../models/types";
 import { BEISPIELRAEUME } from "../data/raeume";
 import { findePassende } from "../logic/stilFinder";
 import { pruefeMoebel } from "../logic/passtCheck";
-import { einrichten } from "../logic/einrichten";
+import { einrichten, type Platzierung } from "../logic/einrichten";
 import { zimmerSet } from "../logic/stilAuswertung";
 import { alsCent, euro } from "../logic/preisRechner";
 import { Grundriss, Icon, ProduktKarte } from "./ui";
@@ -30,11 +30,12 @@ interface Props {
   onMessen: () => void;
   onEntdecken: () => void;
   onStilFinder: () => void;
+  onRundgang: (platziert: Platzierung[]) => void;
 }
 
 /** Startseite: der eigene Raum als Grundriss mit Möbeln, dazu Stil und weitere Vorschläge. */
 export default function Start(props: Props) {
-  const { katalog, raeume, raum, imRaum, stile, onStile, onWaehlen, onOeffnen, onAlleInKorb, onMessen, onEntdecken, onStilFinder } = props;
+  const { katalog, raeume, raum, imRaum, stile, onStile, onWaehlen, onOeffnen, onAlleInKorb, onMessen, onEntdecken, onStilFinder, onRundgang } = props;
   const alleRaeume = [...raeume, ...BEISPIELRAEUME];
 
   // Eigene Auswahl im Raum, sonst ein automatischer Vorschlag
@@ -75,7 +76,10 @@ export default function Start(props: Props) {
           {imPlan.length > 0 && (
             <div className="plan-leiste">
               <span>Zusammen <b>{euro(summe)}</b></span>
-              <button className="chip hell" onClick={() => onAlleInKorb(imPlan.map((m) => m.id))}>Alle in den Korb</button>
+              <span className="plan-knoepfe">
+                <button className="chip hell" onClick={() => onRundgang(plan.platziert)}><Icon name="wuerfel" groesse={16} /> 3D</button>
+                <button className="chip hell" onClick={() => onAlleInKorb(imPlan.map((m) => m.id))}>Alle in den Korb</button>
+              </span>
             </div>
           )}
           <p className="plan-tipp">Tippe auf ein Möbel im Grundriss, um es anzusehen.</p>

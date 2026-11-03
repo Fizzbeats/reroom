@@ -19,6 +19,8 @@ const PFADE = {
   plus: <path d="M12 5v14M5 12h14" strokeLinecap="round" />,
   schliessen: <path d="M6 6l12 12M18 6 6 18" strokeLinecap="round" />,
   foto: <><rect x="3" y="5" width="18" height="14" rx="2" /><circle cx="9" cy="10" r="1.5" /><path d="m21 16-5-5-8 8" strokeLinejoin="round" /></>,
+  chat: <path d="M4 5h16v11H9l-5 4z" strokeLinejoin="round" />,
+  wuerfel: <path d="M12 3 4 7.5v9L12 21l8-4.5v-9zM4 7.5l8 4.5 8-4.5M12 12v9" strokeLinejoin="round" />,
   funkeln: <path d="M12 3v4M12 17v4M3 12h4M17 12h4M6 6l2.5 2.5M15.5 15.5 18 18M6 18l2.5-2.5M15.5 8.5 18 6" strokeLinecap="round" />,
 };
 export type IconName = keyof typeof PFADE;

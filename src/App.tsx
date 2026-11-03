@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import type { Moebel, Raum, Stil } from "./models/types";
 import { BEISPIELRAEUME } from "./data/raeume";
 import { LokalesMoebelRepository } from "./data/moebelRepository";
@@ -9,9 +9,15 @@ import Entdecken from "./views/Entdecken";
 import Detail from "./views/Detail";
 import StilFinder from "./views/StilFinder";
 import Willkommen from "./views/Willkommen";
+import Chat, { type Nachricht } from "./views/Chat";
 import Warenkorb from "./views/Warenkorb";
 import Verkaufen from "./views/Verkaufen";
 import { Icon, type IconName } from "./views/ui";
+import type { Platzierung } from "./logic/einrichten";
+import { NEU as KEIN_VERBRAUCH, type Verbrauch } from "./logic/chatLimit";
+
+// Die 3D-Bibliothek ist groß und wird erst geladen, wenn jemand den Rundgang öffnet
+const Rundgang3D = lazy(() => import("./views/Rundgang3D"));
 
 type Tab = "Start" | "Entdecken" | "Messen" | "Warenkorb" | "Verkaufen";
 
@@ -30,6 +36,10 @@ export default function App() {
   const [tab, setTab] = useState<Tab>("Start");
   const [detailId, setDetailId] = useState<string>();
   const [stilFinderOffen, setStilFinderOffen] = useState(false);
+  const [chatOffen, setChatOffen] = useState(false);
+  const [nachrichten, setNachrichten] = useState<Nachricht[]>([]);
+  const [verbrauch, setVerbrauch] = useLokal<Verbrauch>("reroom.chat", KEIN_VERBRAUCH);
+  const [rundgang, setRundgang] = useState<Platzierung[]>();
   const [katalog, setKatalog] = useState<Moebel[]>([]);
   const [raeume, setRaeume] = useLokal<Raum[]>("reroom.raeume", []);
   const [aktiverRaum, setAktiverRaum] = useLokal<string>("reroom.aktiverRaum", "");
@@ -72,6 +82,7 @@ export default function App() {
             onStile={setStile} onWaehlen={setAktiverRaum} onOeffnen={setDetailId}
             onAlleInKorb={(ids) => { inKorb(ids); gehe("Warenkorb"); }}
             onMessen={() => gehe("Messen")} onEntdecken={() => gehe("Entdecken")} onStilFinder={() => setStilFinderOffen(true)}
+            onRundgang={setRundgang}
           />
         )}
         {tab === "Messen" && (
@@ -120,6 +131,31 @@ export default function App() {
             gehe("Warenkorb");
           }}
         />
+      )}
+
+      {!chatOffen && !detail && (
+        <button className="chat-fab" onClick={() => setChatOffen(true)} aria-label="Assistent öffnen">
+          <Icon name="chat" groesse={24} />
+        </button>
+      )}
+
+      {chatOffen && (
+        <Chat
+          katalog={katalog}
+          raum={raum}
+          nachrichten={nachrichten}
+          onNachrichten={setNachrichten}
+          verbrauch={verbrauch}
+          onVerbrauch={setVerbrauch}
+          onOeffnen={setDetailId}
+          onSchliessen={() => setChatOffen(false)}
+        />
+      )}
+
+      {rundgang && raum && (
+        <Suspense fallback={<div className="vollbild rundgang"><p className="rundgang-laden">3D wird geladen …</p></div>}>
+          <Rundgang3D raum={raum} platziert={rundgang} onSchliessen={() => setRundgang(undefined)} />
+        </Suspense>
       )}
 
       {!willkommenGesehen && (
