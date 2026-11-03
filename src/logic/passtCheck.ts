@@ -7,6 +7,8 @@ export interface PasstErgebnis {
   /** Kleinster Spielraum in cm (negativ = passt nicht) */
   spielraumCm: number;
   begruendung: string;
+  /** Spielraum je Prüfung in cm, z. B. für Balken in der Detailansicht */
+  details: { tuerCm: number; treppenhausCm: number; raumCm: number };
 }
 
 interface Pruefung {
@@ -79,5 +81,11 @@ export function pruefePasst(m: Masse, raum: Raum): PasstErgebnis {
   const hinweis = ampel === "gelb" ? " Bitte nachmessen." : "";
   const begruendung =
     ampel === "gruen" ? "Tür, Treppenhaus und Raum haben genug Platz." : knappste.text + hinweis;
-  return { ampel, spielraumCm: knappste.spielraumCm, begruendung };
+  const [tuer, treppenhaus, raumP] = pruefungen;
+  return {
+    ampel,
+    spielraumCm: knappste.spielraumCm,
+    begruendung,
+    details: { tuerCm: tuer!.spielraumCm, treppenhausCm: treppenhaus!.spielraumCm, raumCm: raumP!.spielraumCm },
+  };
 }

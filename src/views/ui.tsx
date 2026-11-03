@@ -1,0 +1,184 @@
+import type { ReactNode } from "react";
+import type { Kategorie, Moebel, Raum } from "../models/types";
+import type { Ampel } from "../logic/passtCheck";
+import { alsCent, cashbackCent, euro } from "../logic/preisRechner";
+
+// ---------- Icons (eigene Strich-Icons statt Emojis) ----------
+
+const PFADE = {
+  home: <path d="M3 11 12 4l9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z" strokeLinejoin="round" />,
+  suche: <><circle cx="11" cy="11" r="6.5" /><path d="m16 16 4.5 4.5" strokeLinecap="round" /></>,
+  kamera: <><path d="M4 8h3l2-3h6l2 3h3v11H4z" strokeLinejoin="round" /><circle cx="12" cy="13" r="3.5" /></>,
+  tasche: <><path d="M5 8h14l-1 12H6z" strokeLinejoin="round" /><path d="M9 8V6a3 3 0 0 1 6 0v2" /></>,
+  etikett: <><path d="M3 12V4h8l10 10-8 8z" strokeLinejoin="round" /><circle cx="7.5" cy="8" r="1" fill="currentColor" /></>,
+  herz: <path d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 10c0 5.5-7 10-7 10z" strokeLinejoin="round" />,
+  filter: <path d="M4 7h16M7 12h10M10 17h4" strokeLinecap="round" />,
+  zurueck: <path d="m14 6-6 6 6 6" strokeLinecap="round" strokeLinejoin="round" />,
+  raum: <path d="M4 4h16v16H4zM4 14h6v6" strokeLinejoin="round" />,
+  plus: <path d="M12 5v14M5 12h14" strokeLinecap="round" />,
+  schliessen: <path d="M6 6l12 12M18 6 6 18" strokeLinecap="round" />,
+  foto: <><rect x="3" y="5" width="18" height="14" rx="2" /><circle cx="9" cy="10" r="1.5" /><path d="m21 16-5-5-8 8" strokeLinejoin="round" /></>,
+};
+export type IconName = keyof typeof PFADE;
+
+export function Icon({ name, groesse = 22 }: { name: IconName; groesse?: number }) {
+  return (
+    <svg viewBox="0 0 24 24" width={groesse} height={groesse} fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true">
+      {PFADE[name]}
+    </svg>
+  );
+}
+
+// ---------- Möbelbild: Anbieterfoto oder Zeichnung ----------
+
+const FARBE: Record<string, string> = {
+  grau: "#A3A7AB", weiss: "#ECEAE5", holz: "#C9A06E", schwarz: "#2E2E2E", braun: "#80553A", terrakotta: "#C9694C",
+};
+const HOLZ = "#B98C5C";
+
+function mischen(hex: string, ziel: number, anteil: number): string {
+  return "#" + [1, 3, 5].map((i) => {
+    const v = parseInt(hex.slice(i, i + 2), 16);
+    return Math.round(v + (ziel - v) * anteil).toString(16).padStart(2, "0");
+  }).join("");
+}
+const dunkler = (hex: string, anteil = 0.22) => mischen(hex, 0, anteil);
+const heller = (hex: string, anteil = 0.18) => mischen(hex, 255, anteil);
+
+function Zeichnung({ kategorie, c }: { kategorie: Kategorie; c: string }) {
+  switch (kategorie) {
+    case "sofa":
+      return (<>
+        <rect x="34" y="54" width="132" height="44" rx="16" fill={dunkler(c)} />
+        <rect x="20" y="86" width="160" height="36" rx="13" fill={c} />
+        <rect x="14" y="72" width="28" height="50" rx="13" fill={dunkler(c, 0.12)} />
+        <rect x="158" y="72" width="28" height="50" rx="13" fill={dunkler(c, 0.12)} />
+        <rect x="46" y="84" width="52" height="16" rx="7" fill={heller(c)} />
+        <rect x="102" y="84" width="52" height="16" rx="7" fill={heller(c)} />
+        <rect x="34" y="122" width="6" height="10" rx="2" fill={HOLZ} /><rect x="160" y="122" width="6" height="10" rx="2" fill={HOLZ} />
+      </>);
+    case "stuhl":
+      return (<>
+        <rect x="70" y="30" width="60" height="54" rx="12" fill={dunkler(c, 0.1)} />
+        <rect x="62" y="80" width="76" height="16" rx="7" fill={c} />
+        <path d="M70 96 64 132M130 96 136 132M82 96 80 128M118 96 120 128" stroke={HOLZ} strokeWidth="5" strokeLinecap="round" />
+      </>);
+    case "bett":
+      return (<>
+        <rect x="22" y="40" width="40" height="88" rx="8" fill={dunkler(c)} />
+        <rect x="40" y="92" width="150" height="30" rx="8" fill={c} />
+        <rect x="48" y="74" width="40" height="18" rx="8" fill="#FFFFFF" />
+        <rect x="36" y="118" width="156" height="10" rx="4" fill={dunkler(c, 0.3)} />
+      </>);
+    case "schrank":
+      return (<>
+        <rect x="50" y="14" width="100" height="116" rx="6" fill={c} />
+        <line x1="100" y1="18" x2="100" y2="126" stroke={dunkler(c, 0.2)} strokeWidth="2" />
+        <rect x="90" y="66" width="3" height="16" rx="1.5" fill={dunkler(c, 0.4)} /><rect x="107" y="66" width="3" height="16" rx="1.5" fill={dunkler(c, 0.4)} />
+      </>);
+    case "tisch":
+      return (<>
+        <rect x="22" y="62" width="156" height="12" rx="4" fill={c} />
+        <path d="M38 74 34 130M162 74 166 130M56 74 58 120M144 74 142 120" stroke={dunkler(c, 0.25)} strokeWidth="6" strokeLinecap="round" />
+        <rect x="112" y="46" width="20" height="16" rx="3" fill="#FFFFFF" />
+      </>);
+    case "regal":
+      return (<>
+        <rect x="58" y="12" width="84" height="120" rx="3" fill="none" stroke={c} strokeWidth="7" />
+        {[44, 74, 104].map((y) => <rect key={y} x="58" y={y} width="84" height="6" fill={c} />)}
+        <rect x="68" y="22" width="8" height="22" fill="#C9694C" /><rect x="78" y="26" width="7" height="18" fill="#555" />
+        <rect x="87" y="20" width="9" height="24" fill="#D9C27A" /><circle cx="120" cy="66" r="8" fill="#7E9B7A" />
+        <rect x="70" y="86" width="22" height="18" rx="3" fill="#D8D6D0" />
+      </>);
+    case "lampe":
+      return (<>
+        <ellipse cx="100" cy="130" rx="24" ry="5" fill={dunkler(c, 0.3)} />
+        <rect x="98" y="46" width="4" height="84" fill={dunkler(c, 0.3)} />
+        <path d="M72 46h56l-10-32H82z" fill={c} />
+        <ellipse cx="100" cy="52" rx="38" ry="10" fill="#FFE7A3" opacity=".55" />
+      </>);
+    case "teppich":
+      return (<>
+        <path d="M30 118 62 62h108l-32 56z" fill={c} />
+        <path d="M46 110 70 70h84l-24 40z" fill="none" stroke={heller(c, 0.45)} strokeWidth="3" />
+      </>);
+  }
+}
+
+export function MoebelBild({ moebel }: { moebel: Moebel }) {
+  if (moebel.bildUrl) return <img src={moebel.bildUrl} alt={moebel.name} loading="lazy" />;
+  const c = FARBE[moebel.farben[0] ?? "grau"] ?? FARBE.grau!;
+  return (
+    <svg viewBox="0 0 200 150" role="img" aria-label={`Zeichnung: ${moebel.name}`}>
+      <ellipse cx="100" cy="134" rx="78" ry="6" fill="#000" opacity=".08" />
+      <Zeichnung kategorie={moebel.kategorie} c={c} />
+    </svg>
+  );
+}
+
+// ---------- Ampel, Preise, Produktkarte ----------
+
+export const AMPEL_TEXT: Record<Ampel, string> = { gruen: "Passt", gelb: "Knapp", rot: "Passt nicht" };
+
+export function AmpelSchild({ ampel }: { ampel: Ampel }) {
+  return <span className={`ampel-schild ${ampel}`}>{AMPEL_TEXT[ampel]}</span>;
+}
+
+/** Preis mit ReRoom (nach 4 % Cashback), nur für neue Möbel. Werbesatz aus dem Businessplan. */
+export function MitReRoom({ moebel }: { moebel: Moebel }) {
+  if (moebel.zustand !== "neu") return null;
+  const cent = alsCent(moebel.preis);
+  return <span className="mit-reroom">mit ReRoom {euro(cent - cashbackCent(cent))}</span>;
+}
+
+export function kurzInfo(m: Moebel): string {
+  return m.zustand === "gebraucht" ? `Gebraucht · ${m.entfernungKm ?? "?"} km` : `Neu · ${m.anbieter}`;
+}
+
+export function ProduktKarte({ moebel, ampel, onOeffnen }: { moebel: Moebel; ampel?: Ampel; onOeffnen: () => void }) {
+  return (
+    <button className="produkt" onClick={onOeffnen} aria-label={`${moebel.name}, ${euro(alsCent(moebel.preis))}`}>
+      <span className="produkt-bild">
+        <MoebelBild moebel={moebel} />
+        {ampel && <AmpelSchild ampel={ampel} />}
+      </span>
+      <span className="produkt-preis">{euro(alsCent(moebel.preis))}</span>
+      <MitReRoom moebel={moebel} />
+      <span className="produkt-name">{moebel.name}</span>
+      <span className="produkt-meta">{kurzInfo(moebel)}</span>
+    </button>
+  );
+}
+
+// ---------- Grundriss aus den Raummaßen ----------
+
+/** Maßstäblicher Grundriss mit Tür (Position ist schematisch, die Breite stimmt). */
+export function Grundriss({ raum }: { raum: Raum }) {
+  const B = 220, H = 150; // verfügbare Zeichenfläche
+  const s = Math.min(B / raum.breiteCm, H / raum.tiefeCm);
+  const w = raum.breiteCm * s, h = raum.tiefeCm * s;
+  const x = 30 + (B - w) / 2, y = 14 + (H - h) / 2;
+  const tuer = raum.tuerBreiteCm * s;
+  const tx = x + 12, ty = y + h;
+  const m = (cm: number) => `${(cm / 100).toFixed(2).replace(".", ",")} m`;
+  return (
+    <svg className="grundriss" viewBox="0 0 280 190" role="img" aria-label={`Grundriss ${m(raum.breiteCm)} mal ${m(raum.tiefeCm)}`}>
+      <rect x={x} y={y} width={w} height={h} fill="rgb(255 255 255 / .05)" stroke="#fff" strokeWidth="3.5" />
+      <rect x={tx} y={ty - 2} width={tuer} height="5" fill="#111" />
+      <path d={`M${tx} ${ty} A${tuer} ${tuer} 0 0 1 ${tx + tuer} ${ty - tuer}`} fill="none" stroke="var(--orange)" strokeWidth="1.6" strokeDasharray="3 3" />
+      <line x1={tx} y1={ty} x2={tx} y2={ty - tuer} stroke="var(--orange)" strokeWidth="2.5" />
+      <text x={x + w / 2} y={y + h + 18} textAnchor="middle">{m(raum.breiteCm)}</text>
+      <text x={x + w + 8} y={y + h / 2} dominantBaseline="middle">{m(raum.tiefeCm)}</text>
+      <text x={tx + tuer + 6} y={ty - 6} className="tuer-text">Tür {raum.tuerBreiteCm} cm</text>
+    </svg>
+  );
+}
+
+export function Leer({ titel, children }: { titel: string; children?: ReactNode }) {
+  return (
+    <div className="leer">
+      <strong>{titel}</strong>
+      {children}
+    </div>
+  );
+}

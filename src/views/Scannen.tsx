@@ -51,7 +51,7 @@ export default function Scannen({ onSpeichern }: { onSpeichern: (r: Raum) => voi
         </>
       )}
 
-      <div className="karte">
+      <div className="flaeche">
         <h2>{gemessen ? "Gemessene Werte prüfen" : "Maße"}</h2>
         {gemessen && <p className="gedaempft">Fehlt ein Wert, kannst du ihn hier ergänzen.</p>}
         <label>
@@ -65,7 +65,7 @@ export default function Scannen({ onSpeichern }: { onSpeichern: (r: Raum) => voi
         {feld("tuerH", "Türhöhe", "205")}
         {feld("treppe", "Treppenhaus an der engsten Stelle", "110")}
         <button
-          className="primaer"
+          className="knopf"
           disabled={!gueltig}
           onClick={() =>
             onSpeichern({

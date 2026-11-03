@@ -16,7 +16,7 @@
 >
 > **Businessplan** (`ReRoom – Businessplan.pdf`) hat Vorrang vor der iPhone-Planung unten. Daraus übernommen: Slogan „Ausmessen, Stil wählen, günstiger einrichten.“, Preisanzeige „649 €, mit ReRoom 623,04 €“, Startseite als geführter Weg.
 >
-> **Design:** klar und hell, Systemschrift, Blau `#1F5FD1` als Hauptfarbe (wie im Businessplan), Gelb `#FFD23F` nur für Cashback, kein Creme/Serif/Braun-Look. Die alten Entwürfe unter `public/entwuerfe/` sind verworfen.
+> **Design:** Marktplatz-Stil nach Entwurf `public/design/index.html`: Weiß/Schwarz, Bilder im 2er-Raster, Orange `#FF5B2E` nur als Marken-Akzent, Grün nur für „mit ReRoom“, Schrift Bricolage Grotesque für Titel und Preise, eigene Strich-Icons (`src/views/ui.tsx`). Möbelbilder: Produktfoto des Anbieters (`bildUrl`), sonst Zeichnung je Kategorie. Kein Blau, kein Creme/Serif-Look. Alte Entwürfe unter `public/entwuerfe/` sind verworfen.
 >
 > **Noch offen (laut Businessplan):** Budget fürs ganze Zimmer statt pro Möbel, Farben „mag ich nicht“, Inspo-Bilder wischen und hochladen, 3D-Rundgang, Chatbot, Verkaufserlös als Guthaben mit 5 % Bonus, QR-Übergabe, Transport-Partner, Free = 1 Raum, Möbel-Detailseite, Möbelbilder.
 >
@@ -155,12 +155,14 @@ TabView unten mit: **Start**, **Scannen**, **Entdecken**, **Warenkorb**, **Verka
 
 ## Design
 
-- Klar und hell, viel Weißraum, Karten mit Eckenradius 14, keine Deko-Animationen. Kein Creme/Serif/Braun-Look.
-- Startseite als geführter Weg: Raum ausmessen → Stil wählen → passende Möbel.
+- Weiß und Schwarz als Basis, Bilder im Vordergrund (2er-Raster), Ecken 18, keine Deko-Animationen.
+- Startseite: Raumkarte mit maßstäblichem Grundriss, Stil-Chips, „Passt in dein …“. Ohne Raum: Aufruf „Raum ausmessen“.
+- Möbel-Detail mit Passt-Check als Balken (Tür, Treppenhaus, Raum) und fester Kaufleiste.
+- Navigation unten mit Messen als rundem Knopf in der Mitte.
 - Farben (jeweils mit Dark-Mode-Variante, Werte in `src/theme.ts`):
-  - Hintergrund `#F4F5F7`, Karten `#FFFFFF`
-  - Primär Blau `#1F5FD1`
-  - Akzent Gelb `#FFD23F`, nur für Cashback und Preisvorteile
+  - Hintergrund `#FFFFFF`, Flächen `#F1F1EF`, Text und Knöpfe `#111111`
+  - Akzent Orange `#FF5B2E` (Logo-Punkt, aktiver Tab)
+  - Grün `#0B7A4B` nur für „mit ReRoom“ und Cashback
   - Ampel: grün, gelb, rot
 - SF Symbols für Icons, Systemschrift.
 

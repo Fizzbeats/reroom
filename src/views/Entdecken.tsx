@@ -1,100 +1,103 @@
 import { useMemo, useState } from "react";
-import { ALLE_FARBEN, ALLE_STILE, type Moebel, type Raum, type Stil, type Zustand } from "../models/types";
+import { ALLE_FARBEN, type Moebel, type Raum, type Stil, type Zustand } from "../models/types";
 import { findePassende } from "../logic/stilFinder";
-import { pruefePasst, type Ampel } from "../logic/passtCheck";
-import { alsCent, cashbackCent, euro } from "../logic/preisRechner";
+import { pruefePasst } from "../logic/passtCheck";
+import { alsCent, euro } from "../logic/preisRechner";
+import { STIL_INFO } from "./Start";
+import { Icon, Leer, ProduktKarte } from "./ui";
 
 interface Props {
   katalog: Moebel[];
   raum?: Raum;
-  korb: string[];
-  onKorb: (id: string) => void;
+  stile: Stil[];
+  onStile: (s: Stil[]) => void;
+  onOeffnen: (id: string) => void;
 }
-
-const AMPEL_TEXT: Record<Ampel, string> = { gruen: "Passt", gelb: "Knapp", rot: "Passt nicht" };
 
 function umschalten<T>(liste: T[], wert: T): T[] {
   return liste.includes(wert) ? liste.filter((x) => x !== wert) : [...liste, wert];
 }
 
-export default function Entdecken({ katalog, raum, korb, onKorb }: Props) {
-  const [budget, setBudget] = useState(1500);
-  const [stile, setStile] = useState<Stil[]>([]);
-  const [farben, setFarben] = useState<string[]>([]);
-  const [zustand, setZustand] = useState<Zustand | "alle">("alle");
+const FARB_PUNKT: Record<string, string> = {
+  grau: "#A3A7AB", weiss: "#ECEAE5", holz: "#C9A06E", schwarz: "#2E2E2E", braun: "#80553A", terrakotta: "#C9694C",
+};
 
-  const treffer = useMemo(
-    () => findePassende(katalog, { budget, stile, farben }).filter((t) => zustand === "alle" || t.moebel.zustand === zustand),
-    [katalog, budget, stile, farben, zustand],
-  );
+/** Alle Möbel als Bilder-Raster, sortiert nach Stil-Finder, mit Passt-Ampel auf dem Bild. */
+export default function Entdecken({ katalog, raum, stile, onStile, onOeffnen }: Props) {
+  const [suche, setSuche] = useState("");
+  const [nurPassend, setNurPassend] = useState(true);
+  const [zustand, setZustand] = useState<Zustand | "alle">("alle");
+  const [filterOffen, setFilterOffen] = useState(false);
+  const [budget, setBudget] = useState(1500);
+  const [farben, setFarben] = useState<string[]>([]);
+
+  const treffer = useMemo(() => {
+    const s = suche.trim().toLowerCase();
+    return findePassende(katalog, { budget, stile, farben })
+      .map((t) => ({ ...t, passt: raum ? pruefePasst(t.moebel.masseCm, raum) : undefined }))
+      .filter((t) => zustand === "alle" || t.moebel.zustand === zustand)
+      .filter((t) => !s || `${t.moebel.name} ${t.moebel.kategorie} ${t.moebel.farben.join(" ")}`.toLowerCase().includes(s))
+      .filter((t) => !raum || !nurPassend || t.passt?.ampel !== "rot");
+  }, [katalog, budget, stile, farben, zustand, suche, raum, nurPassend]);
 
   return (
     <section>
-      <h1>Entdecken</h1>
-      <p className="gedaempft">{raum ? `Passt-Check für: ${raum.name}` : "Wähle auf der Startseite einen Raum für den Passt-Check."}</p>
-
-      <div className="karte">
-        <h2>Stil</h2>
-        <div className="chips">
-          {ALLE_STILE.map((s) => (
-            <button key={s} className="chip" aria-pressed={stile.includes(s)} onClick={() => setStile(umschalten(stile, s))}>{s}</button>
-          ))}
-        </div>
-        <h2>Farben</h2>
-        <div className="chips">
-          {ALLE_FARBEN.map((f) => (
-            <button key={f} className="chip" aria-pressed={farben.includes(f)} onClick={() => setFarben(umschalten(farben, f))}>{f}</button>
-          ))}
-        </div>
-        <label>
-          <h2>Budget pro Möbel: {euro(alsCent(budget))}</h2>
-          <input type="range" min={20} max={1500} step={10} value={budget} onChange={(e) => setBudget(Number(e.target.value))} />
-        </label>
-        <label>
-          Zustand
-          <select value={zustand} onChange={(e) => setZustand(e.target.value as Zustand | "alle")}>
-            <option value="alle">Neu und gebraucht</option>
-            <option value="neu">Nur neu</option>
-            <option value="gebraucht">Nur gebraucht</option>
-          </select>
-        </label>
+      <div className="kopf">
+        <h1 style={{ margin: 0 }}>Entdecken</h1>
+        <button className="rund" aria-expanded={filterOffen} aria-label="Weitere Filter" onClick={() => setFilterOffen(!filterOffen)}>
+          <Icon name={filterOffen ? "schliessen" : "filter"} groesse={20} />
+        </button>
       </div>
 
-      <p>{treffer.length} Möbel gefunden</p>
-      {treffer.map(({ moebel: m }) => {
-        const passt = raum ? pruefePasst(m.masseCm, raum) : undefined;
-        const imKorb = korb.includes(m.id);
-        return (
-          <article className="karte" key={m.id}>
-            <div className="reihe">
-              <strong>{m.name}</strong>
-              <span className="badge">{m.zustand}</span>
-            </div>
-            <div className="gedaempft">
-              {m.anbieter}
-              {m.entfernungKm !== undefined && ` · ${m.entfernungKm} km`} · {m.masseCm.breite} × {m.masseCm.tiefe} × {m.masseCm.hoehe} cm
-            </div>
-            <p>{m.beschreibung}</p>
-            <div className="reihe trenner">
-              <strong className="preis-zahl">{euro(alsCent(m.preis))}</strong>
-              {/* Werbesatz aus dem Businessplan: „800 €, mit ReRoom 768 €“ */}
-              {m.zustand === "neu" && (
-                <span className="cashback">mit ReRoom {euro(alsCent(m.preis) - cashbackCent(alsCent(m.preis)))}</span>
-              )}
-            </div>
-            {passt && (
-              <p className="trenner">
-                <span className={`ampel ${passt.ampel}`}>{AMPEL_TEXT[passt.ampel]}</span>
-                <br />
-                <span className="gedaempft">{passt.begruendung}</span>
-              </p>
-            )}
-            <button className={imKorb ? "" : "primaer"} onClick={() => onKorb(m.id)}>
-              {imKorb ? "Aus dem Warenkorb nehmen" : "In den Warenkorb"}
-            </button>
-          </article>
-        );
-      })}
+      <label className="suche">
+        <Icon name="suche" groesse={18} />
+        <input type="search" placeholder="Sofa, Regal, Lampe …" value={suche} onChange={(e) => setSuche(e.target.value)} aria-label="Möbel suchen" />
+      </label>
+
+      <div className="chips">
+        {raum && (
+          <button className="chip" aria-pressed={nurPassend} onClick={() => setNurPassend(!nurPassend)}>
+            <Icon name="raum" groesse={14} /> Passt ins {raum.name}
+          </button>
+        )}
+        {(Object.keys(STIL_INFO) as Stil[]).map((s) => (
+          <button key={s} className="chip" aria-pressed={stile.includes(s)} onClick={() => onStile(umschalten(stile, s))}>
+            {STIL_INFO[s].name}
+          </button>
+        ))}
+        <button className="chip" aria-pressed={zustand === "neu"} onClick={() => setZustand(zustand === "neu" ? "alle" : "neu")}>Neu</button>
+        <button className="chip" aria-pressed={zustand === "gebraucht"} onClick={() => setZustand(zustand === "gebraucht" ? "alle" : "gebraucht")}>
+          Gebraucht
+        </button>
+      </div>
+
+      {filterOffen && (
+        <div className="filterpanel">
+          <label>
+            Höchstens {euro(alsCent(budget))} pro Möbel
+            <input type="range" min={20} max={1500} step={10} value={budget} onChange={(e) => setBudget(Number(e.target.value))} />
+          </label>
+          <div className="chips">
+            {ALLE_FARBEN.map((f) => (
+              <button key={f} className="chip" aria-pressed={farben.includes(f)} onClick={() => setFarben(umschalten(farben, f))}>
+                <i className="punkt" style={{ background: FARB_PUNKT[f] }} />{f}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      <p className="anzahl">{treffer.length} Möbel{raum && nurPassend ? ` passen in dein ${raum.name}` : ""}</p>
+
+      {treffer.length === 0 ? (
+        <Leer titel="Nichts gefunden">Lockere die Filter oder such nach etwas anderem.</Leer>
+      ) : (
+        <div className="raster">
+          {treffer.map((t) => (
+            <ProduktKarte key={t.moebel.id} moebel={t.moebel} ampel={t.passt?.ampel} onOeffnen={() => onOeffnen(t.moebel.id)} />
+          ))}
+        </div>
+      )}
     </section>
   );
 }

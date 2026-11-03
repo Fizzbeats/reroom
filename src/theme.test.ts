@@ -8,9 +8,10 @@ const [hellCss, dunkelCss] = css.split("@media");
 const cssName = (k: string) => "--" + k.replace(/[A-Z]/g, (c) => "-" + c.toLowerCase());
 
 describe("Farben", () => {
-  it("Vorgabefarben: Blau als Hauptfarbe, Gelb für Cashback", () => {
-    expect(FARBEN.hell.primaer).toBe("#1F5FD1");
-    expect(FARBEN.hell.akzent).toBe("#FFD23F");
+  it("Vorgabefarben: Schwarz-Weiß mit orangem Akzent", () => {
+    expect(FARBEN.hell.hintergrund).toBe("#FFFFFF");
+    expect(FARBEN.hell.primaer).toBe("#111111");
+    expect(FARBEN.hell.akzent).toBe("#FF5B2E");
   });
 
   it.each(["hell", "dunkel"] as const)("Text auf Akzent-Badges ist lesbar (%s)", (modus) => {

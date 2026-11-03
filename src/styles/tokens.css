@@ -1,35 +1,44 @@
 /* Werte müssen mit src/theme.ts übereinstimmen. */
 :root {
-  --hintergrund: #F4F5F7;
-  --karte: #FFFFFF;
-  --text: #14181F;
-  --text-gedaempft: #586272;
-  --primaer: #1F5FD1;
+  --hintergrund: #FFFFFF;
+  --karte: #F1F1EF;
+  --text: #111111;
+  --text-gedaempft: #686868;
+  --primaer: #111111;
   --auf-primaer: #FFFFFF;
-  --akzent: #FFD23F;
-  --auf-akzent: #14181F;
-  --ampel-gruen: #1E8E5A;
+  --akzent: #FF5B2E;
+  --auf-akzent: #111111;
+  --ampel-gruen: #12924F;
   --ampel-gelb: #A87400;
-  --ampel-rot: #C93A2B;
-  --linie: rgb(20 24 31 / .1);
-  --primaer-hell: rgb(31 95 209 / .1);
-  --radius: 14px;
+  --ampel-rot: #D63A2A;
+  --orange: #FF5B2E;
+  --gruen: #0B7A4B;
+  --gruen-bg: #E3F3EA;
+  --gelb-bg: #FFF1CC;
+  --linie: #E5E4E1;
+  --raumkarte: #111111;
+  --radius: 18px;
+  --titel: "Bricolage Grotesque Variable", "Segoe UI", system-ui, sans-serif;
   --schrift: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 }
 @media (prefers-color-scheme: dark) {
   :root {
-    --hintergrund: #0F1217;
-    --karte: #181C23;
-    --text: #EEF1F5;
-    --text-gedaempft: #A3ACB9;
-    --primaer: #7AA7FF;
-    --auf-primaer: #0F1217;
-    --akzent: #FFD23F;
-    --auf-akzent: #14181F;
-    --ampel-gruen: #4CC38A;
+    --hintergrund: #0E0E0E;
+    --karte: #1C1C1C;
+    --text: #F2F2F2;
+    --text-gedaempft: #A6A6A6;
+    --primaer: #F2F2F2;
+    --auf-primaer: #0E0E0E;
+    --akzent: #FF6B3D;
+    --auf-akzent: #0E0E0E;
+    --ampel-gruen: #3FCB7E;
     --ampel-gelb: #F2C94C;
-    --ampel-rot: #FF7A6B;
-    --linie: rgb(238 241 245 / .12);
-    --primaer-hell: rgb(122 167 255 / .14);
+    --ampel-rot: #FF6B5B;
+    --orange: #FF6B3D;
+    --gruen: #5FD39A;
+    --gruen-bg: #12301F;
+    --gelb-bg: #3A2E0E;
+    --linie: #2A2A2A;
+    --raumkarte: #1C1C1C;
   }
 }

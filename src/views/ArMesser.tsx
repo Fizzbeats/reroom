@@ -125,10 +125,10 @@ export default function ArMesser({ onFertig }: { onFertig: (werte: Werte) => voi
 
   return (
     <>
-      <div className="karte">
+      <div className="flaeche">
         <h2>Raum mit der Kamera messen</h2>
         <p className="gedaempft">Du gehst einmal durch den Raum und tippst Ecken, Tür und Treppenhaus an. Einen Zollstock brauchst du nicht.</p>
-        <button className="primaer" onClick={starten}>Kamera starten</button>
+        <button className="knopf" onClick={starten}>Kamera starten</button>
         {fehler && <p role="alert" className="hinweis">{fehler}</p>}
       </div>
 
@@ -137,7 +137,7 @@ export default function ArMesser({ onFertig }: { onFertig: (werte: Werte) => voi
         <div className="ar-panel">
           <div className="ar-kopf">
             <span className="gedaempft">Schritt {schritt + 1} von {SCHRITTE.length}</span>
-            <button className="ar-schliessen" onClick={() => sitzung.current?.beenden()} aria-label="Messung abbrechen">✕</button>
+            <button className="rund" onClick={() => sitzung.current?.beenden()} aria-label="Messung abbrechen">✕</button>
           </div>
           <strong>{s.titel}</strong>
           <p>{s.anleitung}</p>
@@ -150,13 +150,13 @@ export default function ArMesser({ onFertig }: { onFertig: (werte: Werte) => voi
           <div className="reihe">
             {ergebnis ? (
               <>
-                <button onClick={() => schrittStarten(schritt)}>Nochmal</button>
-                <button className="primaer" onClick={() => weiter(true)}>{schritt + 1 < SCHRITTE.length ? "Weiter" : "Fertig"}</button>
+                <button className="knopf leise" onClick={() => schrittStarten(schritt)}>Nochmal</button>
+                <button className="knopf" onClick={() => weiter(true)}>{schritt + 1 < SCHRITTE.length ? "Weiter" : "Fertig"}</button>
               </>
             ) : (
               <>
-                {anzahl > 0 && <button onClick={() => schrittStarten(schritt)}>Neu setzen</button>}
-                <button onClick={() => weiter(false)}>Überspringen</button>
+                {anzahl > 0 && <button className="knopf leise" onClick={() => schrittStarten(schritt)}>Neu setzen</button>}
+                <button className="knopf leise" onClick={() => weiter(false)}>Überspringen</button>
               </>
             )}
           </div>

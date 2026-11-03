@@ -88,7 +88,7 @@ export default function KameraMesser({ onWert }: Props) {
   const gemessen = cmProPx && messPunkte.length === 2 ? messeCm(messPunkte[0]!, messPunkte[1]!, cmProPx) : undefined;
 
   return (
-    <div className="karte">
+    <div className="flaeche">
       <h2>Mit der Kamera messen</h2>
       <p className="gedaempft">
         Lege eine Bankkarte oder ein A4-Blatt flach an das, was du messen willst (Tür, Wand). Fotografiere gerade von vorn.
@@ -112,7 +112,7 @@ export default function KameraMesser({ onWert }: Props) {
             {schritt === 1 && `Schritt 1: Tippe die zwei Enden des Referenzobjekts an (${refPunkte.length}/2).`}
             {schritt === 2 && "Schritt 2: Tippe Anfang und Ende der Strecke an, die du messen willst."}
           </p>
-          {meldung && <p role="alert" className="ampel gelb">{meldung}</p>}
+          {meldung && <p role="alert" className="hinweis">{meldung}</p>}
           <canvas
             ref={leinwand}
             onPointerDown={antippen}
@@ -129,10 +129,10 @@ export default function KameraMesser({ onWert }: Props) {
               </label>
               <p>{gemessen !== undefined ? <strong>Gemessen: {gemessen} cm</strong> : <span className="gedaempft">Noch keine Strecke gesetzt.</span>}</p>
               <div className="reihe">
-                <button className="primaer" disabled={gemessen === undefined} onClick={() => gemessen !== undefined && onWert(ziel, gemessen)}>
+                <button className="knopf" disabled={gemessen === undefined} onClick={() => gemessen !== undefined && onWert(ziel, gemessen)}>
                   Wert übernehmen
                 </button>
-                <button onClick={() => { setRefPunkte([]); setMessPunkte([]); }}>Neu ansetzen</button>
+                <button className="knopf leise" onClick={() => { setRefPunkte([]); setMessPunkte([]); }}>Neu ansetzen</button>
               </div>
               <p className="gedaempft">Die Messung ist eine Schätzung (etwa ±3 %). Bitte nachmessen, wenn es knapp wird.</p>
             </>

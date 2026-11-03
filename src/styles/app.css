@@ -1,85 +1,161 @@
-/* Klar und ruhig: helle Flächen, eine Hauptfarbe (Blau), Gelb nur für Geld-Vorteile */
+/* Weiß und Schwarz als Basis, Bilder im Vordergrund, Orange nur als Marken-Akzent */
 * { box-sizing: border-box; }
 body {
   margin: 0;
   background: var(--hintergrund);
   color: var(--text);
   font-family: var(--schrift);
-  line-height: 1.5;
+  line-height: 1.45;
   -webkit-font-smoothing: antialiased;
 }
-.app { max-width: 720px; margin: 0 auto; padding: 28px 20px 110px; }
-h1 { margin: 0 0 4px; font-size: 1.9rem; font-weight: 800; letter-spacing: -.02em; }
-h2 { margin: 0 0 8px; font-size: 1.05rem; font-weight: 700; }
-section > h2 { margin-top: 28px; }
-.slogan { margin: 4px 0 0; }
-.slogan, .gedaempft { color: var(--text-gedaempft); }
-.gedaempft { font-size: .9rem; }
-.preis-zahl, .summe span:last-child { font-variant-numeric: tabular-nums; }
-.karte {
-  background: var(--karte);
-  border: 1px solid var(--linie);
-  border-radius: var(--radius);
-  padding: 18px;
-  margin: 14px 0;
-}
-.karte > * + * { margin-top: 8px; }
-.trenner { margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--linie); }
-.reihe { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; justify-content: space-between; }
-button, select, input {
-  font: inherit;
-  color: inherit;
-  border-radius: 10px;
-  border: 1px solid var(--linie);
-  background: var(--karte);
-  padding: 10px 14px;
-  min-height: 44px;
-}
-button { cursor: pointer; font-weight: 600; }
-button:disabled { opacity: .45; cursor: not-allowed; }
-button.primaer { background: var(--primaer); color: var(--auf-primaer); border-color: var(--primaer); }
-button.chip { border-radius: 999px; min-height: 36px; padding: 6px 14px; }
-button.chip[aria-pressed="true"] { background: var(--primaer); color: var(--auf-primaer); border-color: var(--primaer); }
-button:focus-visible, input:focus-visible, select:focus-visible { outline: 3px solid var(--primaer); outline-offset: 2px; }
-label { display: block; margin: 12px 0; font-weight: 600; font-size: .92rem; }
-label input, label select { display: block; width: 100%; margin-top: 6px; font-weight: 400; }
-input[type="range"] { padding: 0; border: 0; background: transparent; accent-color: var(--primaer); }
-.chips { display: flex; gap: 8px; flex-wrap: wrap; }
-.ampel { display: inline-flex; align-items: center; gap: 8px; font-weight: 700; }
-.ampel::before { content: ""; width: 10px; height: 10px; border-radius: 50%; background: currentColor; flex: none; }
-.ampel.gruen { color: var(--ampel-gruen); }
-.ampel.gelb { color: var(--ampel-gelb); }
-.ampel.rot { color: var(--ampel-rot); }
-.badge { background: var(--primaer-hell); color: var(--primaer); border-radius: 999px; padding: 2px 10px; font-size: .78rem; font-weight: 700; }
-.cashback { background: var(--akzent); color: var(--auf-akzent); border-radius: 6px; padding: 2px 8px; font-size: .85rem; font-weight: 700; }
-.hinweis { background: var(--primaer-hell); border-radius: 10px; padding: 12px 14px; font-size: .92rem; }
+.app { max-width: 560px; margin: 0 auto; padding: 14px 20px 120px; }
+h1, h2, h3, .marke, .preis-gross, .produkt-preis { font-family: var(--titel); }
+h1 { font-size: 1.75rem; font-weight: 800; letter-spacing: -.03em; margin: 0 0 6px; }
+h2 { font-size: 1.25rem; font-weight: 700; letter-spacing: -.02em; margin: 26px 0 12px; display: flex; justify-content: space-between; align-items: baseline; }
+h2 button.link, .link { background: none; border: 0; padding: 0; min-height: 0; font: 600 .82rem var(--schrift); color: var(--text-gedaempft); cursor: pointer; }
+.gedaempft { color: var(--text-gedaempft); font-size: .9rem; }
+.kopf { display: flex; justify-content: space-between; align-items: center; padding: 6px 0 14px; }
+.marke { font-size: 1.65rem; font-weight: 800; letter-spacing: -.035em; margin: 0; }
+.marke i { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--orange); margin-left: 2px; }
+.rund { width: 42px; height: 42px; border-radius: 50%; border: 0; background: var(--karte); color: var(--text); display: grid; place-items: center; cursor: pointer; padding: 0; min-height: 0; }
 
-/* Startseite: geführter Weg */
-.schritte { display: grid; gap: 10px; margin: 20px 0; padding: 0; list-style: none; }
-.schritt { display: flex; gap: 14px; align-items: center; background: var(--karte); border: 1px solid var(--linie); border-radius: var(--radius); padding: 14px 16px; }
-.schritt .nr { width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; flex: none; font-weight: 800; border: 2px solid var(--linie); }
-.schritt.erledigt .nr { background: var(--ampel-gruen); border-color: var(--ampel-gruen); color: #fff; }
-.schritt.dran { border-color: var(--primaer); box-shadow: 0 0 0 1px var(--primaer); }
-.schritt.dran .nr { border-color: var(--primaer); color: var(--primaer); }
-.schritt small { display: block; color: var(--text-gedaempft); }
+/* Formulare und Knöpfe */
+button, select, input { font: inherit; color: inherit; }
+button { cursor: pointer; }
+button:disabled { opacity: .4; cursor: not-allowed; }
+.knopf {
+  border: 0; border-radius: 14px; padding: 14px 18px; min-height: 48px; font-weight: 700;
+  background: var(--primaer); color: var(--auf-primaer); display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+}
+.knopf.breit { width: 100%; }
+.knopf.zweit { background: transparent; color: var(--text); box-shadow: inset 0 0 0 1.5px var(--text); }
+.knopf.leise { background: var(--karte); color: var(--text); }
+button:focus-visible, input:focus-visible, select:focus-visible { outline: 3px solid var(--orange); outline-offset: 2px; }
+label { display: block; margin: 14px 0; font-weight: 600; font-size: .9rem; }
+input, select { display: block; width: 100%; margin-top: 6px; border: 0; border-radius: 12px; background: var(--karte); padding: 13px 14px; min-height: 48px; font-weight: 400; }
+input[type="range"] { padding: 0; background: transparent; accent-color: var(--primaer); min-height: 0; }
+input[type="file"] { padding: 10px; }
 
+/* Chips */
+.chips { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; margin: 0 -20px; padding: 0 20px 2px; }
+.chips::-webkit-scrollbar { display: none; }
+.chip { flex: none; border: 0; border-radius: 999px; padding: 9px 15px; font: 600 .84rem var(--schrift); background: var(--karte); color: var(--text); display: inline-flex; align-items: center; gap: 6px; min-height: 38px; }
+.chip[aria-pressed="true"] { background: var(--primaer); color: var(--auf-primaer); }
+.chip .punkt { width: 12px; height: 12px; border-radius: 50%; box-shadow: inset 0 0 0 1px rgb(0 0 0 / .12); }
+
+/* Flächen */
+.flaeche { background: var(--karte); border-radius: var(--radius); padding: 18px; margin: 14px 0; }
+.flaeche > * + * { margin-top: 10px; }
+.hinweis { background: var(--gelb-bg); border-radius: 14px; padding: 12px 14px; font-size: .9rem; }
+.leer { background: var(--karte); border-radius: var(--radius); padding: 28px 20px; text-align: center; display: grid; gap: 8px; justify-items: center; color: var(--text-gedaempft); }
+.leer strong { color: var(--text); font: 700 1.1rem var(--titel); }
+
+/* Raumkarte auf der Startseite */
+.raumkarte { background: var(--raumkarte); color: #fff; border-radius: 24px; padding: 18px; }
+.raumkarte .zeile { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
+.raumkarte small { color: #B5B5B5; font-size: .78rem; }
+.raumkarte h3 { margin: 0; font-size: 1.3rem; font-weight: 700; }
+.raumkarte .chip { background: rgb(255 255 255 / .12); color: #fff; }
+.grundriss { display: block; width: 100%; height: auto; margin: 6px 0; }
+.grundriss text { fill: #B5B5B5; font: 11px var(--schrift); }
+.grundriss .tuer-text { fill: var(--orange); font-size: 10px; }
+.werte { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.werte div { background: rgb(255 255 255 / .08); border-radius: 12px; padding: 8px 10px; font-size: .74rem; color: #B5B5B5; }
+.werte b { display: block; color: #fff; font: 700 1.05rem var(--titel); }
+.raumwahl { display: flex; gap: 8px; overflow-x: auto; margin-top: 12px; scrollbar-width: none; }
+.raumwahl .chip { background: rgb(255 255 255 / .08); color: #ddd; }
+.raumwahl .chip[aria-pressed="true"] { background: #fff; color: #111; }
+.messen-cta { background: var(--raumkarte); color: #fff; border-radius: 24px; padding: 24px 20px; display: grid; gap: 12px; }
+.messen-cta h3 { margin: 0; font-size: 1.45rem; font-weight: 800; letter-spacing: -.02em; }
+.messen-cta p { margin: 0; color: #C8C8C8; }
+.messen-cta .knopf { background: #fff; color: #111; }
+
+/* Produktraster */
+.raster { display: grid; grid-template-columns: 1fr 1fr; gap: 18px 12px; }
+.produkt { text-align: left; background: none; border: 0; padding: 0; color: inherit; display: flex; flex-direction: column; gap: 1px; min-width: 0; }
+.produkt-bild { position: relative; aspect-ratio: 1 / 1.05; border-radius: var(--radius); background: var(--karte); display: grid; place-items: center; overflow: hidden; margin-bottom: 8px; }
+.produkt-bild svg, .produkt-bild img { width: 92%; height: auto; }
+.produkt-bild img { width: 100%; height: 100%; object-fit: cover; }
+.produkt-preis { font-size: 1.05rem; font-weight: 800; letter-spacing: -.01em; }
+.produkt-name { font-size: .86rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.produkt-meta { font-size: .78rem; color: var(--text-gedaempft); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.mit-reroom { align-self: flex-start; font: 700 .7rem var(--schrift); color: var(--gruen); background: var(--gruen-bg); border-radius: 6px; padding: 2px 6px; margin: 2px 0; }
+.ampel-schild { position: absolute; top: 8px; left: 8px; background: #fff; color: #111; border-radius: 999px; padding: 4px 9px 4px 7px; font: 700 .7rem var(--schrift); display: inline-flex; align-items: center; gap: 5px; }
+.ampel-schild::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--c); }
+.ampel-schild.gruen { --c: #12924F; } .ampel-schild.gelb { --c: #C98A00; } .ampel-schild.rot { --c: #D63A2A; }
+.suche { display: flex; align-items: center; gap: 10px; background: var(--karte); border-radius: 14px; padding: 0 14px; color: var(--text-gedaempft); margin-bottom: 12px; }
+.suche input { margin: 0; padding: 13px 0; background: transparent; }
+.anzahl { font: 600 .82rem var(--schrift); color: var(--text-gedaempft); margin: 16px 0 12px; }
+.filterpanel { background: var(--karte); border-radius: var(--radius); padding: 6px 16px 16px; margin-top: 12px; }
+.filterpanel .chips { margin: 0; padding: 0; flex-wrap: wrap; }
+.filterpanel .chip { background: var(--hintergrund); }
+.filterpanel .chip[aria-pressed="true"] { background: var(--primaer); }
+
+/* Detailseite */
+.detail { position: fixed; inset: 0; background: var(--hintergrund); overflow-y: auto; z-index: 20; }
+.detail-innen { max-width: 560px; margin: 0 auto; padding-bottom: 120px; }
+.detail-bild { position: relative; height: 340px; background: var(--karte); display: grid; place-items: center; }
+.detail-bild svg { width: 82%; height: auto; }
+.detail-bild img { width: 100%; height: 100%; object-fit: cover; }
+.detail-bild .rund { position: absolute; top: calc(14px + env(safe-area-inset-top)); left: 16px; background: var(--hintergrund); }
+.detail-text { padding: 16px 20px; }
+.tags { display: flex; gap: 6px; flex-wrap: wrap; }
+.tag { font: 700 .72rem var(--schrift); border-radius: 6px; padding: 3px 8px; background: var(--karte); }
+.detail-text h1 { font-size: 1.9rem; margin: 10px 0 2px; }
+.passt { border: 1px solid var(--linie); border-radius: var(--radius); padding: 16px; margin-top: 16px; }
+.passt-kopf { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.passt-kopf b { font: 700 1rem var(--titel); }
+.status { font: 700 .76rem var(--schrift); border-radius: 999px; padding: 4px 10px; }
+.status.gruen { background: var(--gruen-bg); color: var(--gruen); }
+.status.gelb { background: var(--gelb-bg); color: var(--ampel-gelb); }
+.status.rot { background: #FDE3DF; color: #A82A1C; }
+.balken { display: grid; gap: 10px; margin-top: 14px; }
+.balken-zeile { display: grid; grid-template-columns: 96px 1fr 64px; align-items: center; gap: 10px; font-size: .84rem; }
+.spur { height: 8px; border-radius: 4px; background: var(--karte); overflow: hidden; }
+.spur i { display: block; height: 100%; border-radius: 4px; }
+.balken-zeile em { font-style: normal; font-weight: 700; text-align: right; font-variant-numeric: tabular-nums; }
+.passt p { margin: 12px 0 0; font-size: .85rem; color: var(--text-gedaempft); }
+.masse { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 12px; }
+.masse div { background: var(--karte); border-radius: 12px; padding: 10px 12px; font-size: .74rem; color: var(--text-gedaempft); }
+.masse b { display: block; font: 700 1.1rem var(--titel); color: var(--text); }
+.beschreibung { margin-top: 16px; }
+.kaufleiste {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 21; background: var(--hintergrund); border-top: 1px solid var(--linie);
+  padding: 12px 20px calc(14px + env(safe-area-inset-bottom));
+}
+.kaufleiste > div { max-width: 520px; margin: 0 auto; display: flex; align-items: center; gap: 12px; }
+.kaufleiste .preisblock { flex: 1; min-width: 0; }
+.preis-gross { font-size: 1.45rem; font-weight: 800; display: block; letter-spacing: -.02em; }
+.kaufleiste small { font-size: .74rem; color: var(--text-gedaempft); }
+
+/* Warenkorb */
+.position { display: flex; gap: 12px; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--linie); }
+.position .mini { width: 72px; height: 72px; border-radius: 14px; background: var(--karte); display: grid; place-items: center; flex: none; overflow: hidden; }
+.position .mini svg { width: 90%; }
+.position .info { flex: 1; min-width: 0; display: grid; }
+.position .info span { font-size: .8rem; color: var(--text-gedaempft); }
+.position b { font-family: var(--titel); }
+.summe { display: flex; justify-content: space-between; margin: 8px 0; font-variant-numeric: tabular-nums; }
+.summe.gross { font: 800 1.2rem var(--titel); border-top: 1px solid var(--linie); padding-top: 12px; margin-top: 12px; }
+.summe.gruen { color: var(--gruen); font-weight: 700; }
+
+/* Navigation unten */
 .tabs {
-  position: fixed; left: 0; right: 0; bottom: 0;
-  display: flex; background: var(--karte);
-  border-top: 1px solid var(--linie);
-  padding-bottom: env(safe-area-inset-bottom);
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 10; background: var(--hintergrund); border-top: 1px solid var(--linie);
+  display: flex; justify-content: space-around; padding: 8px 6px calc(10px + env(safe-area-inset-bottom));
 }
-.tabs button { flex: 1; border: 0; border-radius: 0; background: transparent; padding: 10px 4px; font-size: .74rem; color: var(--text-gedaempft); font-weight: 600; }
-.tabs button b { display: block; font-size: 1.15rem; font-weight: 400; }
-.tabs button[aria-current="page"] { color: var(--primaer); }
-.summe { display: flex; justify-content: space-between; margin: 6px 0; }
-.summe.gross { font-weight: 800; font-size: 1.1rem; border-top: 1px solid var(--linie); padding-top: 10px; margin-top: 10px; }
+.tabs button { flex: 1; max-width: 96px; border: 0; background: none; display: flex; flex-direction: column; align-items: center; gap: 3px; font: 600 .66rem var(--schrift); color: var(--text-gedaempft); position: relative; padding: 6px 0 0; }
+.tabs button[aria-current="page"] { color: var(--text); }
+.tabs button[aria-current="page"]::after { content: ""; position: absolute; top: -9px; width: 22px; height: 3px; border-radius: 3px; background: var(--orange); }
+.tabs .mitte b { width: 48px; height: 48px; border-radius: 50%; background: var(--primaer); color: var(--auf-primaer); display: grid; place-items: center; margin-top: -10px; }
+.tabs .anzahl-punkt { position: absolute; top: 0; left: 55%; background: var(--orange); color: #fff; border-radius: 999px; font-size: .62rem; padding: 0 5px; min-width: 16px; }
 
 /* AR-Messung: Overlay liegt über dem Kamerabild */
-.ar-overlay { position: fixed; inset: 0; pointer-events: none; display: flex; align-items: flex-end; padding: 16px; padding-bottom: calc(16px + env(safe-area-inset-bottom)); }
+.ar-overlay { position: fixed; inset: 0; pointer-events: none; display: flex; align-items: flex-end; padding: 16px; padding-bottom: calc(16px + env(safe-area-inset-bottom)); z-index: 30; }
 .ar-overlay[hidden] { display: none; }
-.ar-panel { pointer-events: auto; width: 100%; max-width: 520px; margin: 0 auto; background: var(--karte); color: var(--text); border-radius: var(--radius); padding: 16px; box-shadow: 0 8px 30px rgb(0 0 0 / .35); }
+.ar-panel { pointer-events: auto; width: 100%; max-width: 520px; margin: 0 auto; background: var(--hintergrund); color: var(--text); border-radius: 22px; padding: 18px; box-shadow: 0 10px 40px rgb(0 0 0 / .35); }
 .ar-panel p { margin: 6px 0; }
 .ar-kopf { display: flex; justify-content: space-between; align-items: center; }
-.ar-schliessen { min-height: 36px; padding: 4px 12px; }
-.ar-ergebnis { font-size: 1.15rem; font-weight: 800; color: var(--primaer); }
+.ar-ergebnis { font: 800 1.3rem var(--titel); }
+.reihe { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; justify-content: space-between; }
+.reihe .knopf { flex: 1; }

@@ -19,7 +19,7 @@ export default function Verkaufen() {
   return (
     <section>
       <h1>Verkaufen</h1>
-      <div className="karte">
+      <div className="flaeche">
         <label>
           Was verkaufst du?
           <input value={name} onChange={(e) => setName(e.target.value)} />
@@ -35,7 +35,7 @@ export default function Verkaufen() {
         </label>
         <p className="gedaempft">Die Abholung erfolgt beim Verkäufer.</p>
         <button
-          className="primaer"
+          className="knopf"
           disabled={name.trim() === "" || !(Number(preis || vorschlag) > 0)}
           onClick={() => {
             setInserate([...inserate, { id: `ins-${Date.now()}`, name: name.trim(), preis: Number(preis || vorschlag) }]);
@@ -48,7 +48,7 @@ export default function Verkaufen() {
       <h2>Meine Inserate</h2>
       {inserate.length === 0 && <p className="gedaempft">Noch keine Inserate.</p>}
       {inserate.map((i) => (
-        <div className="karte reihe" key={i.id}>
+        <div className="flaeche reihe" key={i.id}>
           <span>{i.name}</span>
           <strong>{euro(i.preis * 100)}</strong>
         </div>

@@ -66,6 +66,11 @@ describe("PasstCheck", () => {
     expect(r.begruendung).toContain("Zu knapp durch die Tür");
   });
 
+  it("liefert den Spielraum jeder einzelnen Prüfung (Sofa Lund im Wohnzimmer)", () => {
+    const r = pruefePasst({ breite: 200, tiefe: 85, hoehe: 80 }, wohn);
+    expect(r.details).toEqual({ tuerCm: 10, treppenhausCm: 35, raumCm: 170 });
+  });
+
   it("gelb mit Hinweis bei 10 cm Spielraum", () => {
     const r = pruefePasst({ breite: 70, tiefe: 70, hoehe: 150 }, wg);
     expect(r.spielraumCm).toBe(10);

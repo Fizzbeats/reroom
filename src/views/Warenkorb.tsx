@@ -1,8 +1,16 @@
 import { useState } from "react";
 import type { Moebel } from "../models/types";
 import { alsCent, berechneWarenkorb, euro } from "../logic/preisRechner";
+import { Icon, Leer, MoebelBild, kurzInfo } from "./ui";
 
-export default function Warenkorb({ positionen, onLeeren }: { positionen: Moebel[]; onLeeren: () => void }) {
+interface Props {
+  positionen: Moebel[];
+  onEntfernen: (id: string) => void;
+  onLeeren: () => void;
+  onOeffnen: (id: string) => void;
+}
+
+export default function Warenkorb({ positionen, onEntfernen, onLeeren, onOeffnen }: Props) {
   const [gekauft, setGekauft] = useState(false);
   const k = berechneWarenkorb(positionen);
 
@@ -10,8 +18,8 @@ export default function Warenkorb({ positionen, onLeeren }: { positionen: Moebel
     return (
       <section>
         <h1>Danke!</h1>
-        <p>Das war nur ein Demo-Kauf, es wurde nichts bezahlt.</p>
-        <button className="primaer" onClick={() => { setGekauft(false); onLeeren(); }}>Zurück</button>
+        <Leer titel="Demo-Kauf abgeschlossen">Es wurde nichts bezahlt. Im echten Betrieb läuft die Zahlung über einen Zahlungsdienstleister.</Leer>
+        <button className="knopf breit" style={{ marginTop: 16 }} onClick={() => { setGekauft(false); onLeeren(); }}>Zurück</button>
       </section>
     );
   }
@@ -19,20 +27,31 @@ export default function Warenkorb({ positionen, onLeeren }: { positionen: Moebel
   return (
     <section>
       <h1>Warenkorb</h1>
-      {positionen.length === 0 && <p className="gedaempft">Dein Warenkorb ist leer.</p>}
+      {positionen.length === 0 && <Leer titel="Noch leer">Tippe bei einem Möbel auf „In den Warenkorb“.</Leer>}
+
       {positionen.map((m) => (
-        <div className="karte reihe" key={m.id}>
-          <span>{m.name} <span className="badge">{m.zustand}</span></span>
-          <strong>{euro(alsCent(m.preis))}</strong>
+        <div className="position" key={m.id}>
+          <button className="mini" onClick={() => onOeffnen(m.id)} aria-label={`${m.name} ansehen`} style={{ border: 0, padding: 0 }}>
+            <MoebelBild moebel={m} />
+          </button>
+          <div className="info">
+            <strong>{m.name}</strong>
+            <span>{kurzInfo(m)}</span>
+            <b>{euro(alsCent(m.preis))}</b>
+          </div>
+          <button className="rund" onClick={() => onEntfernen(m.id)} aria-label={`${m.name} entfernen`}><Icon name="schliessen" groesse={18} /></button>
         </div>
       ))}
+
       {positionen.length > 0 && (
-        <div className="karte">
+        <div className="flaeche">
           <div className="summe"><span>Zwischensumme</span><span>{euro(k.zwischensummeCent)}</span></div>
-          <div className="summe"><span>Käuferschutz (gebraucht)</span><span>{euro(k.kaeuferschutzCent)}</span></div>
+          {k.kaeuferschutzCent > 0 && <div className="summe"><span>Käuferschutz (gebraucht)</span><span>{euro(k.kaeuferschutzCent)}</span></div>}
           <div className="summe gross"><span>Endpreis</span><span>{euro(k.endpreisCent)}</span></div>
-          <div className="summe"><span>Cashback (neu, 4 %)</span><span>{euro(k.cashbackCent)}</span></div>
-          <button className="primaer" onClick={() => setGekauft(true)}>Demo-Kauf</button>
+          {k.cashbackCent > 0 && (
+            <div className="summe gruen"><span>Du bekommst zurück (4 % Cashback)</span><span>{euro(k.cashbackCent)}</span></div>
+          )}
+          <button className="knopf breit" onClick={() => setGekauft(true)}>Demo-Kauf</button>
         </div>
       )}
     </section>
