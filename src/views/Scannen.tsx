@@ -1,34 +1,49 @@
 import { useEffect, useState } from "react";
 import type { Raum } from "../models/types";
 import { arPruefen } from "../services/arSitzung";
-import type { ArStatus } from "../logic/arStatus";
+import { istApple, type ArStatus } from "../logic/arStatus";
+import { MESS_SCHRITTE, pruefeEingabe, type MessKey } from "../logic/messSchritte";
 import ArMesser from "./ArMesser";
-import KameraMesser, { type Ziel } from "./KameraMesser";
+import MessAssistent from "./MessAssistent";
 
-type Felder = Record<Ziel, string> & { name: string };
+type Felder = Record<MessKey, string> & { name: string };
 
 const LEER: Felder = { name: "", breite: "", tiefe: "", hoehe: "", tuerB: "", tuerH: "", treppe: "" };
 
-// Mit AR-Kamera (Android) misst die App selbst. Ohne AR (z. B. iPhone im Browser)
-// gibt es die Foto-Messung mit Bankkarte oder Eintippen.
+/**
+ * Raum messen. Auf Android mit Chrome misst die AR-Kamera von allein.
+ * Überall sonst (z. B. iPhone) führt der Assistent durch die Maße, mit Foto oder Maßband-App.
+ */
 export default function Scannen({ onSpeichern }: { onSpeichern: (r: Raum) => void }) {
   const [ar, setAr] = useState<ArStatus>();
   const [f, setF] = useState<Felder>(LEER);
-  const [gemessen, setGemessen] = useState(false);
+  const [fertigGemessen, setFertigGemessen] = useState(false);
 
   useEffect(() => {
     arPruefen().then(setAr);
   }, []);
 
-  const zahl = (s: string) => Number(s.replace(",", "."));
-  const gueltig = f.name.trim() !== "" && (Object.keys(LEER) as (keyof Felder)[]).every((k) => k === "name" || zahl(f[k]) > 0);
+  const apple = istApple(navigator.userAgent);
+  const werte = Object.fromEntries(MESS_SCHRITTE.map((s) => [s.key, pruefeEingabe(s, f[s.key]).cm])) as Record<MessKey, number | undefined>;
+  const gueltig = f.name.trim() !== "" && MESS_SCHRITTE.every((s) => (werte[s.key] ?? 0) > 0);
+  const zeigeFormular = ar?.ok === true || fertigGemessen;
 
-  const feld = (k: Ziel, label: string, beispiel: string) => (
-    <label>
-      {label} (cm)
-      <input inputMode="numeric" value={f[k]} placeholder={`z. B. ${beispiel}`} onChange={(e) => setF({ ...f, [k]: e.target.value })} />
-    </label>
-  );
+  const feld = (s: (typeof MESS_SCHRITTE)[number]) => {
+    const p = pruefeEingabe(s, f[s.key]);
+    return (
+      <label key={s.key}>
+        {s.name} (cm)
+        <input
+          inputMode="decimal"
+          value={f[s.key]}
+          placeholder={`z. B. ${s.beispiel}`}
+          onChange={(e) => setF({ ...f, [s.key]: e.target.value })}
+          aria-invalid={p.status === "ungueltig"}
+        />
+        {(p.status === "warnung" || p.status === "ungueltig") && <span className="feld-hinweis">{p.text}</span>}
+      </label>
+    );
+  };
 
   return (
     <section>
@@ -36,52 +51,58 @@ export default function Scannen({ onSpeichern }: { onSpeichern: (r: Raum) => voi
 
       {ar?.ok === true && (
         <ArMesser
-          onFertig={(werte) => {
-            setF((alt) => ({ ...alt, ...Object.fromEntries(Object.entries(werte).map(([k, v]) => [k, String(v)])) }));
-            setGemessen(true);
+          onFertig={(gemessen) => {
+            setF((alt) => ({ ...alt, ...Object.fromEntries(Object.entries(gemessen).map(([k, v]) => [k, String(v)])) }));
+            setFertigGemessen(true);
           }}
         />
       )}
 
-      {ar && !ar.ok && (
+      {ar && !ar.ok && !fertigGemessen && (
         <>
           <p className="hinweis" role="status">{ar.text}</p>
-          <KameraMesser onWert={(ziel, cm) => setF({ ...f, [ziel]: String(cm) })} />
+          <MessAssistent
+            apple={apple}
+            werte={f}
+            onWert={(key, cm) => setF((alt) => ({ ...alt, [key]: String(cm) }))}
+            onFertig={() => setFertigGemessen(true)}
+            onAlleEintippen={() => setFertigGemessen(true)}
+          />
         </>
       )}
 
-      <div className="flaeche">
-        <h2>{gemessen ? "Gemessene Werte prüfen" : "Maße"}</h2>
-        {gemessen && <p className="gedaempft">Fehlt ein Wert, kannst du ihn hier ergänzen.</p>}
-        <label>
-          Name des Raums
-          <input value={f.name} onChange={(e) => setF({ ...f, name: e.target.value })} placeholder="z. B. Mein Wohnzimmer" />
-        </label>
-        {feld("breite", "Raumbreite", "400")}
-        {feld("tiefe", "Raumtiefe", "500")}
-        {feld("hoehe", "Raumhöhe", "250")}
-        {feld("tuerB", "Türbreite", "85")}
-        {feld("tuerH", "Türhöhe", "205")}
-        {feld("treppe", "Treppenhaus an der engsten Stelle", "110")}
-        <button
-          className="knopf"
-          disabled={!gueltig}
-          onClick={() =>
-            onSpeichern({
-              id: `raum-${Date.now()}`,
-              name: f.name.trim(),
-              breiteCm: zahl(f.breite),
-              tiefeCm: zahl(f.tiefe),
-              hoeheCm: zahl(f.hoehe),
-              tuerBreiteCm: zahl(f.tuerB),
-              tuerHoeheCm: zahl(f.tuerH),
-              treppenhausBreiteCm: zahl(f.treppe),
-            })
-          }
-        >
-          Raum speichern
-        </button>
-      </div>
+      {zeigeFormular && (
+        <div className="flaeche">
+          <h2>{ar?.ok ? "Gemessene Werte prüfen" : "Fast fertig"}</h2>
+          <p className="gedaempft" style={{ margin: 0 }}>
+            {ar?.ok ? "Fehlt ein Wert, kannst du ihn hier ergänzen." : "Prüfe die Maße und gib deinem Raum einen Namen."}
+          </p>
+          <label>
+            Name des Raums
+            <input value={f.name} onChange={(e) => setF({ ...f, name: e.target.value })} placeholder="z. B. Mein Wohnzimmer" autoComplete="off" />
+          </label>
+          {MESS_SCHRITTE.map(feld)}
+          <button
+            className="knopf breit"
+            disabled={!gueltig}
+            onClick={() =>
+              onSpeichern({
+                id: `raum-${Date.now()}`,
+                name: f.name.trim(),
+                breiteCm: werte.breite!,
+                tiefeCm: werte.tiefe!,
+                hoeheCm: werte.hoehe!,
+                tuerBreiteCm: werte.tuerB!,
+                tuerHoeheCm: werte.tuerH!,
+                treppenhausBreiteCm: werte.treppe!,
+              })
+            }
+          >
+            Raum speichern
+          </button>
+          {!ar?.ok && <button className="link" onClick={() => setFertigGemessen(false)}>Zurück zum Assistenten</button>}
+        </div>
+      )}
     </section>
   );
 }

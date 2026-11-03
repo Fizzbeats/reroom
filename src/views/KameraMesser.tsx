@@ -14,13 +14,15 @@ const ZIELE: { id: Ziel; name: string }[] = [
 
 interface Props {
   onWert: (ziel: Ziel, cm: number) => void;
+  /** Wenn gesetzt, wird genau dieses Maß gemessen und die Auswahl ausgeblendet */
+  festesZiel?: Ziel;
 }
 
 /** Foto mit der Kamera aufnehmen, Referenzobjekt antippen, dann beliebige Strecken messen. */
-export default function KameraMesser({ onWert }: Props) {
+export default function KameraMesser({ onWert, festesZiel }: Props) {
   const [bild, setBild] = useState<HTMLImageElement>();
   const [referenzId, setReferenzId] = useState(REFERENZEN[0]!.id);
-  const [ziel, setZiel] = useState<Ziel>("tuerB");
+  const [ziel, setZiel] = useState<Ziel>(festesZiel ?? "tuerB");
   const [refPunkte, setRefPunkte] = useState<Punkt[]>([]);
   const [messPunkte, setMessPunkte] = useState<Punkt[]>([]);
   const [meldung, setMeldung] = useState("");
@@ -121,12 +123,14 @@ export default function KameraMesser({ onWert }: Props) {
           />
           {schritt === 2 && (
             <>
-              <label>
-                Das ist
-                <select value={ziel} onChange={(e) => setZiel(e.target.value as Ziel)}>
-                  {ZIELE.map((z) => <option key={z.id} value={z.id}>{z.name}</option>)}
-                </select>
-              </label>
+              {!festesZiel && (
+                <label>
+                  Das ist
+                  <select value={ziel} onChange={(e) => setZiel(e.target.value as Ziel)}>
+                    {ZIELE.map((z) => <option key={z.id} value={z.id}>{z.name}</option>)}
+                  </select>
+                </label>
+              )}
               <p>{gemessen !== undefined ? <strong>Gemessen: {gemessen} cm</strong> : <span className="gedaempft">Noch keine Strecke gesetzt.</span>}</p>
               <div className="reihe">
                 <button className="knopf" disabled={gemessen === undefined} onClick={() => gemessen !== undefined && onWert(ziel, gemessen)}>

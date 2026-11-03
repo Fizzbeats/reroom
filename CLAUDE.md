@@ -20,6 +20,8 @@
 >
 > **Handy (umgesetzt):** Installierbar als App (`public/manifest.webmanifest`, Symbole in `public/icons/`, erzeugt mit `node scripts/symbole.mjs`), Sicherheitsabstände für Notch und Home-Leiste (`viewport-fit=cover`), Hell/Dunkel-Farbe der Browserleiste. AR-Status mit Erklärung, warum die Kamera ggf. nicht geht (`src/logic/arStatus.ts`). Das AR-Overlay darf nie `display: none` sein, sonst sind Anleitung und Knöpfe in der Kamera unsichtbar. **Die AR-Messung ist noch nicht an einem echten Android-Handy getestet.**
 >
+> **Messen auf dem iPhone (umgesetzt):** Safari kann kein WebXR, also keine Live-Messung im Browser. Stattdessen führt `src/views/MessAssistent.tsx` durch 6 Maße (ein Maß pro Bildschirm, Skizze, Prüfung in `src/logic/messSchritte.ts`), misst auf Wunsch per Foto mit Bankkarte oder verweist auf die Maßband-App des iPhones (`measure://`). Ein vollautomatischer Scan auf dem iPhone geht nur mit einer eigenen App (RoomPlan, nur iPhone 12 Pro und neuer mit LiDAR, Apple-Entwicklerkonto 99 €/Jahr).
+>
 > **Erlebnis für neue Kunden (umgesetzt):**
 > - Willkommen-Karten beim ersten Besuch (`src/views/Willkommen.tsx`): Messen, Stil finden, Sparen.
 > - Möbel im eigenen Grundriss: automatische Platzierung (`src/logic/einrichten.ts`), Startseite zeigt „So könnte es aussehen“, Detailseite hat „Foto / In meinem Raum“ mit Weg durch die Tür. Eigene Auswahl je Raum in `reroom.imRaum`.

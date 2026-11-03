@@ -218,3 +218,10 @@ input[type="file"] { padding: 10px; }
 .willkommen-text { font-size: 1rem; margin: 6px 0 0; }
 .willkommen-knoepfe { margin-top: auto; padding-top: 24px; display: grid; gap: 10px; }
 .willkommen .vollbild-innen { padding-bottom: calc(24px + env(safe-area-inset-bottom)); }
+
+/* Mess-Assistent */
+.assistent > * + * { margin-top: 10px; }
+.skizze { display: block; width: 100%; max-width: 280px; height: auto; margin: 6px auto 0; color: var(--text); background: var(--hintergrund); border-radius: 16px; padding: 8px; }
+.werkzeuge { display: flex; gap: 8px; flex-wrap: wrap; }
+.werkzeuge .knopf { flex: 1; min-width: 150px; text-decoration: none; font-size: .9rem; }
+.feld-hinweis { display: block; margin-top: 6px; font-weight: 400; font-size: .84rem; color: var(--ampel-gelb); }
