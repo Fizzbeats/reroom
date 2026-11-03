@@ -1,0 +1,277 @@
+<title>ReRoom UX-Prüfung</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,650&family=Source+Sans+3:wght@400;600;700&family=IBM+Plex+Mono:wght@500&display=swap">
+<style>
+  /* Layout: eine ruhige Lesespalte, Befunde als Tabellen, Vorschläge mit kleinen Handy-Skizzen */
+  :root {
+    --bg: #F6F3EC; --fl: #FFFFFF; --fg: #2B2419; --muted: #6A5F4E; --linie: #E2DACB;
+    --gruen: #3F5B3A; --gruen-soft: #E3EADF; --senf: #B8860B; --senf-soft: #F6EBCB;
+    --rot: #A8321F; --rot-soft: #F5DED8; --blau: #2F5A7A; --blau-soft: #DDE8F0;
+    --display: "Fraunces", Georgia, serif; --text: "Source Sans 3", "Segoe UI", system-ui, sans-serif; --mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+  }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+    --bg: #1C1914; --fl: #26211A; --fg: #F0E8D8; --muted: #BBAE97; --linie: #3A3328;
+    --gruen: #9CBF8F; --gruen-soft: #2A3527; --senf: #E3B54F; --senf-soft: #3A3120; --rot: #F07A62; --rot-soft: #3E2620; --blau: #8FB7D6; --blau-soft: #22303B; color-scheme: dark; } }
+  :root[data-theme="dark"] {
+    --bg: #1C1914; --fl: #26211A; --fg: #F0E8D8; --muted: #BBAE97; --linie: #3A3328;
+    --gruen: #9CBF8F; --gruen-soft: #2A3527; --senf: #E3B54F; --senf-soft: #3A3120; --rot: #F07A62; --rot-soft: #3E2620; --blau: #8FB7D6; --blau-soft: #22303B; color-scheme: dark; }
+  body { background: var(--bg); color: var(--fg); font: 17px/1.6 var(--text); }
+  .wrap { max-width: 860px; margin: 0 auto; padding-block: 40px 80px; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+  h1, h2, h3 { font-family: var(--display); font-weight: 650; line-height: 1.2; text-wrap: balance; }
+  h1 { font-size: 2.4rem; margin: 6px 0 10px; }
+  h2 { font-size: 1.6rem; margin: 56px 0 12px; padding-top: 20px; border-top: 1px solid var(--linie); }
+  h3 { font-size: 1.15rem; margin: 26px 0 6px; font-weight: 500; }
+  p, li { max-width: 68ch; }
+  .eyebrow { font: 500 .75rem var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+  .lead { font-size: 1.15rem; color: var(--muted); }
+  a { color: var(--blau); }
+  .fazit { background: var(--fl); border: 1px solid var(--linie); border-radius: 12px; padding: 20px 24px; margin-top: 24px; }
+  .fazit ol { margin: 8px 0 0; padding-left: 20px; display: grid; gap: 6px; }
+  .tabelle { overflow-x: auto; margin: 12px 0; }
+  table { width: 100%; border-collapse: collapse; font-size: .95rem; min-width: 560px; }
+  th, td { text-align: left; vertical-align: top; padding: 10px 12px; border-bottom: 1px solid var(--linie); }
+  th { font: 500 .72rem var(--mono); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  .pill { display: inline-block; font: 500 .72rem var(--mono); letter-spacing: .05em; padding: 2px 8px; border-radius: 999px; white-space: nowrap; }
+  .hoch { background: var(--rot-soft); color: var(--rot); }
+  .mittel { background: var(--senf-soft); color: var(--senf); }
+  .niedrig { background: var(--blau-soft); color: var(--blau); }
+  .apps { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; margin-top: 14px; }
+  .app { background: var(--fl); border: 1px solid var(--linie); border-radius: 12px; padding: 16px 18px; display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+  .app h3 { margin: 0; }
+  .app .art { font: 500 .72rem var(--mono); color: var(--muted); text-transform: uppercase; letter-spacing: .08em; }
+  .app .lehre { margin-top: auto; padding-top: 8px; border-top: 1px dashed var(--linie); font-size: .95rem; }
+  .app .lehre b { color: var(--gruen); }
+  .vorschlag { display: grid; grid-template-columns: 1fr 220px; gap: 24px; align-items: start; margin-top: 18px; padding: 20px 0; border-top: 1px solid var(--linie); }
+  .vorschlag:first-of-type { border-top: 0; }
+  .vorschlag > div { min-width: 0; }
+  .vorschlag h3 { margin-top: 0; }
+  .meta { display: flex; flex-wrap: wrap; gap: 8px; margin: 4px 0 8px; }
+  .vorbild { font-size: .9rem; color: var(--muted); }
+  @media (max-width: 640px) { .vorschlag { grid-template-columns: 1fr; } .skizze { margin: 0 auto; } }
+  /* Handy-Skizzen im ReRoom-Stil (feste Farben, da sie die App selbst zeigen) */
+  .skizze { width: 220px; max-width: 100%; border: 6px solid #2B2419; border-radius: 26px; background: #F4E8CC; color: #3A2B1A; padding: 14px 12px; font: 12px/1.4 Georgia, serif; display: flex; flex-direction: column; gap: 8px; }
+  .skizze b.t { font-size: 16px; }
+  .skizze .k { background: #FBF3DE; border: 1px solid rgb(58 43 26 / .2); border-radius: 8px; padding: 8px 10px; }
+  .skizze .btn { background: #3F5B3A; color: #FBF3DE; border-radius: 8px; padding: 8px; text-align: center; font-weight: 700; }
+  .skizze .schritt { display: flex; gap: 8px; align-items: center; }
+  .skizze .nr { width: 20px; height: 20px; border-radius: 50%; border: 1.5px solid #3A2B1A; display: grid; place-items: center; font-size: 11px; flex: none; }
+  .skizze .nr.ok { background: #3F5B3A; color: #FBF3DE; border-color: #3F5B3A; }
+  .skizze .grau { color: #6B5A3E; }
+  .skizze .chip { display: inline-block; border: 1px solid rgb(58 43 26 / .3); border-radius: 999px; padding: 1px 8px; margin: 2px 2px 0 0; }
+  .skizze .chip.an { background: #3F5B3A; color: #FBF3DE; border-color: #3F5B3A; }
+  .skizze .bild { height: 54px; border-radius: 6px; background: #E1CE9F; display: grid; place-items: center; font-size: 22px; }
+  .skizze .zeile { display: flex; justify-content: space-between; align-items: center; gap: 6px; }
+  .skizze .badge-g { color: #3A7A3A; font-weight: 700; }
+  .skizze .fortschritt { height: 6px; background: #E1CE9F; border-radius: 3px; overflow: hidden; }
+  .skizze .fortschritt i { display: block; height: 100%; width: 33%; background: #3F5B3A; }
+  .quellen li { font-size: .9rem; }
+  :focus-visible { outline: 3px solid var(--senf); outline-offset: 2px; }
+</style>
+
+<main class="wrap">
+  <p class="eyebrow">ReRoom · Kundenprüfung UX und UI · Stand 3. November 2026</p>
+  <h1>Wo ReRoom einfacher werden muss</h1>
+  <p class="lead">Ich bin die Web-Version von ReRoom mit drei typischen Kundinnen und Kunden durchgegangen und habe sie mit Apps verglichen, die bei Raum-Scan, Möbelkauf und Gebrauchtverkauf gut funktionieren. Im Mittelpunkt steht Einfachheit: Kommt jemand ohne Erklärung in unter drei Minuten zu einem Möbel, das sicher passt?</p>
+
+  <section class="fazit" aria-labelledby="kurz">
+    <h3 id="kurz" style="margin-top:0">Kurzfazit</h3>
+    <p>Die Idee ist stark, und der Passt-Check ist das, was andere Apps nicht haben. Im Moment versteckt die App ihn aber: Man muss erst wissen, dass man einen Raum auswählen muss, und dann viele Felder auf einmal ausfüllen. Fünf Änderungen bringen am meisten:</p>
+    <ol>
+      <li>Startseite als geführter Weg in drei Schritten statt Raumliste.</li>
+      <li>Messen als Assistent: ein Maß pro Bildschirm, mit der Tür zuerst.</li>
+      <li>In „Entdecken“ zuerst Ergebnisse zeigen, die Filter wandern in ein Menü.</li>
+      <li>Jedes Möbel bekommt ein Bild und eine Detailseite, die Karten werden kürzer.</li>
+      <li>Verkaufen beginnt mit dem Foto, wie bei Vinted.</li>
+    </ol>
+  </section>
+
+  <h2>So habe ich geprüft</h2>
+  <p>Ich habe jeden Bildschirm aus Sicht von drei Personen durchgespielt und notiert, wo jemand stockt, raten muss oder abbricht. Echte Nutzertests mit Menschen ersetzt das nicht. Es zeigt aber, wo ihr zuerst ansetzen solltet.</p>
+  <div class="tabelle"><table>
+    <thead><tr><th>Person</th><th>Ziel</th><th>Wo es hakt</th></tr></thead>
+    <tbody>
+      <tr><td><b>Lena, 22</b>, Studentin, zieht ins WG-Zimmer</td><td>Günstiges gebrauchtes Bett, das durch die enge Tür passt</td><td>Weiß nicht, dass sie erst einen Raum auswählen muss. Die Ampel taucht in „Entdecken“ sonst gar nicht auf.</td></tr>
+      <tr><td><b>Herr Becker, 58</b>, richtet das Wohnzimmer neu ein</td><td>Sofa kaufen, ohne dass es im Treppenhaus stecken bleibt</td><td>Sieben Maßfelder auf einmal, dazu Begriffe wie „Referenzobjekt“. Er bricht beim Messen ab.</td></tr>
+      <tr><td><b>Aylin, 31</b>, verkauft ihren alten Schrank</td><td>Schnell ein Inserat einstellen</td><td>Kein Foto, keine Maße, kein Zustand. Der Preis springt von allein ins Feld, und es ist unklar, ob das schon ihr Preis ist.</td></tr>
+    </tbody>
+  </table></div>
+
+  <h2>Befunde je Bildschirm</h2>
+  <div class="tabelle"><table>
+    <thead><tr><th>Bildschirm</th><th>Befund</th><th>Gewicht</th></tr></thead>
+    <tbody>
+      <tr><td>Start</td><td>Kein klarer nächster Schritt. Die Liste mischt Beispielräume und eigene Räume, und „Auswählen“ erklärt nicht, wozu.</td><td><span class="pill hoch">Hoch</span></td></tr>
+      <tr><td>Start</td><td>Das Titelbild nimmt ein Drittel des Bildschirms ein, ohne dass man damit etwas tun kann.</td><td><span class="pill niedrig">Niedrig</span></td></tr>
+      <tr><td>Scannen</td><td>Kamera-Messung und sieben Felder stehen auf einem Bildschirm. Die Felder sind schon mit 400, 500 usw. gefüllt, so speichert man leicht falsche Maße.</td><td><span class="pill hoch">Hoch</span></td></tr>
+      <tr><td>Scannen</td><td>„Referenzobjekt“ und „Ebene“ sind Fachwörter. Ein kleines Bild „Karte an die Tür halten“ erklärt mehr als drei Sätze.</td><td><span class="pill mittel">Mittel</span></td></tr>
+      <tr><td>Entdecken</td><td>Vier Filtergruppen stehen über 30 Ergebnissen. Am Handy sieht man zuerst nur Knöpfe und kein einziges Möbel.</td><td><span class="pill hoch">Hoch</span></td></tr>
+      <tr><td>Entdecken</td><td>Die Möbel haben keine Bilder. Man muss Text lesen, um ein Sofa von einem Regal zu unterscheiden.</td><td><span class="pill hoch">Hoch</span></td></tr>
+      <tr><td>Entdecken</td><td>Die Ampel erscheint nur, wenn vorher ein Raum gewählt wurde, und ihr Begründungstext ist auf jeder Karte lang.</td><td><span class="pill mittel">Mittel</span></td></tr>
+      <tr><td>Entdecken</td><td>Die Stilnamen „skandi“ und „industrial“ sind kleingeschrieben und halb Englisch, die Farben sind nur Wörter ohne Farbpunkt.</td><td><span class="pill niedrig">Niedrig</span></td></tr>
+      <tr><td>Warenkorb</td><td>„Käuferschutz 0,00 €“ steht auch dann da, wenn nichts Gebrauchtes im Korb ist. Das Cashback steht unter dem Endpreis, ohne zu sagen, wann man es bekommt.</td><td><span class="pill mittel">Mittel</span></td></tr>
+      <tr><td>Verkaufen</td><td>Ein Inserat ohne Foto, Maße und Zustand verkauft sich nicht. Der Plan sieht Maße aus dem Scan vor, das fehlt noch.</td><td><span class="pill hoch">Hoch</span></td></tr>
+      <tr><td>Überall</td><td>Fünf Tabs, obwohl „Scannen“ eine Aufgabe ist und kein Ort. Die Emoji-Symbole sehen auf jedem Gerät anders aus.</td><td><span class="pill mittel">Mittel</span></td></tr>
+      <tr><td>Überall</td><td>Die Serifenschrift ist bei kleinen Zahlen wie Maßen und Preisen schwerer zu lesen als eine schlichte Schrift.</td><td><span class="pill niedrig">Niedrig</span></td></tr>
+    </tbody>
+  </table></div>
+
+  <h2>Vergleichbare Apps und was ReRoom übernehmen kann</h2>
+  <p>Keine dieser Apps verbindet Passt-Check, Neu und Gebraucht wie ReRoom. Jede löst aber einen Teil sehr gut.</p>
+  <div class="apps">
+    <article class="app"><span class="art">Raum scannen und einrichten</span><h3>IKEA Kreativ</h3>
+      <p>Scannt den Raum, löscht die vorhandenen Möbel aus dem Bild und stellt neue hinein. Ohne LiDAR gibt es automatisch einen Foto-Weitwinkel-Scan. Kritik von Testern: Der Scan des eigenen Raums ist zu weit hinten versteckt, und vor dem Stöbern steht eine Anmeldepflicht.</p>
+      <p class="lehre"><b>Für ReRoom:</b> „Eigenen Raum messen“ ganz nach vorn. Kein Konto zum Stöbern verlangen.</p></article>
+    <article class="app"><span class="art">Möbel in echter Größe ansehen</span><h3>Houzz „View in My Room“</h3>
+      <p>Ein Knopf direkt auf der Produktseite öffnet die Kamera und stellt das Möbel in echter Größe in den Raum. Laut Houzz hat die Hälfte der Käufer die Funktion vor dem Kauf genutzt.</p>
+      <p class="lehre"><b>Für ReRoom:</b> „In meinen Raum stellen“ gehört auf die Detailseite, mit einem Tipp erreichbar.</p></article>
+    <article class="app"><span class="art">Möbel ansehen und Räume planen</span><h3>Wayfair</h3>
+      <p>„View in Room“ legt Produktbilder über das Kamerabild. Später kam ein 3D-Raumplaner dazu, in dem man den Raum aus verschiedenen Winkeln ansieht.</p>
+      <p class="lehre"><b>Für ReRoom:</b> Es braucht kein perfektes 3D. Eine einfache Ansicht mit echten Maßen reicht für den Anfang.</p></article>
+    <article class="app"><span class="art">Grundriss per Scan</span><h3>Magicplan und Floor Plan+</h3>
+      <p>Man geht einmal durch den Raum, die App erkennt Wände, Türen und Fenster. LiDAR ist am genauesten, ohne LiDAR wird es in verwinkelten Räumen oder bei wenig Licht unsicher.</p>
+      <p class="lehre"><b>Für ReRoom:</b> Ehrlich sagen, wie genau gemessen wurde, und bei knappen Ergebnissen zum Nachmessen auffordern. Das macht der Passt-Check schon richtig.</p></article>
+    <article class="app"><span class="art">Grundriss zeichnen</span><h3>Planner 5D und Homestyler</h3>
+      <p>Viele Funktionen, maßstabsgetreue Grundrisse, große Möbel-Kataloge. Für Einsteiger wirkt das schnell überladen.</p>
+      <p class="lehre"><b>Für ReRoom:</b> Gegenbeispiel. Lieber wenige Funktionen, die man ohne Anleitung versteht.</p></article>
+    <article class="app"><span class="art">Gebraucht verkaufen</span><h3>Vinted</h3>
+      <p>Ein großer „Verkaufen“-Knopf in der Mitte der Leiste, danach sofort Fotos. Das erste Foto zeigt den ganzen Artikel. Erst dann kommen Titel, Zustand und Preis.</p>
+      <p class="lehre"><b>Für ReRoom:</b> Inserat mit dem Foto beginnen. Die Maße kommen aus der Kamera-Messung, der Preisvorschlag am Ende.</p></article>
+    <article class="app"><span class="art">Stil finden</span><h3>Havenly</h3>
+      <p>Ein kurzes Stil-Quiz mit Bildern, bevor Vorschläge kommen. Gute Praxis bei solchen Quiz: wenige Fragen, erst den Nutzen zeigen, dann nach einem Konto fragen. Messen, bei welcher Frage Leute abbrechen.</p>
+      <p class="lehre"><b>Für ReRoom:</b> Der Stil-Finder mit Wischkarten passt. Höchstens vier Schritte, jederzeit überspringbar.</p></article>
+  </div>
+  <p class="vorbild">Zu Kleinanzeigen habe ich keine belastbaren Quellen zum Ablauf gefunden. Die Aussagen zu Vinted stammen aus Hilfeseiten und Ratgebern, die zu IKEA und Houzz teils aus älteren Berichten. Bitte vor Entscheidungen selbst in den Apps nachsehen.</p>
+
+  <h2>Vorschläge, nach Wirkung sortiert</h2>
+
+  <div class="vorschlag">
+    <div>
+      <h3>1. Startseite als Weg in drei Schritten</h3>
+      <div class="meta"><span class="pill hoch">Wirkung hoch</span><span class="pill niedrig">Aufwand klein</span></div>
+      <p>Statt einer Raumliste zeigt die Startseite die drei Schritte „Raum messen“, „Stil wählen“ und „Passende Möbel“. Erledigte Schritte bekommen einen Haken, und genau ein großer Knopf führt zum nächsten. Die Beispielräume wandern hinter „Ohne Messen ausprobieren“.</p>
+      <p class="vorbild">Vorbild: IKEA Kreativ (eigener Raum nach vorn), Havenly (geführter Einstieg)</p>
+    </div>
+    <div class="skizze" aria-label="Skizze: Startseite mit drei Schritten">
+      <b class="t">ReRoom</b>
+      <span class="grau">Dein Weg zum passenden Möbel</span>
+      <div class="k schritt"><span class="nr ok">✓</span><span>Raum messen<br><span class="grau">Wohnzimmer · Tür 90 cm</span></span></div>
+      <div class="k schritt"><span class="nr">2</span><span><b>Stil wählen</b></span></div>
+      <div class="k schritt grau"><span class="nr">3</span><span>Passende Möbel</span></div>
+      <div class="btn">Weiter: Stil wählen</div>
+      <span class="grau" style="text-align:center">Ohne Messen ausprobieren</span>
+    </div>
+  </div>
+
+  <div class="vorschlag">
+    <div>
+      <h3>2. Messen als Assistent, Tür zuerst</h3>
+      <div class="meta"><span class="pill hoch">Wirkung hoch</span><span class="pill mittel">Aufwand mittel</span></div>
+      <p>Ein Maß pro Bildschirm mit Fortschrittsbalken: zuerst Türbreite, dann Türhöhe, dann Treppenhaus, zuletzt der Raum. Tür und Treppenhaus entscheiden am häufigsten, ob ein Möbel passt. Jeder Schritt zeigt ein kleines Bild, wo gemessen wird, und bietet „Mit Kamera“ oder „Eintippen“. Die Felder starten leer. Wer ein Maß nicht weiß, wählt „Weiß ich nicht“: Dann rechnet die App mit einem üblichen Wert und markiert den Passt-Check als unsicher.</p>
+      <p class="vorbild">Vorbild: Magicplan (Schritt für Schritt), Vinted (ein Feld nach dem anderen)</p>
+    </div>
+    <div class="skizze" aria-label="Skizze: Mess-Assistent für die Türbreite">
+      <div class="fortschritt"><i></i></div>
+      <span class="grau">Schritt 1 von 3</span>
+      <b class="t">Wie breit ist deine Tür?</b>
+      <div class="bild" aria-hidden="true">🚪↔</div>
+      <div class="k">Innen von Rahmen zu Rahmen messen</div>
+      <div class="btn">📷 Mit Kamera messen</div>
+      <div class="k" style="text-align:center">Eintippen</div>
+      <span class="grau" style="text-align:center">Weiß ich nicht</span>
+    </div>
+  </div>
+
+  <div class="vorschlag">
+    <div>
+      <h3>3. Entdecken: erst Ergebnisse, dann Filter</h3>
+      <div class="meta"><span class="pill hoch">Wirkung hoch</span><span class="pill niedrig">Aufwand klein</span></div>
+      <p>Oben steht eine Zeile mit aktiven Filtern als Chips, etwa „Wohnzimmer“, „Skandinavisch“ und „bis 500 €“, dazu ein Knopf „Filter“, der ein Menü von unten öffnet. Der Schalter „Nur was passt“ ist von Anfang an eingeschaltet. Die Ampel wird ein kurzes Abzeichen wie „✓ Passt“ oder „! Knapp“. Die ausführliche Begründung steht auf der Detailseite.</p>
+      <p class="vorbild">Vorbild: Wayfair und IKEA (Filterleiste über Ergebnissen)</p>
+    </div>
+    <div class="skizze" aria-label="Skizze: Entdecken mit Filterchips und kompakter Karte">
+      <b class="t">Entdecken</b>
+      <div><span class="chip an">Wohnzimmer</span><span class="chip an">Skandi</span><span class="chip">Filter ▾</span></div>
+      <div class="zeile"><span>Nur was passt</span><span class="chip an">An</span></div>
+      <div class="k"><div class="bild" aria-hidden="true">🛋️</div><div class="zeile"><b>Sofa Lund</b><span class="grau">gebraucht</span></div><div class="zeile"><b>180 €</b><span class="badge-g">✓ Passt</span></div></div>
+      <div class="k"><div class="bild" aria-hidden="true">🪑</div><div class="zeile"><b>Stuhl Ahorn</b><span class="grau">neu</span></div></div>
+    </div>
+  </div>
+
+  <div class="vorschlag">
+    <div>
+      <h3>4. Bilder und eine Detailseite für jedes Möbel</h3>
+      <div class="meta"><span class="pill hoch">Wirkung hoch</span><span class="pill mittel">Aufwand mittel</span></div>
+      <p>Solange es keine echten Fotos gibt, bekommt jede Kategorie eine einfache Zeichnung in der Möbelfarbe. Ein Tipp auf die Karte öffnet die Detailseite mit allen Maßen, dem Passt-Check samt Begründung und den beiden Knöpfen „In meinen Raum stellen“ und „In den Warenkorb“. Auf den Karten selbst bleibt kein Knopf mehr, das macht die Liste ruhiger.</p>
+      <p class="vorbild">Vorbild: Houzz (Raum-Ansicht direkt auf der Produktseite)</p>
+    </div>
+    <div class="skizze" aria-label="Skizze: Möbel-Detailseite">
+      <div class="bild" style="height:80px" aria-hidden="true">🛋️</div>
+      <b class="t">Sofa Lund · 180 €</b>
+      <span class="grau">Privat, Chemnitz-Kaßberg · 3 km</span>
+      <div class="k">200 × 85 × 80 cm</div>
+      <div class="k"><span style="color:#9A6C00;font-weight:700">! Knapp</span><br>Tür: 10 cm Spielraum. Bitte nachmessen.</div>
+      <div class="k" style="text-align:center">In meinen Raum stellen</div>
+      <div class="btn">In den Warenkorb</div>
+    </div>
+  </div>
+
+  <div class="vorschlag">
+    <div>
+      <h3>5. Verkaufen beginnt mit dem Foto</h3>
+      <div class="meta"><span class="pill hoch">Wirkung hoch</span><span class="pill mittel">Aufwand mittel</span></div>
+      <p>Der Ablauf ist Foto, Kategorie, Maße, Zustand und Preis. Die Maße kommen aus der Kamera-Messung mit der Karte am Möbel. Der Preisvorschlag (Neupreis × 0,4) steht als Hinweis neben dem Feld und füllt das Feld nicht von allein, damit klar ist, was der eigene Preis ist.</p>
+      <p class="vorbild">Vorbild: Vinted (Verkaufen-Knopf, Fotos zuerst)</p>
+    </div>
+    <div class="skizze" aria-label="Skizze: Verkaufen mit Foto zuerst">
+      <b class="t">Verkaufen</b>
+      <div class="bild" style="height:80px" aria-hidden="true">📷</div>
+      <span class="grau" style="text-align:center">Erstes Foto: das ganze Möbel</span>
+      <div class="k">Maße: 150 × 55 × 195 cm <span class="grau">(gemessen)</span></div>
+      <div class="k">Preis: ___ € <span class="grau">· Vorschlag 120 €</span></div>
+      <div class="btn">Weiter</div>
+    </div>
+  </div>
+
+  <h3>Kleinere Anpassungen</h3>
+  <ul>
+    <li><b>Vier Tabs statt fünf:</b> Start, Entdecken, Warenkorb, Verkaufen. Messen startet über die Startseite oder eine Raumkarte. Ein Chat-Knopf kommt oben rechts dazu, sobald es den Chatbot gibt.</li>
+    <li><b>Einheitliche Symbole</b> statt Emojis, zum Beispiel ein schlichtes Strich-Set, damit sie auf jedem Handy gleich aussehen.</li>
+    <li><b>Schrift:</b> Die Serifenschrift nur für Überschriften verwenden. Text, Preise und Maße in einer schlichten Schrift mit gleich breiten Ziffern setzen.</li>
+    <li><b>Stile mit deutschen Namen</b> und kleinem Vorschaubild: Skandinavisch, Modern, Industrie-Look, Boho, Vintage. Farbwahl mit Farbpunkten.</li>
+    <li><b>Warenkorb:</b> Den Käuferschutz nur zeigen, wenn Gebrauchtes im Korb liegt. Das Cashback als „Du bekommst 25,96 € zurück, sobald die Ware da ist“ formulieren.</li>
+    <li><b>Kein Konto bis zum Kauf</b> oder bis zum ersten Inserat, denn bei IKEA wird gerade die frühe Anmeldepflicht kritisiert.</li>
+    <li><b>Titelbild verkleinern</b> auf etwa ein Viertel des Bildschirms, damit der erste Schritt ohne Scrollen sichtbar ist.</li>
+  </ul>
+
+  <h2>Woran ihr messt, ob es einfacher geworden ist</h2>
+  <div class="tabelle"><table>
+    <thead><tr><th>Kennzahl</th><th>Ziel für die Pitch-Demo</th></tr></thead>
+    <tbody>
+      <tr><td>Zeit vom Öffnen bis zum ersten „passt“-Möbel</td><td>unter 3 Minuten</td></tr>
+      <tr><td>Anteil, der das Messen abschließt</td><td>mehr als 70 %</td></tr>
+      <tr><td>Abbruch je Schritt im Mess-Assistenten und im Stil-Finder</td><td>für jeden Schritt einzeln ansehen, den schlechtesten zuerst verbessern</td></tr>
+      <tr><td>Test mit 5 Personen aus dem Freundeskreis</td><td>Niemand fragt „Was muss ich jetzt machen?“</td></tr>
+    </tbody>
+  </table></div>
+
+  <h2>Quellen</h2>
+  <ul class="quellen">
+    <li><a href="https://www.ikea.com/gb/en/customer-service/knowledge/articles/250fg37g-2498-40gg-916c-f27d354683f0.html">IKEA: How do I scan a room on IKEA Kreativ?</a></li>
+    <li><a href="https://screensdesign.com/showcase/ikea">screensdesign: IKEA App Onboarding</a></li>
+    <li><a href="https://www.techradar.com/news/ikeas-new-iphone-app-can-delete-and-replace-your-old-furniture">TechRadar: IKEA app can delete and replace your furniture</a></li>
+    <li><a href="https://digitalstrategy.rsm.nl/2025/09/15/ikea-kreativ-how-ai-and-ar-are-disrupting-furniture-shopping/">RSM: IKEA Kreativ, AI and AR in furniture shopping</a></li>
+    <li><a href="https://www.furnituretoday.com/business-news/houzz-updates-ar-app-says-users-11x-more-likely-buy">Furniture Today: Houzz updates AR app</a></li>
+    <li><a href="https://www.houzz.se/press/398/Houzz-App-Upgrades-3D-Augmented-Reality-Tool-with-ARKit-to-Help-You-Design-and-Shop">Houzz Press: 3D AR with ARKit</a></li>
+    <li><a href="https://www.retaildive.com/news/wayfair-app-lets-shoppers-visualize-decor-in-their-own-homes/431814">Retail Dive: Wayfair View in Room</a></li>
+    <li><a href="https://blog.designfiles.co/best-room-scanning-apps-for-interior-designers/">DesignFiles: Room scanning apps</a></li>
+    <li><a href="https://arcsite.com/blog/room-scan-apps">ArcSite: Room scan apps</a></li>
+    <li><a href="https://www.remodelai.io/blog/best-free-ai-room-planner-apps">Remodel AI: Free room planner apps (Anbieter mit Eigeninteresse)</a></li>
+    <li><a href="https://www.vinted.co.uk/help/48">Vinted Hilfe: Fotos</a></li>
+    <li><a href="https://www.adobe.com/uk/express/learn/blog/how-to-sell-on-vinted">Adobe: How to sell on Vinted</a></li>
+    <li><a href="https://ixd.prattsi.org/2026/09/design-critique-vinted-mobile-app/">Pratt IxD: Design critique Vinted</a></li>
+    <li><a href="https://adapty.io/blog/markdown/how-to-fix-your-onboarding-flow.md">Adapty: Onboarding flow</a></li>
+    <li><a href="https://docs.revenuehunt.com/customer-success/reduce-dropoff">RevenueHunt: Quiz drop-off</a></li>
+    <li><a href="https://www.lazyweb.com/research/what-percent-of-apps-show-an-onboarding-quiz.md">Lazyweb: Onboarding quiz prevalence</a></li>
+  </ul>
+</main>

@@ -152,7 +152,7 @@ TabView unten mit: **Start**, **Scannen**, **Entdecken**, **Warenkorb**, **Verka
 ## Design
 
 - Stil „Wohnstube" (Vintage, gewählt aus 5 Entwürfen): warm, viel Weißraum, feine Linien, Karten mit Eckenradius 10, Serifenschrift (Georgia).
-- Bewegte Deko-Szene auf der Startseite (Pendeluhr, Plattenspieler, Dampf, Katze), bewegt sich leicht mit dem Finger mit und hält bei „Bewegung reduzieren" still.
+- Illustriertes Titelbild auf der Startseite (Wohnstube mit Pendeluhr, Plattenspieler, Katze). Es bewegt sich nicht.
 - Farben im Asset-Katalog (jeweils mit Dark-Mode-Variante):
   - Hintergrund `#F4E8CC`, Karten `#FBF3DE`
   - Primär Waldgrün `#3F5B3A`
