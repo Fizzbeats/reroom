@@ -34,7 +34,9 @@ function pruefeTuer(m: Masse, raum: Raum): Pruefung {
     text:
       spielraumCm < 0
         ? `Passt nicht durch die Tür: kleinste Möbelmaße ${a} × ${b} cm, Tür nur ${raum.tuerBreiteCm} × ${raum.tuerHoeheCm} cm.`
-        : `Tür: ${spielraumCm} cm Spielraum.`,
+        : spielraumCm < 5
+          ? `Zu knapp durch die Tür: nur ${spielraumCm} cm Spielraum.`
+          : `Tür: ${spielraumCm} cm Spielraum.`,
   };
 }
 
@@ -47,7 +49,9 @@ function pruefeTreppenhaus(m: Masse, raum: Raum): Pruefung {
     text:
       spielraumCm < 0
         ? `Passt nicht durchs Treppenhaus: ${b} cm Breite, Treppenhaus nur ${raum.treppenhausBreiteCm} cm.`
-        : `Treppenhaus: ${spielraumCm} cm Spielraum.`,
+        : spielraumCm < 5
+          ? `Zu knapp fürs Treppenhaus: nur ${spielraumCm} cm Spielraum.`
+          : `Treppenhaus: ${spielraumCm} cm Spielraum.`,
   };
 }
 
@@ -57,7 +61,7 @@ function pruefeRaum(m: Masse, raum: Raum): Pruefung {
   const gedreht = Math.min(raum.breiteCm - m.tiefe, raum.tiefeCm - m.breite);
   const hoehe = raum.hoeheCm - m.hoehe;
   const spielraumCm = Math.min(Math.max(normal, gedreht), hoehe);
-  let text = `Raum: ${spielraumCm} cm Spielraum.`;
+  let text = spielraumCm < 5 ? `Zu knapp im Raum: nur ${spielraumCm} cm Spielraum.` : `Raum: ${spielraumCm} cm Spielraum.`;
   if (spielraumCm < 0) {
     text =
       hoehe < 0

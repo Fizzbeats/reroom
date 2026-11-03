@@ -1,0 +1,77 @@
+/* Gemeinsames Grundgerüst der 5 Entwürfe. Jede Seite setzt nur ihre eigenen Farben und Schrift. */
+* { box-sizing: border-box; }
+body {
+  margin: 0; min-height: 100vh; background: var(--seite);
+  display: flex; flex-direction: column; align-items: center; gap: 12px; padding: 16px;
+  font-family: var(--schrift); color: var(--text);
+}
+.leiste { display: flex; gap: 12px; align-items: center; font: 14px system-ui, sans-serif; color: var(--seite-text, #444); }
+.leiste a, .leiste button { color: inherit; font: inherit; background: transparent; border: 1px solid currentColor; border-radius: 999px; padding: 6px 14px; cursor: pointer; text-decoration: none; }
+
+.phone {
+  width: 390px; max-width: 100%; min-height: 820px; position: relative; overflow: hidden;
+  background: var(--bg); border-radius: 40px; box-shadow: 0 10px 40px rgb(0 0 0 / .25);
+  padding-bottom: 72px;
+}
+.kopf { padding: 24px 22px 8px; }
+.kopf h1 { margin: 0; font-size: var(--h1, 2rem); letter-spacing: var(--h1-spacing, 0); font-family: var(--schrift-titel, inherit); }
+.kopf p { margin: 4px 0 0; color: var(--muted); }
+.szene { margin: 8px 0 0; background: var(--szene); line-height: 0; }
+.szene svg { width: 100%; height: auto; display: block; }
+.inhalt { padding: 6px 18px 0; }
+.inhalt h2 { font-size: 1.05rem; margin: 18px 4px 4px; font-family: var(--schrift-titel, inherit); }
+.karte {
+  background: var(--karte); border-radius: var(--radius, 16px); padding: 14px 16px; margin: 12px 0;
+  box-shadow: var(--schatten, 0 1px 3px rgb(0 0 0 / .1));
+}
+.reihe { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+.muted { color: var(--muted); font-size: .9rem; }
+.badge { background: var(--akzent); color: var(--auf-akzent, #1F2A27); border-radius: 999px; padding: 2px 10px; font-size: .8rem; font-weight: 600; }
+.preis { margin: 8px 0 0; font-size: 1.05rem; }
+.ampel { display: flex; gap: 8px; align-items: flex-start; margin: 10px 0; font-size: .92rem; }
+.ampel i { flex: none; width: 12px; height: 12px; border-radius: 50%; margin-top: 5px; }
+button.primaer {
+  width: 100%; min-height: 44px; border: 0; border-radius: var(--knopf, 12px); cursor: pointer;
+  background: var(--primaer); color: var(--auf-primaer); font: inherit; font-weight: 700;
+  transition: transform .15s ease;
+}
+button.primaer:hover { transform: translateY(-2px) scale(1.01); }
+button.primaer:active { transform: scale(.97); }
+button:focus-visible { outline: 3px solid var(--akzent); outline-offset: 2px; }
+.tabs {
+  position: absolute; left: 0; right: 0; bottom: 0; display: flex; background: var(--karte);
+  border-top: 1px solid rgb(128 128 128 / .25); padding: 8px 0 14px;
+}
+.tabs span { flex: 1; text-align: center; font-size: .72rem; color: var(--muted); }
+.tabs span b { display: block; font-size: 1.15rem; font-weight: 400; }
+.tabs .aktiv { color: var(--primaer); font-weight: 700; }
+
+/* Bewegung: Deko-Gruppen im SVG */
+.tiefe { transform: translate(calc(var(--px, 0) * var(--t, 6) * 1px), calc(var(--py, 0) * var(--t, 6) * .5px)); transition: transform .25s ease-out; }
+.wiegen { transform-box: fill-box; transform-origin: 50% 100%; animation: wiegen 5s ease-in-out infinite; }
+.pendel { transform-box: fill-box; transform-origin: 50% 0; animation: pendel 4s ease-in-out infinite; }
+.schweben { animation: schweben 6s ease-in-out infinite; }
+.drehen { transform-box: fill-box; transform-origin: 50% 50%; animation: drehen 40s linear infinite; }
+.dampf { transform-box: fill-box; transform-origin: 50% 100%; animation: dampf 3.6s ease-out infinite; opacity: 0; }
+.flackern { animation: flackern 3.2s ease-in-out infinite; }
+.glimmen { animation: glimmen 2.6s ease-in-out infinite; }
+.wolke { animation: wolke 30s ease-in-out infinite alternate; }
+.schwanz { transform-box: fill-box; transform-origin: 0% 100%; animation: schwanz 2.4s ease-in-out infinite; }
+.nicken { transform-box: fill-box; transform-origin: 50% 100%; animation: nicken 3s ease-in-out infinite; }
+@keyframes wiegen { 0%, 100% { transform: rotate(-3deg); } 50% { transform: rotate(3deg); } }
+@keyframes pendel { 0%, 100% { transform: rotate(-7deg); } 50% { transform: rotate(7deg); } }
+@keyframes schweben { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+@keyframes drehen { to { transform: rotate(360deg); } }
+@keyframes dampf { 0% { transform: translateY(0) scale(.6); opacity: 0; } 25% { opacity: .65; } 100% { transform: translateY(-34px) scale(1.5); opacity: 0; } }
+@keyframes flackern { 0%, 100% { opacity: 1; } 45% { opacity: .75; } 50% { opacity: .95; } 55% { opacity: .6; } }
+@keyframes glimmen { 0%, 100% { opacity: .25; } 50% { opacity: 1; } }
+@keyframes wolke { from { transform: translateX(-50px); } to { transform: translateX(70px); } }
+@keyframes schwanz { 0%, 100% { transform: rotate(-14deg); } 50% { transform: rotate(16deg); } }
+@keyframes nicken { 0%, 100% { transform: rotate(0); } 50% { transform: rotate(5deg); } }
+
+/* Bewegung anhalten: Knopf oben oder Systemeinstellung "Bewegung reduzieren" */
+.still *, .still { animation-play-state: paused !important; }
+@media (prefers-reduced-motion: reduce) {
+  .wiegen, .pendel, .schweben, .drehen, .dampf, .flackern, .glimmen, .wolke, .schwanz, .nicken { animation: none; }
+  .dampf { opacity: .35; }
+}

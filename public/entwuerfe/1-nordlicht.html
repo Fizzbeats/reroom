@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Entwurf 1: Nordlicht (Skandi)</title>
+<link rel="stylesheet" href="base.css" />
+<style>
+  :root {
+    --seite: #E4DED3; --seite-text: #3A3A36;
+    --bg: #F7F4EF; --szene: #F1ECE3; --karte: #FFFFFF; --text: #1F2A27; --muted: #55625E;
+    --primaer: #2F6B5E; --auf-primaer: #FFFFFF; --akzent: #E07A5F;
+    --ampel-gruen: #2E8B57; --ampel-gelb: #B07F00; --ampel-rot: #C0392B;
+    --schrift: system-ui, "Segoe UI", sans-serif; --radius: 16px;
+  }
+</style>
+</head>
+<body>
+<div class="leiste"><a href="index.html">← Alle Entwürfe</a><button id="bew">Bewegung: an</button></div>
+<div class="phone">
+  <header class="kopf"><h1>ReRoom</h1><p>Scannen, Stil wählen, günstiger einrichten.</p></header>
+  <div class="szene">
+    <svg viewBox="0 0 390 250" role="img" aria-label="Helles Zimmer mit wiegender Pflanze, schwingender Lampe, ziehender Wolke und grauem Sofa">
+      <defs>
+        <radialGradient id="glow"><stop offset="0" stop-color="#FFE9A8" stop-opacity=".95"/><stop offset="1" stop-color="#FFE9A8" stop-opacity="0"/></radialGradient>
+        <clipPath id="fenster"><rect x="118" y="30" width="96" height="96"/></clipPath>
+      </defs>
+      <rect width="390" height="250" fill="#F1ECE3"/>
+      <rect y="206" width="390" height="44" fill="#D9BC8F"/>
+      <g class="tiefe" style="--t:3">
+        <rect x="118" y="30" width="96" height="96" fill="#CFE6EE"/>
+        <g clip-path="url(#fenster)"><g class="wolke"><ellipse cx="140" cy="62" rx="24" ry="9" fill="#fff"/><ellipse cx="160" cy="57" rx="17" ry="9" fill="#fff"/></g></g>
+        <rect x="118" y="30" width="96" height="96" fill="none" stroke="#fff" stroke-width="6"/>
+        <path d="M166 30V126M118 78H214" stroke="#fff" stroke-width="4"/>
+      </g>
+      <!-- Teppich und Sofa -->
+      <g class="tiefe" style="--t:6">
+        <ellipse cx="200" cy="222" rx="130" ry="14" fill="#E3D4BC"/>
+        <rect x="112" y="124" width="176" height="44" rx="14" fill="#8B9895"/>
+        <rect x="104" y="150" width="192" height="52" rx="14" fill="#9AA6A3"/>
+        <rect x="124" y="150" width="70" height="30" rx="10" fill="#AAB6B3"/><rect x="204" y="150" width="70" height="30" rx="10" fill="#AAB6B3"/>
+        <rect x="116" y="200" width="8" height="12" fill="#B8935E"/><rect x="276" y="200" width="8" height="12" fill="#B8935E"/>
+        <rect x="236" y="138" width="34" height="34" rx="8" fill="#E07A5F" transform="rotate(10 253 155)"/>
+      </g>
+      <!-- Pflanze: wiegt -->
+      <g class="tiefe" style="--t:12">
+        <g class="wiegen" style="animation-duration:4.5s">
+          <path d="M65 176Q64 140 62 118" stroke="#3F7A55" stroke-width="3" fill="none"/>
+          <ellipse cx="65" cy="128" rx="13" ry="30" fill="#4C9A6A" transform="rotate(-28 65 176)"/>
+          <ellipse cx="65" cy="124" rx="13" ry="32" fill="#3F8A5C" transform="rotate(8 65 176)"/>
+          <ellipse cx="65" cy="130" rx="12" ry="28" fill="#5AAE78" transform="rotate(34 65 176)"/>
+        </g>
+        <path d="M44 172h42l-6 36H50z" fill="#C8704F"/>
+      </g>
+      <!-- Pendelleuchte: schwingt, Licht pulsiert -->
+      <g class="tiefe" style="--t:10">
+        <g class="pendel" style="animation-duration:5s">
+          <line x1="318" y1="0" x2="318" y2="66" stroke="#555" stroke-width="2"/>
+          <circle class="flackern" cx="318" cy="92" r="46" fill="url(#glow)"/>
+          <path d="M298 66h40l8 28h-56z" fill="#2F6B5E"/>
+          <ellipse cx="318" cy="94" rx="28" ry="4" fill="#FFE9A8"/>
+        </g>
+      </g>
+      <!-- Staubflocken im Licht -->
+      <g fill="#fff" opacity=".8">
+        <circle class="schweben" cx="250" cy="90" r="2.5" style="animation-duration:5s"/>
+        <circle class="schweben" cx="276" cy="130" r="2" style="animation-duration:7s;animation-delay:-2s"/>
+        <circle class="schweben" cx="340" cy="120" r="3" style="animation-duration:6s;animation-delay:-4s"/>
+        <circle class="schweben" cx="100" cy="70" r="2" style="animation-duration:8s;animation-delay:-1s"/>
+      </g>
+    </svg>
+  </div>
+  <section class="inhalt"><h2>Passend für dein Wohnzimmer</h2><div class="karten"></div></section>
+  <nav class="tabs" aria-label="Hauptmenü"></nav>
+</div>
+<script src="base.js"></script>
+</body>
+</html>

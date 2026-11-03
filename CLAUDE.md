@@ -5,14 +5,16 @@
 > und am Handy (als Webseite). Die Swift-Planung unten bleibt als Ziel für die iPhone-App erhalten (Stufe 4 wird zu „iPhone und Android").
 >
 > **Ersatz für Apple-Technik im Entwurf:**
-> - RoomPlan-Scan → Raum von Hand eingeben (`src/views/Scannen.tsx`), Beispielräume in `src/data/raeume.ts`
+> - RoomPlan-Scan → Kamera-Messung per Foto mit Referenzobjekt (Bankkarte/A4, `src/views/KameraMesser.tsx`, Logik `src/logic/messen.ts`) oder Raum von Hand eingeben (`src/views/Scannen.tsx`), Beispielräume in `src/data/raeume.ts`
 > - SwiftData → `localStorage` (`src/useLokal.ts`)
 > - `MoebelRepository` → TypeScript-Interface in `src/data/moebelRepository.ts` (später Supabase)
 > - Asset-Katalog mit Dark Mode → `src/styles/tokens.css` + `src/theme.ts` (ein Test prüft, dass beide übereinstimmen und der Kontrast stimmt)
 > - Geld wird in ganzen Cent gerechnet statt mit `Decimal`
 > - `xcodebuild test` → `npm test`
 >
-> **Noch offen im Web-Entwurf:** 3D-Raum, Stil-Finder mit Wisch-Karten, Möbel-Detailseite, Chatbot, echte Scan-Funktion.
+> **Design-Entwürfe:** 5 Stilrichtungen mit bewegter Deko unter `public/entwuerfe/` (im Browser: `/entwuerfe/`).
+>
+> **Noch offen im Web-Entwurf:** Entscheidung für einen Design-Entwurf, 3D-Raum, Stil-Finder mit Wisch-Karten, Möbel-Detailseite, Chatbot, Live-Messung per AR (WebXR, nur Android).
 >
 > **Befehle:** `npm install`, `npm run dev` (Entwicklung), `npm test`, `npm run build`.
 > **CI:** `.github/workflows/ci.yml` (Typen, Tests, Build bei jedem Push und Pull Request).

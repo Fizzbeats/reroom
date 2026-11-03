@@ -1,5 +1,6 @@
 import { useState } from "react";
 import type { Raum } from "../models/types";
+import KameraMesser from "./KameraMesser";
 
 // Auf Windows/Web gibt es kein LiDAR (RoomPlan): Der Raum wird von Hand eingegeben.
 // Ein echter Scan kommt später mit der iPhone-App (siehe CLAUDE.md, Stufe 4).
@@ -18,7 +19,8 @@ export default function Scannen({ onSpeichern }: { onSpeichern: (r: Raum) => voi
   return (
     <section>
       <h1>Raum anlegen</h1>
-      <p className="gedaempft">Alle Maße in Zentimetern. Der automatische Scan ist nur auf dem iPhone mit LiDAR möglich.</p>
+      <p className="gedaempft">Alle Maße in Zentimetern. Miss mit der Kamera oder tippe die Werte ein. Der automatische LiDAR-Scan kommt mit der iPhone-App.</p>
+      <KameraMesser onWert={(ziel, cm) => setF({ ...f, [ziel]: String(cm) })} />
       <div className="karte">
         <label>
           Name

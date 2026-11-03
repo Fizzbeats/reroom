@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Entwurf 4: Klar (Modern minimal)</title>
+<link rel="stylesheet" href="base.css" />
+<style>
+  :root {
+    --seite: #DADFE3; --seite-text: #2A3238;
+    --bg: #F5F7F8; --szene: #E9EEF1; --karte: #FFFFFF; --text: #14202A; --muted: #546572;
+    --primaer: #14202A; --auf-primaer: #FFFFFF; --akzent: #FF6B4A; --auf-akzent: #14202A;
+    --ampel-gruen: #1F8A5B; --ampel-gelb: #A87400; --ampel-rot: #C23B2B;
+    --schrift: "Segoe UI", system-ui, sans-serif; --h1: 2.4rem; --h1-spacing: -.03em;
+    --radius: 22px; --knopf: 16px; --schatten: none;
+  }
+  .kopf h1 { font-weight: 300; }
+  .karte { border: 1px solid #E1E6EA; }
+</style>
+</head>
+<body>
+<div class="leiste"><a href="index.html">← Alle Entwürfe</a><button id="bew">Bewegung: an</button></div>
+<div class="phone">
+  <header class="kopf"><h1>ReRoom</h1><p>Scannen, Stil wählen, günstiger einrichten.</p></header>
+  <div class="szene">
+    <svg viewBox="0 0 390 250" role="img" aria-label="Minimalistischer Raum mit schwebenden Formen, tickender Uhr, Stehlampe und Sofa">
+      <defs><linearGradient id="kegel" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#FFE3A0" stop-opacity=".7"/><stop offset="1" stop-color="#FFE3A0" stop-opacity="0"/></linearGradient></defs>
+      <rect width="390" height="250" fill="#E9EEF1"/>
+      <rect y="212" width="390" height="38" fill="#D3DBE0"/>
+      <!-- Schwebende Formen mit Tiefeneffekt -->
+      <g class="tiefe" style="--t:22"><circle class="schweben" cx="70" cy="60" r="26" fill="#FF6B4A" style="animation-duration:7s"/></g>
+      <g class="tiefe" style="--t:14"><path class="schweben" d="M150 40a30 30 0 0 1 60 0z" fill="#14202A" style="animation-duration:6s;animation-delay:-2s"/></g>
+      <g class="tiefe" style="--t:18"><rect class="schweben" x="250" y="34" width="44" height="44" rx="12" fill="#B7C4CC" style="animation-duration:8s;animation-delay:-3s"/></g>
+      <!-- Wanduhr: Zeiger laufen -->
+      <g class="tiefe" style="--t:6">
+        <circle cx="332" cy="70" r="30" fill="#fff" stroke="#14202A" stroke-width="3"/>
+        <g class="drehen" style="animation-duration:120s"><line x1="332" y1="70" x2="332" y2="52" stroke="#14202A" stroke-width="3" stroke-linecap="round"/></g>
+        <g class="drehen" style="animation-duration:12s"><line x1="332" y1="70" x2="332" y2="46" stroke="#FF6B4A" stroke-width="2" stroke-linecap="round"/></g>
+        <circle cx="332" cy="70" r="3" fill="#14202A"/>
+      </g>
+      <!-- Stehlampe mit Lichtkegel -->
+      <g class="tiefe" style="--t:10">
+        <path class="flackern" d="M60 108L30 212H110z" fill="url(#kegel)" style="animation-duration:5s"/>
+        <rect x="58" y="140" width="4" height="72" fill="#14202A"/><rect x="42" y="208" width="36" height="5" rx="2" fill="#14202A"/>
+        <path d="M44 112h32l-6 28H50z" fill="#14202A"/>
+      </g>
+      <!-- Sofa und Pflanze -->
+      <g class="tiefe" style="--t:8">
+        <rect x="124" y="138" width="170" height="40" rx="16" fill="#C3CED5"/>
+        <rect x="112" y="160" width="194" height="46" rx="16" fill="#14202A"/>
+        <rect x="128" y="206" width="6" height="8" fill="#14202A"/><rect x="284" y="206" width="6" height="8" fill="#14202A"/>
+        <circle cx="270" cy="156" r="14" fill="#FF6B4A"/>
+      </g>
+      <g class="tiefe" style="--t:14">
+        <g class="wiegen" style="animation-duration:4s"><path d="M342 206Q344 170 330 150" stroke="#2F6B5E" stroke-width="3" fill="none"/><ellipse cx="326" cy="146" rx="9" ry="20" fill="#3F8A6C" transform="rotate(-24 330 160)"/><ellipse cx="350" cy="158" rx="8" ry="18" fill="#2F6B5E" transform="rotate(26 342 190)"/></g>
+        <rect x="332" y="196" width="22" height="16" rx="3" fill="#14202A"/>
+      </g>
+    </svg>
+  </div>
+  <section class="inhalt"><h2>Passend für dein Wohnzimmer</h2><div class="karten"></div></section>
+  <nav class="tabs" aria-label="Hauptmenü"></nav>
+</div>
+<script src="base.js"></script>
+</body>
+</html>

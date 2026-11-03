@@ -59,6 +59,13 @@ describe("PasstCheck", () => {
     expect(r.begruendung).toContain("Passt nicht durch die Tür");
   });
 
+  it("rot mit verständlicher Begründung bei 0 bis 4 cm Spielraum", () => {
+    // Schrank Nord im WG-Zimmer (Treppenhaus hier breit): Tür lässt genau 0 cm Spielraum
+    const r = pruefePasst({ breite: 200, tiefe: 60, hoehe: 210 }, { ...wg, treppenhausBreiteCm: 300 });
+    expect(r.ampel).toBe("rot");
+    expect(r.begruendung).toContain("Zu knapp durch die Tür");
+  });
+
   it("gelb mit Hinweis bei 10 cm Spielraum", () => {
     const r = pruefePasst({ breite: 70, tiefe: 70, hoehe: 150 }, wg);
     expect(r.spielraumCm).toBe(10);

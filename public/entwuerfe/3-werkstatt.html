@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Entwurf 3: Werkstatt (Industrial, dunkel)</title>
+<link rel="stylesheet" href="base.css" />
+<style>
+  :root {
+    --seite: #0E1213; --seite-text: #C9D1D3;
+    --bg: #1A1F21; --szene: #23292B; --karte: #262D30; --text: #ECEFF0; --muted: #A9B3B6;
+    --primaer: #F2A33A; --auf-primaer: #1A1F21; --akzent: #F2A33A; --auf-akzent: #1A1F21;
+    --ampel-gruen: #4CC17E; --ampel-gelb: #F0BE2E; --ampel-rot: #F06A58;
+    --schrift: "Segoe UI", system-ui, sans-serif; --schrift-titel: "Arial Narrow", Impact, "Segoe UI", sans-serif;
+    --h1: 2.2rem; --h1-spacing: .12em; --radius: 4px; --knopf: 4px; --schatten: 0 0 0 1px rgb(255 255 255 / .08);
+  }
+  .kopf h1, .inhalt h2 { text-transform: uppercase; }
+</style>
+</head>
+<body>
+<div class="leiste"><a href="index.html">← Alle Entwürfe</a><button id="bew">Bewegung: an</button></div>
+<div class="phone">
+  <header class="kopf"><h1>ReRoom</h1><p>Scannen, Stil wählen, günstiger einrichten.</p></header>
+  <div class="szene">
+    <svg viewBox="0 0 390 250" role="img" aria-label="Loft mit flackernden Glühbirnen, drehendem Zahnrad, aufsteigendem Dampf und Ledersofa">
+      <defs>
+        <radialGradient id="bulb"><stop offset="0" stop-color="#FFC561" stop-opacity=".9"/><stop offset="1" stop-color="#FFC561" stop-opacity="0"/></radialGradient>
+        <pattern id="ziegel" width="48" height="20" patternUnits="userSpaceOnUse"><rect width="48" height="20" fill="#2C3336"/><path d="M0 .5H48M0 10.5H48M0 .5V10M24 10.5V20" stroke="#1A1F21" stroke-width="1.5" fill="none"/></pattern>
+      </defs>
+      <rect width="390" height="250" fill="url(#ziegel)"/>
+      <rect y="210" width="390" height="40" fill="#14181A"/>
+      <!-- Glühbirnen an Kabeln -->
+      <g class="tiefe" style="--t:8">
+        <g class="pendel" style="animation-duration:5s"><line x1="90" y1="0" x2="90" y2="62" stroke="#111" stroke-width="2"/><circle class="flackern" cx="90" cy="76" r="40" fill="url(#bulb)"/><rect x="85" y="60" width="10" height="9" fill="#555"/><ellipse cx="90" cy="76" rx="8" ry="10" fill="#FFD487"/></g>
+        <g class="pendel" style="animation-duration:6s;animation-delay:-2s"><line x1="190" y1="0" x2="190" y2="42" stroke="#111" stroke-width="2"/><circle class="flackern" style="animation-delay:-1s" cx="190" cy="56" r="36" fill="url(#bulb)"/><rect x="185" y="40" width="10" height="9" fill="#555"/><ellipse cx="190" cy="56" rx="8" ry="10" fill="#FFD487"/></g>
+        <g class="pendel" style="animation-duration:4.4s;animation-delay:-1s"><line x1="290" y1="0" x2="290" y2="70" stroke="#111" stroke-width="2"/><circle class="flackern" style="animation-delay:-2s" cx="290" cy="84" r="40" fill="url(#bulb)"/><rect x="285" y="68" width="10" height="9" fill="#555"/><ellipse cx="290" cy="84" rx="8" ry="10" fill="#FFD487"/></g>
+      </g>
+      <!-- Zahnräder: drehen gegenläufig -->
+      <g class="tiefe" style="--t:5">
+        <g class="drehen" style="animation-duration:14s"><circle cx="338" cy="150" r="24" fill="none" stroke="#6B777B" stroke-width="9" stroke-dasharray="7 6.4"/><circle cx="338" cy="150" r="17" fill="none" stroke="#6B777B" stroke-width="5"/><circle cx="338" cy="150" r="4" fill="#6B777B"/></g>
+        <g class="drehen" style="animation-duration:9s;animation-direction:reverse"><circle cx="302" cy="178" r="15" fill="none" stroke="#8A969A" stroke-width="7" stroke-dasharray="5 4"/><circle cx="302" cy="178" r="3" fill="#8A969A"/></g>
+      </g>
+      <!-- Rohr mit Dampf -->
+      <g class="tiefe" style="--t:6">
+        <rect x="24" y="120" width="14" height="92" fill="#4A5558"/><rect x="18" y="116" width="26" height="8" fill="#5C686B"/>
+        <g fill="#C7D0D2"><circle class="dampf" cx="31" cy="110" r="8"/><circle class="dampf" cx="28" cy="108" r="7" style="animation-delay:-1.2s"/><circle class="dampf" cx="34" cy="108" r="6" style="animation-delay:-2.4s"/></g>
+      </g>
+      <!-- Ledersofa -->
+      <g class="tiefe" style="--t:9">
+        <rect x="92" y="136" width="170" height="44" rx="10" fill="#5B3A29"/>
+        <rect x="82" y="160" width="190" height="46" rx="10" fill="#7A4E36"/>
+        <rect x="102" y="160" width="72" height="28" rx="6" fill="#8A5B40"/><rect x="180" y="160" width="72" height="28" rx="6" fill="#8A5B40"/>
+        <rect x="90" y="204" width="6" height="12" fill="#111"/><rect x="258" y="204" width="6" height="12" fill="#111"/>
+        <rect x="222" y="146" width="30" height="30" rx="4" fill="#F2A33A" transform="rotate(9 237 161)"/>
+      </g>
+    </svg>
+  </div>
+  <section class="inhalt"><h2>Passend für dein Wohnzimmer</h2><div class="karten"></div></section>
+  <nav class="tabs" aria-label="Hauptmenü"></nav>
+</div>
+<script src="base.js"></script>
+</body>
+</html>

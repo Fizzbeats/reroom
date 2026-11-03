@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Entwurf 2: Wüstenwärme (Boho)</title>
+<link rel="stylesheet" href="base.css" />
+<style>
+  :root {
+    --seite: #EBCDB6; --seite-text: #4A2E22;
+    --bg: #FBF1E6; --szene: #F3DFCB; --karte: #FFF9F2; --text: #3B2418; --muted: #6E4F40;
+    --primaer: #A9482C; --auf-primaer: #FFFFFF; --akzent: #E9B44C; --auf-akzent: #3B2418;
+    --ampel-gruen: #3F7F4F; --ampel-gelb: #A87400; --ampel-rot: #B3341F;
+    --schrift: Georgia, "Times New Roman", serif; --radius: 28px; --knopf: 999px;
+    --schatten: 0 4px 14px rgb(169 72 44 / .15);
+  }
+</style>
+</head>
+<body>
+<div class="leiste"><a href="index.html">← Alle Entwürfe</a><button id="bew">Bewegung: an</button></div>
+<div class="phone">
+  <header class="kopf"><h1>ReRoom</h1><p>Scannen, Stil wählen, günstiger einrichten.</p></header>
+  <div class="szene">
+    <svg viewBox="0 0 390 250" role="img" aria-label="Boho-Zimmer mit drehender Sonne, schwingender Makramee-Pflanze, wiegendem Pampasgras und funkelnden Lichtern">
+      <rect width="390" height="250" fill="#F3DFCB"/>
+      <rect y="208" width="390" height="42" fill="#C98F63"/>
+      <!-- Sonne mit drehendem Strahlenkranz -->
+      <g class="tiefe" style="--t:4">
+        <circle cx="195" cy="120" r="62" fill="#E9B44C"/>
+        <circle class="drehen" cx="195" cy="120" r="82" fill="none" stroke="#D9843C" stroke-width="7" stroke-dasharray="2 17" stroke-linecap="round" style="animation-duration:50s"/>
+      </g>
+      <!-- Lichterkette -->
+      <path d="M0 14Q100 52 195 18T390 14" stroke="#7A5B48" stroke-width="1.5" fill="none"/>
+      <g fill="#FFD66B">
+        <circle class="glimmen" cx="40" cy="30" r="4"/><circle class="glimmen" cx="100" cy="40" r="4" style="animation-delay:-.6s"/>
+        <circle class="glimmen" cx="160" cy="38" r="4" style="animation-delay:-1.2s"/><circle class="glimmen" cx="230" cy="26" r="4" style="animation-delay:-1.8s"/>
+        <circle class="glimmen" cx="295" cy="26" r="4" style="animation-delay:-.3s"/><circle class="glimmen" cx="352" cy="22" r="4" style="animation-delay:-1.5s"/>
+      </g>
+      <!-- Makramee-Ampel: schwingt -->
+      <g class="tiefe" style="--t:10">
+        <g class="pendel" style="animation-duration:4.4s">
+          <line x1="60" y1="0" x2="60" y2="96" stroke="#E7D3B5" stroke-width="3"/>
+          <path d="M60 96L40 130M60 96L80 130M60 96L60 132" stroke="#E7D3B5" stroke-width="2" fill="none"/>
+          <path d="M42 126h36l-6 28H48z" fill="#A9482C"/>
+          <path d="M60 126Q40 100 30 120M60 126Q80 96 94 118M60 126Q58 100 62 90" stroke="#4F8A5B" stroke-width="5" stroke-linecap="round" fill="none"/>
+          <ellipse cx="32" cy="132" rx="6" ry="14" fill="#5C9A68" transform="rotate(25 32 132)"/>
+          <ellipse cx="90" cy="132" rx="6" ry="14" fill="#5C9A68" transform="rotate(-25 90 132)"/>
+        </g>
+      </g>
+      <!-- Teppich, Sofa -->
+      <g class="tiefe" style="--t:7">
+        <rect x="100" y="216" width="190" height="20" rx="4" fill="#E9B44C"/>
+        <path d="M100 224h190M100 230h190" stroke="#A9482C" stroke-width="3"/>
+        <rect x="126" y="140" width="150" height="48" rx="24" fill="#B8573A"/>
+        <rect x="112" y="162" width="178" height="48" rx="22" fill="#C8654A"/>
+        <circle cx="160" cy="168" r="16" fill="#E9B44C"/><circle cx="160" cy="168" r="8" fill="none" stroke="#A9482C" stroke-width="2"/>
+        <rect x="236" y="150" width="30" height="30" rx="8" fill="#FBF1E6" transform="rotate(-8 251 165)"/>
+      </g>
+      <!-- Pampasgras in der Vase: wiegt -->
+      <g class="tiefe" style="--t:12">
+        <g class="wiegen" style="animation-duration:5.5s">
+          <g stroke="#E3C79A" stroke-width="3" stroke-linecap="round" fill="none">
+            <path d="M334 186Q322 140 318 96"/><path d="M338 186Q338 130 340 84"/><path d="M342 186Q354 140 362 100"/><path d="M336 186Q330 150 308 122"/>
+          </g>
+          <ellipse cx="318" cy="96" rx="7" ry="18" fill="#F1DDB7"/><ellipse cx="340" cy="84" rx="7" ry="20" fill="#F7E8C9"/><ellipse cx="362" cy="100" rx="6" ry="16" fill="#EAD2A3"/>
+        </g>
+        <path d="M322 180h32l-4 30h-24z" fill="#8B5A3C"/>
+      </g>
+    </svg>
+  </div>
+  <section class="inhalt"><h2>Passend für dein Wohnzimmer</h2><div class="karten"></div></section>
+  <nav class="tabs" aria-label="Hauptmenü"></nav>
+</div>
+<script src="base.js"></script>
+</body>
+</html>
