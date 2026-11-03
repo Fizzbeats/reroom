@@ -1,0 +1,258 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ReRoom Businessplan-Abgleich</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&display=swap">
+<style>
+  :root {
+    --bg: #FFFFFF; --flaeche: #F1F1EF; --fg: #111111; --muted: #5E5E5E; --linie: #E5E4E1;
+    --orange: #FF5B2E; --gruen: #0B7A4B; --gruen-bg: #E3F3EA; --gelb: #8A5F00; --gelb-bg: #FFF1CC; --rot: #C0301F; --rot-bg: #FDE3DF; --grau-bg: #E9E9E7;
+    --tinte: #111111; --auf-tinte: #FFFFFF;
+    --titel: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+    --text: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+    --bg: #0E0E0E; --flaeche: #1C1C1C; --fg: #F2F2F2; --muted: #A6A6A6; --linie: #2A2A2A;
+    --orange: #FF6B3D; --gruen: #5FD39A; --gruen-bg: #12301F; --gelb: #F2C94C; --gelb-bg: #3A2E0E; --rot: #FF8070; --rot-bg: #3E2019; --grau-bg: #2A2A2A;
+    --tinte: #F2F2F2; --auf-tinte: #0E0E0E; color-scheme: dark; } }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--fg); font: 16px/1.55 var(--text); -webkit-font-smoothing: antialiased; }
+  .wrap { max-width: 980px; margin: 0 auto; padding: 28px max(18px, env(safe-area-inset-right)) 100px max(18px, env(safe-area-inset-left)); }
+  h1, h2, h3, .titel { font-family: var(--titel); text-wrap: balance; }
+  h1 { font-size: clamp(2.2rem, 7vw, 3.6rem); font-weight: 800; letter-spacing: -.04em; line-height: 1.04; margin: 10px 0 12px; }
+  h2 { font-size: clamp(1.5rem, 4vw, 2rem); font-weight: 800; letter-spacing: -.03em; line-height: 1.1; margin: 0 0 8px; }
+  p { margin: 0 0 12px; max-width: 66ch; }
+  .muted { color: var(--muted); }
+  .marke { font: 800 1.5rem var(--titel); letter-spacing: -.035em; }
+  .marke i { display: inline-block; width: .3em; height: .3em; border-radius: 50%; background: var(--orange); margin-left: .06em; }
+  :focus-visible { outline: 3px solid var(--orange); outline-offset: 2px; }
+  section { padding-top: 52px; }
+
+  .hero { margin-top: 20px; background: #111; color: #fff; border-radius: 28px; padding: clamp(24px, 5vw, 48px); display: grid; gap: 18px; }
+  .hero p { color: #D8D8D8; }
+  .balken { display: flex; height: 22px; border-radius: 11px; overflow: hidden; background: #333; gap: 2px; }
+  .balken > i { display: block; min-width: 4px; }
+  .legende { display: flex; flex-wrap: wrap; gap: 10px 22px; font-size: .92rem; }
+  .legende b { font: 800 1.5rem var(--titel); margin-right: 6px; }
+  .punkt { display: inline-block; width: 12px; height: 12px; border-radius: 50%; margin-right: 6px; vertical-align: -1px; }
+  .s-ja { background: #3FBF86; } .s-teil { background: #F2C94C; } .s-nein { background: #FF6B5E; } .s-demo { background: #9AA0A6; }
+
+  .filter { display: flex; flex-wrap: wrap; gap: 8px; margin: 18px 0 8px; position: sticky; top: 0; background: var(--bg); padding: 10px 0; z-index: 2; }
+  .filter button { font: 600 .88rem var(--text); padding: 9px 15px; min-height: 44px; border-radius: 999px; border: 1.5px solid var(--linie); background: var(--bg); color: var(--fg); cursor: pointer; }
+  .filter button[aria-pressed="true"] { background: var(--tinte); color: var(--auf-tinte); border-color: var(--tinte); }
+
+  .kap { margin-top: 36px; }
+  .kap-kopf { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; border-bottom: 2px solid var(--fg); padding-bottom: 8px; }
+  .kap-kopf h3 { margin: 0; font: 800 1.25rem var(--titel); letter-spacing: -.02em; }
+  .kap-kopf small { color: var(--muted); font-weight: 600; }
+  .mini { display: flex; height: 6px; border-radius: 3px; overflow: hidden; width: 120px; gap: 1px; }
+  .mini i { display: block; }
+  .zeile { display: grid; grid-template-columns: 34px 1fr; gap: 12px; padding: 14px 0; border-bottom: 1px solid var(--linie); }
+  .zeile[hidden] { display: none; }
+  .marker { width: 30px; height: 30px; border-radius: 50%; display: grid; place-items: center; font: 800 .95rem var(--titel); margin-top: 2px; }
+  .m-ja { background: var(--gruen-bg); color: var(--gruen); }
+  .m-teil { background: var(--gelb-bg); color: var(--gelb); }
+  .m-nein { background: var(--rot-bg); color: var(--rot); }
+  .m-demo { background: var(--grau-bg); color: var(--muted); }
+  .plan { font-weight: 700; margin: 0 0 2px; }
+  .app { margin: 0; color: var(--muted); font-size: .94rem; }
+  .app b { color: var(--fg); }
+  .pille { display: inline-block; font: 700 .7rem var(--text); letter-spacing: .06em; text-transform: uppercase; padding: 2px 8px; border-radius: 999px; margin-right: 6px; vertical-align: 1px; }
+  .p-ja { background: var(--gruen-bg); color: var(--gruen); } .p-teil { background: var(--gelb-bg); color: var(--gelb); }
+  .p-nein { background: var(--rot-bg); color: var(--rot); } .p-demo { background: var(--grau-bg); color: var(--muted); }
+
+  .karte { background: var(--flaeche); border-radius: 18px; padding: 20px; }
+  .raster { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); margin: 16px 0; }
+  .raster > * { min-width: 0; }
+  .karte h3 { font: 800 1.1rem var(--titel); letter-spacing: -.02em; margin: 0 0 6px; }
+  .karte p { font-size: .94rem; margin-bottom: 8px; }
+  .zahlen { width: 100%; border-collapse: collapse; font-size: .92rem; }
+  .zahlen th, .zahlen td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--linie); }
+  .zahlen th { font: 700 .72rem var(--text); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  .zahlen td:last-child { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+  .tabelle { overflow-x: auto; }
+  ol.schritte { padding-left: 22px; } ol.schritte li { margin-bottom: 10px; max-width: 70ch; }
+  footer { margin-top: 60px; color: var(--muted); font-size: .85rem; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <span class="marke">ReRoom<i></i></span>
+    <h1>Businessplan-Abgleich</h1>
+    <p class="muted">Stand: 3. November 2026, Vergleich von „ReRoom – Businessplan.pdf“ mit dem Web-Entwurf unter fizzbeats.github.io/reroom. Jeder Punkt stammt aus dem Plan und wird gegen das geprüft, was die App wirklich tut.</p>
+  </header>
+
+  <div class="hero" id="hero">
+    <div class="titel" style="font-size:clamp(1.3rem,3.5vw,1.8rem);font-weight:800;letter-spacing:-.02em" id="heroZahl"></div>
+    <div class="balken" id="balken" role="img" aria-label="Verteilung der Punkte"></div>
+    <div class="legende" id="legende"></div>
+    <p style="margin:0">Die Zählung beruht auf den Punkten in der Liste unten. „Demo“ heißt: Der Ablauf ist sichtbar und bedienbar, aber es fließt kein echtes Geld und es gibt kein echtes Gegenüber.</p>
+  </div>
+
+  <section>
+    <h2>Was stimmt, was nicht</h2>
+    <p class="muted">Tippe auf einen Filter, um nur eine Art von Punkten zu sehen.</p>
+    <div class="filter" id="filter" role="group" aria-label="Filter"></div>
+    <div id="liste"></div>
+  </section>
+
+  <section>
+    <h2>Wo der Plan sich selbst widerspricht</h2>
+    <p class="muted">Diese Stellen sind keine Fehler der App, sondern Sätze im Businessplan, die du vor der Abgabe anpassen oder bewusst so lassen solltest.</p>
+    <div class="raster">
+      <div class="karte"><h3>„Auf den Zentimeter genau“</h3><p>Kapitel 3 sagt, per Zollstock seien die Maße auf den Zentimeter genau. Das stimmt nur, wenn man richtig misst. Das Risiko-Kapitel sagt selbst „Nutzer messen falsch“. Besser: „Zollstock-Maße sind so genau wie du misst, der Passt-Check hält Sicherheitsabstand.“</p></div>
+      <div class="karte"><h3>Messen: Plan und App weichen ab</h3><p>Plan: Raum wird eingetippt, Kamera-Scan ist nur eine spätere Ausbaustufe. App: Es gibt schon den Mess-Assistenten, Foto-Messung mit Bankkarte und AR-Messung auf Android. Das ist mehr als der Plan. Die AR-Messung ist aber an keinem echten Handy getestet und darf nicht als genau beworben werden.</p></div>
+      <div class="karte"><h3>„KI erkennt den Stil“</h3><p>Der Plan verspricht das bei eigenen Inspo-Bildern, und der Chatbot soll eine KI-Schnittstelle nutzen. In der App erkennt ReRoom nur Farben, den Stil wählt der Nutzer. Der Chatbot arbeitet mit Stichwörtern. Entweder die Sätze im Plan auf „Stufe 2“ schieben oder eine KI wirklich anbinden.</p></div>
+      <div class="karte"><h3>Zwei Handys zum Testen</h3><p>Der Plan sagt, es gebe eigene Handys für Android und iPhone. Es gibt bisher nur ein iPhone zum Testen. Auf dem iPhone geht keine AR-Messung im Browser.</p></div>
+      <div class="karte"><h3>768 € und die Start-Aktion</h3><p>Das Beispiel „800 €, mit ReRoom 768 €“ gilt für 4 %. Zum Start gelten 6 %, dann steht bei 800 € ein Preis von 752 € in der App. Das ist kein Fehler, aber Plakate und Videos sollten zur Aktion passen.</p></div>
+      <div class="karte"><h3>Warenkorb für alle Shops</h3><p>Der Plan sagt, der gemeinsame Warenkorb folgt erst ab Jahr 2, zum Start wird zum Bezahlen weitergeleitet. Die App hat einen Warenkorb mit Demo-Kauf. Das ist eine Vorschau auf Jahr 2, nicht der Startzustand im Plan.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Rechnet der Plan richtig?</h2>
+    <p class="muted">Alle Zahlen aus Kapitel 7 nachgerechnet. Sie stimmen.</p>
+    <div class="karte tabelle">
+      <table class="zahlen">
+        <thead><tr><th>Posten</th><th>Rechnung</th><th>Plan</th><th>Nachgerechnet</th></tr></thead>
+        <tbody id="rechnung"></tbody>
+      </table>
+    </div>
+    <p class="muted" style="margin-top:12px">Hinweis: Der Gewinn von 6.143 € zieht die gesamten 25.000 € Startkapital ab, also auch die Reserve von 6.900 €. Das ist vorsichtig gerechnet. Die laufenden Kosten (28.800 €) enthalten keine Kosten für das Chatbot-Volumen bei 20.000 Downloads, das ist eine Annahme.</p>
+  </section>
+
+  <section>
+    <h2>Was ich als Nächstes bauen würde</h2>
+    <ol class="schritte">
+      <li><b>Datenschutz und Impressum.</b> Der Plan lässt Datenschutz prüfen, in der App gibt es beides noch nicht. Ohne das darf die App nicht an echte Nutzer.</li>
+      <li><b>Konten und Anmeldung.</b> Guthaben, Inserate und Tarife liegen bisher nur im Browser des Geräts. Der Plan setzt Verkäufer, Käufer und Bewertungen voraus.</li>
+      <li><b>Bewertungen für Verkäufer.</b> Der Plan nennt sie als Antwort auf das Betrugsrisiko. Sie fehlen ganz.</li>
+      <li><b>Zweites Gerät für den Käufer.</b> Damit die QR-Übergabe wirklich zwischen zwei Menschen läuft, nicht auf einem Handy.</li>
+      <li><b>Wohnung teilen (Makler, Pinterest).</b> Ein Link zu einer fertig eingerichteten Wohnung. Er bedient die Business-Tarife und die Pinterest-Idee aus dem Marketing zugleich.</li>
+      <li><b>Chatbot mit echter KI</b> über eine Cloud-Funktion (Stufe 2), und „KI erkennt den Stil“ bei eigenen Bildern.</li>
+    </ol>
+  </section>
+
+  <footer>Erstellt aus dem Businessplan vom 3. November 2026 und dem Stand des Quellcodes. Marketing, Gründung und Finanzierung (Kapitel 5 bis 7) sind keine App-Funktionen und stehen nur dort, wo die App sie berührt.</footer>
+</div>
+
+<script>
+  // ja = stimmt, teil = teilweise, nein = fehlt, demo = nur als Demo
+  const NAMEN = { ja: "Stimmt", teil: "Teilweise", demo: "Nur Demo", nein: "Fehlt" };
+  const ZEICHEN = { ja: "✓", teil: "~", demo: "D", nein: "✕" };
+  const KAPITEL = [
+    { titel: "1 · Geschäftsidee", punkte: [
+      ["ja", "Kostenlose Web-App, läuft im Browser auf jedem Gerät", "Läuft als Webseite, lässt sich auf den Startbildschirm legen (iPhone und Android), Hell und Dunkel."],
+      ["ja", "Maße von Raum, Tür und Treppenhaus eintippen", "Mess-Assistent führt durch sechs Maße. Dazu Beispielräume."],
+      ["ja", "Aus den Maßen entsteht ein 3D-Modell", "Grundriss mit Möbeln und 3D-Ansicht zum Drehen. Möbel sind einfache Körper, keine echten Modelle der Hersteller."],
+      ["ja", "Passt-Check: warnt, wenn ein Möbel nicht durch die Tür passt", "Prüft Tür, Treppenhaus und Raum, Ampel grün, gelb, rot mit Begründung."],
+      ["ja", "Stil-Finder: Stil und Budget wählen", "Stil-Chips, Budget-Schieberegler fürs ganze Zimmer, Ergebnis als fertiges Set."],
+      ["teil", "Stil-Finder: Farben wählen, auch ungeliebte Farben", "Farbfilter gibt es in Entdecken. Im Stil-Finder leitet die App die Lieblingsfarben aus den Wisch-Bildern ab. Einen eigenen Schritt „Farben, die ich nicht mag“ gibt es nicht."],
+      ["ja", "Inspo-Bilder durchwischen", "Acht gezeichnete Karten zum Wischen, die Auswertung zeigt zwei Stile und drei Farben."],
+      ["teil", "Eigene Inspo-Bilder hochladen, „die KI erkennt den Stil“", "Hochladen und Kamera gehen. Die App liest nur die Farben, den Stil wählt der Nutzer. Eine KI gibt es nicht."],
+      ["teil", "KI-Chatbot kennt die Raummaße", "Er kennt Maße, Nische, Preis, Farbe und schlägt nur passende Möbel vor, auch „Graues Sofa unter 400 €, das in meine Nische passt“. Es sind aber Stichwörter, keine KI. Das sagt der Chat offen."],
+      ["demo", "Gebraucht-Marktplatz: kaufen und verkaufen", "Inserat in vier Schritten, eigene Inserate erscheinen in Entdecken. Alles liegt nur im Browser, es gibt keine anderen Nutzer."],
+      ["demo", "Warenkorb mit 4 % Cashback", "Cashback, Käuferschutz und Guthaben werden richtig gerechnet. Der Kauf ist ein Demo-Kauf, die Shops sind erfundene Beispiele."],
+      ["ja", "3D-Rundgang durch die fertige Wohnung", "Überblick und Rundgang durch den Raum, dazu als Video aufnehmbar."],
+    ]},
+    { titel: "2 · Zielgruppe und Kundennutzen", punkte: [
+      ["ja", "Studenten, Azubis, Paare: Budget, gebraucht, Cashback, Passt-Check", "Alle vier Punkte sind in der App vorhanden."],
+      ["ja", "Verkäufer: Maße und Fotos einfach eintragen, Käuferschutz, Erlös als Guthaben", "Inserat-Assistent mit eingebauter Kamera, Käuferschutz im Warenkorb, Guthaben mit 5 % Bonus."],
+      ["teil", "Makler und Vermieter: Wohnung virtuell einrichten und zeigen", "Business-Tarife mit 5 oder unbegrenzten Räumen sind da. Es gibt keinen Weg, eine eingerichtete Wohnung an Mieter zu schicken."],
+      ["ja", "Preisvorteil bei jedem Möbel sichtbar", "Bei neuen Möbeln steht „mit ReRoom“ und der reduzierte Preis, in der Start-Aktion mit 6 %."],
+    ]},
+    { titel: "3 · Produkt und Gebraucht-Kreislauf", punkte: [
+      ["ja", "Verkaufen: Maße eintragen, Fotos hochladen, Einstellen kostenlos", "Fotos werden verkleinert, bis zu mehreren je Inserat."],
+      ["demo", "Bezahlen über einen Zahlungsdienstleister, Geld liegt nicht bei ReRoom", "Zahlung ist ein Knopf. Es gibt keinen Zahlungsdienstleister, und es fließt kein Geld."],
+      ["teil", "Abholen oder Transport-Partner aus Chemnitz buchen", "Im Warenkorb wählbar: abholen oder „Transport buchen (+ 40 €)“. Es gibt keinen Partner und keine echte Buchung, die 15 % für ReRoom sind nicht abgebildet."],
+      ["demo", "Übergabe per QR-Code, erst dann bekommt der Verkäufer Geld", "QR-Code wird erzeugt, ist mit einem fremden Scanner lesbar und löst die Auszahlung aus. Der Käufer-Scan läuft auf demselben Gerät, nicht auf einem zweiten."],
+      ["ja", "Erlös als Guthaben mit 5 % Bonus", "Guthaben wird im Warenkorb abgezogen."],
+      ["teil", "Neue Möbel: Partner-Shop verkauft, ReRoom erhält Provision", "Die App leitet nicht an Shops weiter. Möbel und Shops sind Beispieldaten, Bilder sind Zeichnungen."],
+    ]},
+    { titel: "3 · Preise und Varianten", punkte: [
+      ["ja", "ReRoom Free: 0 €, 1 Raum, 5 Chatbot-Fragen pro Tag", "Beim zweiten Raum erscheint eine Limit-Karte, der Chat zählt bis fünf. Die Beispielräume bleiben frei."],
+      ["demo", "Umzugs-Pass: 7,99 € für 3 Monate, unbegrenzt Räume und Chatbot, Rundgang als Video", "Tarifkarte, Freischalten als Demo ohne Zahlung, schaltet Räume, Chat und Video wirklich frei und läuft nach 3 Monaten ab."],
+      ["teil", "Premium: 24,99 € im Jahr, dazu Preisalarm", "Preisalarm lässt sich auf der Möbelseite einschalten. Es gibt keine Benachrichtigung bei Preisänderung."],
+      ["demo", "Inserat hervorheben: 1,49 €", "Schalter im Inserat, hervorgehobene Inserate stehen in Entdecken oben. Bezahlt wird nichts (Demo)."],
+      ["ja", "Käuferschutz: 4 % + 0,50 €", "Im Warenkorb bei gebrauchten Möbeln, in Tests nachgerechnet."],
+      ["teil", "Transport ab 40 €, ReRoom erhält 15 %", "40 € stimmen. Die 15 % und die Vermittlung selbst fehlen."],
+      ["teil", "Business Starter 19 € und Pro 59 € im Monat", "Tarifkarten und Raumgrenze (5 oder unbegrenzt) sind da. Die Funktionen für Makler beschränken sich darauf."],
+      ["ja", "4 % Cashback für Kunden", "Überall einheitlich gerechnet und angezeigt."],
+    ]},
+    { titel: "3 · Technik", punkte: [
+      ["ja", "Messen mit Zollstock, Maße eintippen", "Der Mess-Assistent führt Schritt für Schritt mit Skizzen."],
+      ["ja", "Passt-Check warnt schon bei 5 bis 10 cm Spielraum", "Gelb ab 5 bis 10 cm („bitte nachmessen“), rot unter 5 cm."],
+      ["teil", "KI-Schnittstelle für den Chatbot", "Heute lokale Stichwort-Logik. Die Claude-Anbindung über eine Cloud-Funktion ist als Stufe 2 geplant."],
+      ["nein", "Sicherheit, Datenschutz und Bezahlung von externer Firma geprüft", "Es gibt keine Datenschutzerklärung und kein Impressum in der App. Die externe Prüfung ist im Plan mit 5.000 € vorgesehen."],
+      ["ja", "Ausbaustufe Kamera-Scan später", "Als eigene iPhone-App mit RoomPlan beschrieben und bewusst nicht gebaut. Im Browser gibt es schon eine Kamera-Messung auf Android (ungetestet)."],
+    ]},
+    { titel: "5 · Marketing, soweit die App es berührt", punkte: [
+      ["ja", "Preisvorteil „800 €, mit ReRoom 768 €“", "Auf der Willkommen-Karte als Bild, auf allen Möbelkarten als Zeile."],
+      ["ja", "Start-Aktion: 6 % statt 4 % in den ersten 3 Monaten", "Banner auf der Startseite, im Konto, im Warenkorb und im Chat. Läuft vom 1.11.2026 bis 31.1.2027, danach automatisch 4 %."],
+      ["demo", "Empfehlungsprogramm: Freunde einladen gibt den Umzugs-Pass gratis", "Einladungscode mit Teilen-Knopf. „Freund tritt bei“ ist ein Demo-Knopf, es gibt keine Konten, die das prüfen."],
+      ["nein", "Pinterest: fertige 3D-Räume mit Link zum Kauf", "Ein Raum lässt sich nur als Video speichern, nicht als Link teilen."],
+      ["ja", "Läuft kostenlos im Browser, Startbildschirm-Symbol", "Installierbar mit Symbol, App Store und Google Play sind laut Plan später."],
+      ["nein", "Bewertungen als Schutz vor Betrug (Risiko-Kapitel)", "Es gibt keine Bewertungen für Verkäufer."],
+    ]},
+  ];
+
+  const RECHNUNG = [
+    ["Provision neue Möbel", "1.000 × 800 € × 4,5 %", 36000, 1000*800*0.045],
+    ["Käuferschutz gebraucht", "1.500 × (120 € × 4 % + 0,50 €)", 7950, 1500*(120*0.04+0.5)],
+    ["Premium-Jahresabo", "200 × 24,99 €", 4998, 200*24.99],
+    ["Umzugs-Pass", "600 × 7,99 €", 4794, 600*7.99],
+    ["Business-Abos", "8 × 19 € × 12 + 4 × 59 € × 12", 4656, 8*19*12+4*59*12],
+    ["Transport-Vermittlung", "300 × 40 € × 15 %", 1800, 300*40*0.15],
+    ["Inserate hervorheben", "500 × 1,49 €", 745, 500*1.49],
+  ];
+
+  const zaehler = { ja: 0, teil: 0, demo: 0, nein: 0 };
+  KAPITEL.forEach(k => k.punkte.forEach(p => zaehler[p[0]]++));
+  const gesamt = Object.values(zaehler).reduce((a, b) => a + b, 0);
+  const prozent = n => Math.round((n / gesamt) * 100);
+
+  document.getElementById("heroZahl").textContent =
+    `${zaehler.ja} von ${gesamt} Punkten stimmen ganz. ${zaehler.teil + zaehler.demo} sind teilweise oder nur als Demo da, ${zaehler.nein} fehlen.`;
+  document.getElementById("balken").innerHTML = ["ja", "teil", "demo", "nein"]
+    .map(s => `<i class="s-${s}" style="flex:${zaehler[s]}"></i>`).join("");
+  document.getElementById("legende").innerHTML = ["ja", "teil", "demo", "nein"]
+    .map(s => `<span><i class="punkt s-${s}"></i><b>${zaehler[s]}</b>${NAMEN[s]} (${prozent(zaehler[s])} %)</span>`).join("");
+
+  const liste = document.getElementById("liste");
+  liste.innerHTML = KAPITEL.map(k => {
+    const z = { ja: 0, teil: 0, demo: 0, nein: 0 };
+    k.punkte.forEach(p => z[p[0]]++);
+    const mini = ["ja", "teil", "demo", "nein"].map(s => `<i class="s-${s}" style="flex:${z[s]}"></i>`).join("");
+    const zeilen = k.punkte.map(([s, plan, app]) => `
+      <div class="zeile" data-status="${s}">
+        <span class="marker m-${s}" aria-hidden="true">${ZEICHEN[s]}</span>
+        <div><p class="plan"><span class="pille p-${s}">${NAMEN[s]}</span>${plan}</p><p class="app"><b>In der App:</b> ${app}</p></div>
+      </div>`).join("");
+    return `<div class="kap"><div class="kap-kopf"><h3>${k.titel}</h3><span class="mini" aria-hidden="true">${mini}</span></div>${zeilen}</div>`;
+  }).join("");
+
+  const filter = document.getElementById("filter");
+  const optionen = [["alle", `Alle (${gesamt})`], ...["nein", "teil", "demo", "ja"].map(s => [s, `${NAMEN[s]} (${zaehler[s]})`])];
+  filter.innerHTML = optionen.map(([w, t], i) => `<button type="button" data-w="${w}" aria-pressed="${i === 0}">${t}</button>`).join("");
+  filter.addEventListener("click", e => {
+    const b = e.target.closest("button"); if (!b) return;
+    filter.querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", x === b));
+    liste.querySelectorAll(".zeile").forEach(z => z.hidden = b.dataset.w !== "alle" && z.dataset.status !== b.dataset.w);
+    liste.querySelectorAll(".kap").forEach(k => k.hidden = !k.querySelector(".zeile:not([hidden])"));
+  });
+
+  const eur = n => n.toLocaleString("de-DE", { maximumFractionDigits: 2 }) + " €";
+  const summe = RECHNUNG.reduce((a, r) => a + r[3], 0);
+  document.getElementById("rechnung").innerHTML = RECHNUNG.map(r =>
+    `<tr><td>${r[0]}</td><td>${r[1]}</td><td>${eur(r[2])}</td><td>${eur(r[3])} ${Math.round(r[3]) === r[2] ? "✓" : "✕"}</td></tr>`).join("") +
+    `<tr><td><b>Umsatz Jahr 1</b></td><td></td><td><b>${eur(60943)}</b></td><td><b>${eur(summe)} ${Math.round(summe) === 60943 ? "✓" : "✕"}</b></td></tr>` +
+    `<tr><td><b>Gewinn Jahr 1</b></td><td>Umsatz − 28.800 − 25.000 − 1.000</td><td><b>${eur(6143)}</b></td><td><b>${eur(Math.round(summe) - 28800 - 25000 - 1000)} ${Math.round(summe) - 54800 === 6143 ? "✓" : "✕"}</b></td></tr>` +
+    `<tr><td>Laufende Kosten</td><td>2.400 € × 12</td><td>${eur(28800)}</td><td>${eur((1200+400+300+200+150+150)*12)} ✓</td></tr>` +
+    `<tr><td>Startkapital</td><td>10.000 + 5.000 + 3.000 + 100 + 6.900</td><td>${eur(25000)}</td><td>${eur(10000+5000+3000+100+6900)} ✓</td></tr>`;
+</script>
+</body>
+</html>

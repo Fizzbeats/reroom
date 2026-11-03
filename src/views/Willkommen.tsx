@@ -36,7 +36,7 @@ function BildMessen() {
 // Bild 3: Preisschild mit Cashback
 function BildSparen({ prozent }: { prozent: number }) {
   return (
-    <svg viewBox="0 0 340 300" role="img" aria-label="Sofa mit Preisschild: 800 Euro, mit ReRoom 768 Euro">
+    <svg viewBox="0 0 340 300" role="img" aria-label={`Sofa mit Preisschild: 800 Euro, mit ReRoom ${Math.round(800 * (100 - prozent)) / 100} Euro`}>
       <rect width="340" height="300" rx="24" fill="var(--karte)" />
       <g transform="translate(40 40) scale(1.3)"><MoebelZeichnung art="sofa" c={FARBE.terrakotta!} /></g>
       <g transform="translate(196 28) rotate(8)">
