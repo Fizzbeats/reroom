@@ -11,7 +11,7 @@
   * { box-sizing: border-box; }
   body { margin:0; background:var(--bg); color:var(--fg); font:16px/1.55 var(--text); }
   .seite { max-width:1180px; margin:0 auto; padding:18px; min-height:100vh; display:grid; gap:22px; grid-template-columns: minmax(300px, 390px) 1fr; align-items:start; }
-  .telefon { position:sticky; top:14px; width:100%; max-width:390px; aspect-ratio:390/844; max-height:calc(100vh - 28px); border:10px solid #111; border-radius:44px; overflow:hidden; background:#fff; box-shadow:0 18px 40px rgb(0 0 0 / .22); margin:0 auto; }
+  .telefon { position:sticky; top:14px; width:100%; max-width:390px; aspect-ratio:390/844; max-height:calc(100vh - 100px); border:10px solid #111; border-radius:44px; overflow:hidden; background:#fff; box-shadow:0 18px 40px rgb(0 0 0 / .22); margin:0 auto; }
   .telefon iframe { width:100%; height:100%; border:0; display:block; }
   .buehne { display:grid; gap:16px; align-content:start; padding-top:6px; }
   .marke { font:800 1.4rem var(--titel); letter-spacing:-.035em; } .marke i { display:inline-block; width:.3em; height:.3em; border-radius:50%; background:var(--orange); margin-left:.06em; }
@@ -26,6 +26,13 @@
   .zeigen { margin:0; padding-left:20px; color:var(--muted); display:grid; gap:4px; max-width:62ch; }
   .achtung { background:var(--gelb-bg); color:var(--gelb); border-radius:14px; padding:12px 16px; max-width:62ch; font-size:.94rem; }
   .knoepfe { display:flex; gap:10px; flex-wrap:wrap; }
+  /* Die Knöpfe bleiben immer an derselben Stelle: unten am Bildschirmrand, unter dem Text */
+  .leiste { position:fixed; left:0; right:0; bottom:0; z-index:5; background:var(--bg); border-top:1px solid var(--linie); padding:10px 18px calc(10px + env(safe-area-inset-bottom)); }
+  .leiste-innen { max-width:1180px; margin:0 auto; display:grid; grid-template-columns:minmax(300px,390px) 1fr; gap:22px; }
+  .leiste .knoepfe { grid-column:2; flex-wrap:nowrap; }
+  .leiste .knopf { flex:0 0 auto; min-width:120px; }
+  .seite { padding-bottom:100px; }
+  @media (max-width:820px) { .leiste-innen { grid-template-columns:1fr; } .leiste .knoepfe { grid-column:1; justify-content:center; } .leiste .knopf { padding:0 14px; min-width:0; } }
   .knopf { font:700 1rem var(--text); min-height:48px; padding:0 22px; border-radius:999px; border:0; background:var(--fg); color:var(--bg); cursor:pointer; }
   .knopf.leise { background:var(--flaeche); color:var(--fg); }
   .knopf:disabled { opacity:.4; cursor:default; }
@@ -180,12 +187,12 @@
         ${s.zeigen ? `<ul class="zeigen" aria-label="Zeigen">${s.zeigen.map(z => `<li>${z}</li>`).join("")}</ul>` : ""}
         ${s.achtung ? `<div class="achtung" role="note"><b>Ehrlich sagen:</b> ${s.achtung}</div>` : ""}
         ${s.tabelle ? `<table>${s.tabelle.map(t => `<tr><td><span class="pille p-${t[0]}">${NAMEN[t[0]]}</span></td><td>${t[1]}</td></tr>`).join("")}</table>` : ""}
-        <div class="knoepfe">
-          <button class="knopf leise" id="zurueck" ${aktuell === 0 ? "disabled" : ""}>Zurück</button>
-          <button class="knopf" id="weiter" ${aktuell === SCHRITTE.length - 1 ? "disabled" : ""}>Weiter</button>
-          <button class="knopf leise" id="nochmal">Schritt neu starten</button>
-        </div>
-      </div>`;
+      </div>
+      <div class="leiste"><div class="leiste-innen"><div class="knoepfe">
+        <button class="knopf leise" id="zurueck" ${aktuell === 0 ? "disabled" : ""}>Zurück</button>
+        <button class="knopf" id="weiter" ${aktuell === SCHRITTE.length - 1 ? "disabled" : ""}>Weiter</button>
+        <button class="knopf leise" id="nochmal">Neu starten</button>
+      </div></div></div>`;
     rahmen = document.getElementById("rahmen");
     document.getElementById("zurueck").onclick = () => zeige(aktuell - 1);
     document.getElementById("weiter").onclick = () => zeige(aktuell + 1);
