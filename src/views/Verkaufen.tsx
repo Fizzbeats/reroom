@@ -65,6 +65,8 @@ export default function Verkaufen({ inserate, onInserate, guthabenCent: guthaben
 
       <button className="knopf breit" onClick={() => setAssistent(true)}><Icon name="plus" groesse={20} /> Möbel einstellen</button>
 
+      <h2 style={{ marginBottom: 4 }}>So läuft Verkaufen</h2>
+      <p className="gedaempft" style={{ margin: "0 0 6px", fontSize: ".84rem" }}>In dieser Demo gibt es keine echte Zahlung. Die Schritte zeigen, wie es später abläuft.</p>
       <ol className="ablauf" aria-label="So funktioniert Verkaufen">
         {SCHRITTE.map(([titel, text], i) => (
           <li key={titel}><span className="nr" aria-hidden="true">{i + 1}</span><span><strong>{titel}</strong><small>{text}</small></span></li>

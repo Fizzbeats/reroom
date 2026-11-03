@@ -208,7 +208,10 @@ export function antworte(frage: string, katalog: Moebel[], raum?: Raum, vorher: 
   }
   if (/\bdanke\b|dankeschoen/.test(t)) return { text: "Gern! Sag Bescheid, wenn ich noch etwas suchen soll.", treffer: [] };
   if (/hilfe|was kannst du|wie funktionierst du/.test(t)) {
-    return { text: `Ich kenne die Maße deines Raums und schlage nur Möbel vor, die durch Tür und Treppenhaus in den Raum passen. Frag mich zum Beispiel ${HILFE_BEISPIELE}.`, treffer: [] };
+    const wissen = raum
+      ? "Ich kenne die Maße deines Raums und schlage nur Möbel vor, die durch Tür und Treppenhaus in den Raum passen."
+      : "Ich kenne deinen Raum noch nicht. Miss ihn oder wähle einen Beispielraum, dann prüfe ich auch Tür und Treppenhaus.";
+    return { text: `${wissen} Frag mich zum Beispiel ${HILFE_BEISPIELE}.`, treffer: [] };
   }
   if (/cashback|zurueck ?bekomm|rueckerstatt/.test(t)) {
     return { text: `Bei neuen Möbeln bekommst du 4 % vom Kaufpreis zurück, zum Beispiel ${euro(cashbackCent(alsCent(649)))} bei einem Sofa für 649 €.`, treffer: [] };

@@ -44,3 +44,5 @@
 .rundgang-fehler { position: absolute; top: 90px; left: 14px; right: 14px; }
 .rundgang-laden { color: #fff; text-align: center; margin-top: 40vh; }
 .plan-knoepfe { display: flex; gap: 6px; flex-wrap: wrap; justify-content: flex-end; }
+
+.demo-hinweis { margin: 28px 0 0; text-align: center; font-size: .78rem; color: var(--text-gedaempft); }

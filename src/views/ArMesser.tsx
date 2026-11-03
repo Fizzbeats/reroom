@@ -54,7 +54,7 @@ const NAMEN: Record<Ziel, string> = {
   breite: "Breite", tiefe: "Tiefe", hoehe: "Höhe", tuerB: "Türbreite", tuerH: "Türhöhe", treppe: "Treppenhaus",
 };
 
-/** Geführte Messung mit der AR-Kamera: kein Zollstock nötig. */
+/** Geführte Messung mit der AR-Kamera. Die Werte sind eine Schätzung. */
 export default function ArMesser({ onFertig }: { onFertig: (werte: Werte) => void }) {
   const overlay = useRef<HTMLDivElement>(null);
   const sitzung = useRef<ArSitzung | null>(null);
@@ -128,7 +128,7 @@ export default function ArMesser({ onFertig }: { onFertig: (werte: Werte) => voi
     <>
       <div className="flaeche">
         <h2>Raum mit der Kamera messen</h2>
-        <p className="gedaempft">Du gehst einmal durch den Raum und tippst Ecken, Tür und Treppenhaus an. Einen Zollstock brauchst du nicht.</p>
+        <p className="gedaempft">Du gehst einmal durch den Raum und tippst Ecken, Tür und Treppenhaus an. ReRoom schätzt daraus die Maße. Bei knappen Ergebnissen sagt dir der Passt-Check: Bitte nachmessen.</p>
         <button className="knopf" onClick={starten}>Kamera starten</button>
         {fehler && <p role="alert" className="hinweis">{fehler}</p>}
       </div>

@@ -125,7 +125,7 @@ export default function InseratAssistent({ onFertig, onSchliessen }: Props) {
         {nr === 2 && (
           <div className="assistent">
             <h1 style={{ marginTop: 18 }}>Wie groß ist es?</h1>
-            <p className="gedaempft" style={{ margin: 0 }}>Käufer sehen sofort, ob es in ihren Raum und durch die Tür passt. Darum sind genaue Maße wichtig.</p>
+            <p className="gedaempft" style={{ margin: 0 }}>Käufer sehen sofort, ob es in ihren Raum und durch die Tür passt. Miss darum so genau, wie du kannst.</p>
             <div className="masse-felder">
               {([["breite", "Breite"], ["tiefe", "Tiefe"], ["hoehe", "Höhe"]] as const).map(([k, n]) => (
                 <label key={k}>{n} (cm)

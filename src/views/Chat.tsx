@@ -4,6 +4,7 @@ import { antworte, type Kontext } from "../logic/chatbot";
 import { FRAGEN_PRO_TAG, mitPass, tagVon, verbleibend, verbrauche, type Verbrauch } from "../logic/chatLimit";
 import { pruefeMoebel } from "../logic/passtCheck";
 import { alsCent, euro } from "../logic/preisRechner";
+import { chatBegruessung } from "../logic/texte";
 import { AmpelSchild, Icon, MoebelBild, kurzInfo } from "./ui";
 
 export interface Nachricht {
@@ -31,9 +32,6 @@ const VORSCHLAEGE = [
   "Passt das Sofa Lund durch meine Tür?",
   "Wie funktioniert der Cashback?",
 ];
-
-const BEGRUESSUNG =
-  "Hallo! Ich bin der ReRoom-Assistent. Ich kenne die Maße deines Raums und schlage nur Möbel vor, die durch Tür und Treppenhaus passen. Was suchst du?";
 
 /** Chat als Sheet von unten. Lokaler Ersatz-Bot, später austauschbar gegen die Claude-API über eine Cloud-Funktion. */
 export default function Chat({ katalog, raum, nachrichten, onNachrichten, verbrauch, onVerbrauch, onOeffnen, onSchliessen }: Props) {
@@ -98,7 +96,7 @@ export default function Chat({ katalog, raum, nachrichten, onNachrichten, verbra
         </div>
 
         <div className="sheet-verlauf" aria-live="polite">
-          <div className="blase bot">{BEGRUESSUNG}</div>
+          <div className="blase bot">{chatBegruessung(raum?.name)}</div>
           {nachrichten.map((n) => (
             <div key={n.id} className={`zeile-chat ${n.von}`}>
               <div className={`blase ${n.von}`}>{n.text}</div>

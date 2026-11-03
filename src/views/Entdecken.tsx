@@ -4,6 +4,7 @@ import { findePassende } from "../logic/stilFinder";
 import { pruefeMoebel } from "../logic/passtCheck";
 import { alsCent, euro } from "../logic/preisRechner";
 import { STIL_INFO } from "./Start";
+import { DEMO_HINWEIS } from "../logic/texte";
 import { Icon, Leer, ProduktKarte } from "./ui";
 
 interface Props {
@@ -100,6 +101,7 @@ export default function Entdecken({ katalog, raum, stile, onStile, onOeffnen }: 
           ))}
         </div>
       )}
+      <p className="demo-hinweis">{DEMO_HINWEIS}</p>
     </section>
   );
 }

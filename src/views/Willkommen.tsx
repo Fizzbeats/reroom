@@ -1,5 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { INSPO_KARTEN } from "../data/inspo";
+import { arPruefen } from "../services/arSitzung";
+import { istApple } from "../logic/arStatus";
+import { DEMO_HINWEIS, messArt, SLOGAN, willkommenMessText, type MessArt } from "../logic/texte";
 import { Moodboard } from "./Moodboard";
 import { FARBE, Icon, MoebelZeichnung } from "./ui";
 
@@ -52,8 +55,7 @@ function BildSparen() {
 const SEITEN = [
   {
     bild: <BildMessen />,
-    titel: "Miss deinen Raum mit der Kamera",
-    text: "Ecken antippen, fertig. Kein Zollstock. ReRoom merkt sich Tür und Treppenhaus und warnt, wenn ein Möbel nicht durchpasst.",
+    ...willkommenMessText("sonst"), // wird je Gerät ersetzt, siehe unten
   },
   {
     bild: <div className="willkommen-moodboard"><Moodboard karte={INSPO_KARTEN[0]!} /></div>,
@@ -63,15 +65,21 @@ const SEITEN = [
   {
     bild: <BildSparen />,
     titel: "Neu und gebraucht. Mit 4 % zurück.",
-    text: "Neue Möbel aus vielen Shops und gebrauchte aus deiner Nähe in Chemnitz. Bei neuen bekommst du 4 % zurück.",
+    text: "Neue Möbel von Partner-Shops und gebrauchte aus deiner Nähe in Chemnitz. Bei neuen Möbeln bekommst du 4 % zurück.",
   },
 ];
 
 /** Einstieg beim ersten Besuch: drei Karten, jederzeit überspringbar. */
 export default function Willkommen({ onMessen, onStilFinder, onStoebern }: Props) {
   const [seite, setSeite] = useState(0);
-  const s = SEITEN[seite]!;
-  const letzte = seite === SEITEN.length - 1;
+  const [art, setArt] = useState<MessArt>(messArt(false, istApple(navigator.userAgent)));
+  useEffect(() => {
+    arPruefen().then((status) => setArt(messArt(status.ok, istApple(navigator.userAgent))));
+  }, []);
+  // Die Mess-Karte verspricht die Kamera nur, wo sie wirklich misst
+  const seiten = SEITEN.map((x, i) => (i === 0 ? { ...x, ...willkommenMessText(art) } : x));
+  const s = seiten[seite]!;
+  const letzte = seite === seiten.length - 1;
 
   return (
     <div className="vollbild willkommen" role="dialog" aria-modal="true" aria-label="Willkommen bei ReRoom">
@@ -80,14 +88,16 @@ export default function Willkommen({ onMessen, onStilFinder, onStoebern }: Props
           <p className="marke" style={{ fontSize: "1.3rem" }}>ReRoom<i /></p>
           <button className="link" onClick={onStoebern}>Überspringen</button>
         </div>
+        <p className="slogan" style={{ margin: "2px 0 0" }}>{SLOGAN}</p>
         <div className="willkommen-bild">{s.bild}</div>
-        <div className="seiten" aria-label={`Seite ${seite + 1} von ${SEITEN.length}`}>
-          {SEITEN.map((_, i) => (
+        <div className="seiten" aria-label={`Seite ${seite + 1} von ${seiten.length}`}>
+          {seiten.map((_, i) => (
             <button key={i} className={i === seite ? "an" : ""} onClick={() => setSeite(i)} aria-label={`Seite ${i + 1}`} />
           ))}
         </div>
         <h1 className="willkommen-titel">{s.titel}</h1>
         <p className="gedaempft willkommen-text">{s.text}</p>
+        {letzte && <p className="gedaempft" style={{ fontSize: ".8rem", margin: "8px 0 0" }}>{DEMO_HINWEIS}</p>}
 
         <div className="willkommen-knoepfe">
           {seite === 0 && <button className="knopf breit" onClick={() => setSeite(1)}>Weiter</button>}

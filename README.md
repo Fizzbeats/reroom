@@ -8,8 +8,8 @@ Mit ReRoom findest du neue und gebrauchte Möbel in deinem Stil und Budget, sieh
 
 ## Raum messen
 
-- **Android mit Chrome:** Unter „Messen“ auf „Kamera starten“ tippen. Die App führt durch Raumecken, Raumhöhe, Tür und Treppenhaus. Ein Zollstock ist nicht nötig.
-- **iPhone:** Safari unterstützt keine AR-Messung im Browser. Dort misst man mit einem Foto und einer Bankkarte oder tippt die Maße ein.
+- **Android mit Chrome:** Unter „Messen“ auf „Kamera starten“ tippen. Die App führt durch Raumecken, Raumhöhe, Tür und Treppenhaus und schätzt daraus die Maße. Bei knappen Ergebnissen sagt der Passt-Check, dass du nachmessen sollst.
+- **iPhone:** Safari unterstützt keine AR-Messung im Browser. Ein Assistent führt durch sechs Maße, eines pro Bildschirm. Du misst mit der Maßband-App deines iPhones oder mit einem Foto und einer Bankkarte und trägst die Werte ein.
 
 ## Entwickeln
 
@@ -22,4 +22,4 @@ npm run build    # Produktions-Build
 
 Bei jedem Push prüft die CI Typen, Tests und Build. Nach einem Push auf `main` veröffentlicht die CD die App auf GitHub Pages.
 
-Schülerprojekt (Mediengestaltung, Chemnitz). Alle Möbel, Shops und Anbieter in den Beispieldaten sind erfunden.
+**Hinweis:** ReRoom ist ein Schulprojekt (Mediengestaltung, Chemnitz). Alle Möbel, Shops, Anbieter und Preise in den Beispieldaten sind erfunden. Bezahlung, Auszahlung und der Chatbot (noch ohne KI) sind eine Demo.

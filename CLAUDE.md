@@ -5,7 +5,7 @@
 > und am Handy (als Webseite). Die Swift-Planung unten bleibt als Ziel für die iPhone-App erhalten (Stufe 4 wird zu „iPhone und Android").
 >
 > **Ersatz für Apple-Technik im Entwurf:**
-> - RoomPlan-Scan → **AR-Kamera-Messung** im Browser (WebXR mit Hit-Test, `src/services/arSitzung.ts`, `src/views/ArMesser.tsx`, Logik `src/logic/arMessung.ts`): geführt durch Raumecken, Raumhöhe, Tür und Treppenhaus, ohne Zollstock. Läuft auf Android mit Chrome, nur über HTTPS (GitHub Pages) oder localhost.
+> - RoomPlan-Scan → **AR-Kamera-Messung** im Browser (WebXR mit Hit-Test, `src/services/arSitzung.ts`, `src/views/ArMesser.tsx`, Logik `src/logic/arMessung.ts`): geführt durch Raumecken, Raumhöhe, Tür und Treppenhaus. Die Werte sind eine Schätzung (nie am echten Handy gemessen, darum keine Genauigkeit versprechen). Läuft auf Android mit Chrome, nur über HTTPS (GitHub Pages) oder localhost.
 >   - Ohne AR (iPhone-Safari kann kein WebXR): Foto-Messung mit Bankkarte/A4 (`src/views/KameraMesser.tsx`, `src/logic/messen.ts`) oder Eintippen. Beispielräume in `src/data/raeume.ts`.
 >   - Vollautomatischer Scan auf iPhones mit LiDAR geht nur als eigene App mit RoomPlan (z. B. Expo + `expo-roomplan`, Build in der Cloud mit EAS). Braucht ein Apple-Entwicklerkonto (99 €/Jahr). Weicht vom Businessplan ab („Web-App, ohne App-Store-Gebühren“), dort als „Ausbaustufe Kamera-Scan“ geplant.
 > - SwiftData → `localStorage` (`src/useLokal.ts`)
@@ -19,6 +19,8 @@
 > **Design:** Marktplatz-Stil nach Entwurf `public/design/index.html`: Weiß/Schwarz, Bilder im 2er-Raster, Orange `#FF5B2E` nur als Marken-Akzent, Grün nur für „mit ReRoom“, Schrift Bricolage Grotesque für Titel und Preise, eigene Strich-Icons (`src/views/ui.tsx`). Möbelbilder: Produktfoto des Anbieters (`bildUrl`), sonst Zeichnung je Kategorie. Kein Blau, kein Creme/Serif-Look. Alte Entwürfe unter `public/entwuerfe/` sind verworfen.
 >
 > **Handy (umgesetzt):** Installierbar als App (`public/manifest.webmanifest`, Symbole in `public/icons/`, erzeugt mit `node scripts/symbole.mjs`), Sicherheitsabstände für Notch und Home-Leiste (`viewport-fit=cover`), Hell/Dunkel-Farbe der Browserleiste. AR-Status mit Erklärung, warum die Kamera ggf. nicht geht (`src/logic/arStatus.ts`). Das AR-Overlay darf nie `display: none` sein, sonst sind Anleitung und Knöpfe in der Kamera unsichtbar. **Die AR-Messung ist noch nicht an einem echten Android-Handy getestet.**
+>
+> **Ehrliche Texte (Regel):** Alle Versprechen stehen in `src/logic/texte.ts` und sind getestet. Die Kamera wird nur dort versprochen, wo sie misst (Android mit Chrome), auf dem iPhone steht die Maßband-App, sonst Zollstock oder Foto mit Bankkarte. Keine erfundenen Genauigkeitsangaben („±3 %“, „auf den Zentimeter“). Der Slogan „Ausmessen, Stil wählen, günstiger einrichten.“ steht auf Startseite und Willkommen. Auf Startseite, Entdecken und der letzten Willkommen-Karte steht, dass es ein Schulprojekt mit Beispieldaten ist. Der Chat sagt, dass er noch keine KI ist.
 >
 > **Messen auf dem iPhone (umgesetzt):** Safari kann kein WebXR, also keine Live-Messung im Browser. Stattdessen führt `src/views/MessAssistent.tsx` durch 6 Maße (ein Maß pro Bildschirm, Skizze, Prüfung in `src/logic/messSchritte.ts`), misst auf Wunsch per Foto mit Bankkarte oder verweist auf die Maßband-App des iPhones (`measure://`). Ein vollautomatischer Scan auf dem iPhone geht nur mit einer eigenen App (RoomPlan, nur iPhone 12 Pro und neuer mit LiDAR, Apple-Entwicklerkonto 99 €/Jahr).
 >

@@ -5,6 +5,7 @@ import { pruefeMoebel } from "../logic/passtCheck";
 import { einrichten, type Platzierung } from "../logic/einrichten";
 import { zimmerSet } from "../logic/stilAuswertung";
 import { alsCent, euro } from "../logic/preisRechner";
+import { START_MESSEN_TEXT, SLOGAN, DEMO_HINWEIS } from "../logic/texte";
 import { Grundriss, Icon, ProduktKarte } from "./ui";
 
 export const STIL_INFO: Record<Stil, { name: string; farbe: string }> = {
@@ -62,6 +63,7 @@ export default function Start(props: Props) {
         <p className="marke">ReRoom<i /></p>
         {raum && <button className="chip" onClick={onMessen}><Icon name="kamera" groesse={16} /> Neu messen</button>}
       </div>
+      <p className="slogan" style={{ margin: "-6px 0 14px" }}>{SLOGAN}</p>
 
       {raum && plan ? (
         <div className="raumkarte">
@@ -94,7 +96,7 @@ export default function Start(props: Props) {
       ) : (
         <div className="messen-cta">
           <h3>Passt das Sofa durch die Tür?</h3>
-          <p>Miss deinen Raum mit der Handykamera. ReRoom zeigt dir dann nur Möbel, die wirklich passen.</p>
+          <p>{START_MESSEN_TEXT}</p>
           <button className="knopf breit" onClick={onMessen}><Icon name="kamera" /> Raum ausmessen</button>
           <button className="link" style={{ color: "#C8C8C8" }} onClick={() => onWaehlen(BEISPIELRAEUME[2]!.id)}>
             Erst mit einem Beispielraum ausprobieren
@@ -135,6 +137,7 @@ export default function Start(props: Props) {
           </div>
         </>
       )}
+      <p className="demo-hinweis">{DEMO_HINWEIS}</p>
     </section>
   );
 }

@@ -140,7 +140,7 @@ export default function KameraMesser({ onWert, festesZiel, ziele }: Props) {
                 </button>
                 <button className="knopf leise" onClick={() => { setRefPunkte([]); setMessPunkte([]); }}>Neu ansetzen</button>
               </div>
-              <p className="gedaempft">Die Messung ist eine Schätzung (etwa ±3 %). Bitte nachmessen, wenn es knapp wird.</p>
+              <p className="gedaempft">Die Messung ist eine Schätzung. Sie stimmt nur, wenn Karte und Messstrecke gleich weit von der Kamera entfernt sind. Bitte nachmessen, wenn es knapp wird.</p>
             </>
           )}
         </>
