@@ -1,0 +1,632 @@
+<title>ReRoom Corporate Identity</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&display=swap">
+<style>
+  /* Layout: ein Handbuch in Kapiteln, Beispiele zuerst, Regeln darunter. Die Marke zeigt sich selbst. */
+  :root {
+    --bg: #FFFFFF; --flaeche: #F1F1EF; --fg: #111111; --muted: #5E5E5E; --linie: #E5E4E1;
+    --orange: #FF5B2E; --gruen: #0B7A4B; --gruen-bg: #E3F3EA; --gelb: #8A5F00; --gelb-bg: #FFF1CC; --rot: #C0301F; --rot-bg: #FDE3DF;
+    --tinte: #111111; --auf-tinte: #FFFFFF;
+    --titel: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+    --text: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --mono: ui-monospace, "Cascadia Mono", Consolas, monospace;
+  }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+    --bg: #0E0E0E; --flaeche: #1C1C1C; --fg: #F2F2F2; --muted: #A6A6A6; --linie: #2A2A2A;
+    --orange: #FF6B3D; --gruen: #5FD39A; --gruen-bg: #12301F; --gelb: #F2C94C; --gelb-bg: #3A2E0E; --rot: #FF8070; --rot-bg: #3E2019;
+    --tinte: #F2F2F2; --auf-tinte: #0E0E0E; color-scheme: dark; } }
+  :root[data-theme="dark"] {
+    --bg: #0E0E0E; --flaeche: #1C1C1C; --fg: #F2F2F2; --muted: #A6A6A6; --linie: #2A2A2A;
+    --orange: #FF6B3D; --gruen: #5FD39A; --gruen-bg: #12301F; --gelb: #F2C94C; --gelb-bg: #3A2E0E; --rot: #FF8070; --rot-bg: #3E2019;
+    --tinte: #F2F2F2; --auf-tinte: #0E0E0E; color-scheme: dark; }
+
+  * { box-sizing: border-box; }
+  body { background: var(--bg); color: var(--fg); font: 16px/1.55 var(--text); -webkit-font-smoothing: antialiased; }
+  .wrap { max-width: 980px; margin: 0 auto; padding-block: 28px 100px; padding-left: max(18px, env(safe-area-inset-left, 0px)); padding-right: max(18px, env(safe-area-inset-right, 0px)); }
+  h1, h2, h3, .titel { font-family: var(--titel); text-wrap: balance; }
+  h1 { font-size: clamp(2.4rem, 7vw, 4rem); font-weight: 800; letter-spacing: -.04em; line-height: 1.02; margin: 12px 0 14px; }
+  h2 { font-size: clamp(1.6rem, 4vw, 2.1rem); font-weight: 800; letter-spacing: -.03em; line-height: 1.1; margin: 0 0 8px; }
+  h3 { font-size: 1.15rem; font-weight: 700; letter-spacing: -.02em; margin: 28px 0 8px; }
+  p { margin: 0 0 12px; max-width: 68ch; }
+  .muted { color: var(--muted); }
+  .klein { font-size: .88rem; }
+  code, .mono { font-family: var(--mono); font-size: .84em; background: var(--flaeche); border-radius: 6px; padding: 1px 6px; }
+  a { color: inherit; text-underline-offset: 3px; }
+  :focus-visible { outline: 3px solid var(--orange); outline-offset: 2px; }
+
+  .marke { font: 800 1.5rem var(--titel); letter-spacing: -.035em; }
+  .marke i, .logo i { display: inline-block; width: .3em; height: .3em; border-radius: 50%; background: var(--orange); margin-left: .06em; }
+  .kopf { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .stand { font: 600 .8rem var(--text); color: var(--muted); }
+  .inhalt { display: flex; flex-wrap: wrap; gap: 6px; margin: 22px 0 0; padding: 0; list-style: none; }
+  .inhalt a { display: inline-block; padding: 7px 13px; border-radius: 999px; background: var(--flaeche); text-decoration: none; font: 600 .85rem var(--text); }
+  .inhalt a:hover { background: var(--tinte); color: var(--auf-tinte); }
+
+  section { padding-top: 64px; scroll-margin-top: 16px; }
+  .kap { font: 700 .74rem var(--text); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; display: block; }
+  .kap b { color: var(--orange); }
+  .karte { background: var(--flaeche); border-radius: 18px; padding: 20px; }
+  .linie { border: 1px solid var(--linie); border-radius: 18px; padding: 20px; }
+  .raster { display: grid; gap: 14px; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); margin: 16px 0; }
+  .raster > * { min-width: 0; }
+  .tabelle { overflow-x: auto; margin: 14px 0; }
+  table { width: 100%; border-collapse: collapse; min-width: 560px; font-size: .92rem; }
+  th, td { text-align: left; vertical-align: top; padding: 10px 12px; border-bottom: 1px solid var(--linie); }
+  th { font: 700 .72rem var(--text); letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+  td.zahl { font-variant-numeric: tabular-nums; font-family: var(--mono); font-size: .85rem; white-space: nowrap; }
+
+  /* Hero: Wortmarke groß */
+  .hero { margin-top: 20px; background: #111; color: #fff; border-radius: 28px; padding: clamp(28px, 6vw, 56px); display: grid; gap: 18px; }
+  .hero .logo { font: 800 clamp(3rem, 14vw, 7rem) var(--titel); letter-spacing: -.045em; line-height: .95; }
+  .hero .claim { font: 600 clamp(1.05rem, 3vw, 1.5rem) var(--titel); color: #D6D6D6; letter-spacing: -.01em; max-width: 30ch; }
+
+  /* Pillen und Hinweise */
+  .pille { display: inline-block; font: 700 .72rem var(--text); border-radius: 999px; padding: 3px 10px; background: var(--flaeche); }
+  .pille.ok { background: var(--gruen-bg); color: var(--gruen); }
+  .pille.mittel { background: var(--gelb-bg); color: var(--gelb); }
+  .pille.nein { background: var(--rot-bg); color: var(--rot); }
+  .tun, .lassen { border-radius: 18px; padding: 18px 20px; }
+  .tun { background: var(--gruen-bg); } .lassen { background: var(--rot-bg); }
+  .tun h3, .lassen h3 { margin-top: 0; }
+  .tun h3 { color: var(--gruen); } .lassen h3 { color: var(--rot); }
+  ul.liste { margin: 0; padding-left: 1.1rem; display: grid; gap: 6px; }
+  ul.liste li { max-width: 62ch; }
+
+  /* Logo-Kapitel */
+  .logo-flaeche { border-radius: 18px; padding: 30px 20px; display: grid; place-items: center; min-height: 140px; }
+  .logo { font: 800 2.6rem var(--titel); letter-spacing: -.045em; line-height: 1; }
+  .logo-flaeche.weiss { background: #fff; color: #111; box-shadow: inset 0 0 0 1px var(--linie); }
+  .logo-flaeche.tinte { background: #111; color: #fff; }
+  .logo-flaeche.grau { background: #F1F1EF; color: #111; }
+  .schutz { position: relative; padding: 2.2rem 2.4rem; outline: 2px dashed var(--orange); outline-offset: 0; }
+  .schutz::before { content: "R"; position: absolute; top: .3rem; left: .35rem; font: 700 .7rem var(--text); color: var(--orange); }
+  .appicon { width: 120px; height: 120px; border-radius: 28px; background: #111; color: #fff; display: grid; place-items: center; font: 800 4.6rem var(--titel); letter-spacing: -.05em; }
+  .appicon i { display: inline-block; width: 14px; height: 14px; border-radius: 50%; background: #FF5B2E; margin-left: 2px; align-self: end; margin-bottom: 26px; }
+  .appicon span { display: flex; }
+
+  /* Farben */
+  .farbe { border-radius: 18px; overflow: hidden; border: 1px solid var(--linie); background: var(--bg); }
+  .farbe .paar { display: grid; grid-template-columns: 1fr 1fr; min-height: 92px; }
+  .farbe .paar div { padding: 10px 12px; display: flex; flex-direction: column; justify-content: flex-end; font: 700 .76rem var(--mono); }
+  .farbe .paar small { font: 600 .62rem var(--text); letter-spacing: .08em; text-transform: uppercase; opacity: .7; }
+  .farbe .text { padding: 12px 14px; }
+  .farbe .text b { font: 700 1rem var(--titel); display: block; }
+  .farbe .text span { font-size: .84rem; color: var(--muted); display: block; }
+  .farbe .text code { margin-top: 6px; display: inline-block; }
+  .anteil { display: flex; height: 54px; border-radius: 14px; overflow: hidden; margin: 14px 0 6px; box-shadow: inset 0 0 0 1px var(--linie); }
+  .anteil div { display: grid; place-items: center; font: 700 .76rem var(--text); }
+
+  /* Schrift */
+  .glyphen { font: 800 clamp(3rem, 11vw, 6rem) var(--titel); letter-spacing: -.04em; line-height: 1; }
+  .skala { display: grid; }
+  .skala > div { display: grid; grid-template-columns: minmax(120px, 190px) 1fr; gap: 14px; padding: 14px 0; border-bottom: 1px solid var(--linie); align-items: baseline; }
+  .skala .meta { font: 600 .78rem var(--text); color: var(--muted); }
+  .skala .meta code { display: block; margin-top: 4px; width: fit-content; }
+  @media (max-width: 560px) { .skala > div { grid-template-columns: 1fr; gap: 4px; } }
+
+  /* Formen */
+  .formen { display: flex; flex-wrap: wrap; gap: 14px; align-items: flex-end; margin: 16px 0; }
+  .form { background: var(--flaeche); display: grid; place-items: center; font: 700 .78rem var(--mono); text-align: center; padding: 8px; }
+  .abstand { display: flex; align-items: flex-end; gap: 10px; margin: 12px 0; flex-wrap: wrap; }
+  .abstand i { display: block; background: var(--orange); border-radius: 3px; }
+
+  /* Icons */
+  .icons { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 10px; }
+  .icons div { background: var(--flaeche); border-radius: 14px; padding: 16px 8px 10px; display: grid; justify-items: center; gap: 8px; font: 600 .74rem var(--text); color: var(--muted); }
+  .icons svg { width: 30px; height: 30px; color: var(--fg); }
+
+  /* Bildwelt */
+  .bildkachel { background: #F1F1EF; border-radius: 18px; aspect-ratio: 1/.9; display: grid; place-items: center; position: relative; overflow: hidden; }
+  .bildkachel svg { width: 88%; }
+  .schild { position: absolute; top: 10px; left: 10px; background: #fff; color: #111; border-radius: 999px; padding: 4px 10px 4px 8px; font: 700 .74rem var(--text); display: inline-flex; gap: 6px; align-items: center; }
+  .schild::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--c); }
+
+  /* Komponenten (gleiche Werte wie in der App) */
+  .demo { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
+  .k-knopf { border: 0; border-radius: 14px; padding: 14px 20px; min-height: 48px; font: 700 1rem var(--text); background: #111; color: #fff; cursor: default; }
+  .k-knopf.zweit { background: transparent; color: var(--fg); box-shadow: inset 0 0 0 1.5px var(--fg); }
+  .k-knopf.leise { background: var(--flaeche); color: var(--fg); }
+  .k-chip { border: 0; border-radius: 999px; padding: 9px 15px; min-height: 38px; font: 600 .84rem var(--text); background: var(--flaeche); color: var(--fg); display: inline-flex; align-items: center; gap: 6px; }
+  .k-chip.an { background: #111; color: #fff; }
+  .k-chip .p { width: 12px; height: 12px; border-radius: 50%; }
+  .k-preis { font: 800 1.45rem var(--titel); letter-spacing: -.02em; }
+  .k-reroom { font: 700 .72rem var(--text); color: var(--gruen); background: var(--gruen-bg); border-radius: 6px; padding: 2px 7px; }
+  .k-balken { display: grid; grid-template-columns: 90px 1fr 60px; gap: 10px; align-items: center; font-size: .86rem; margin: 8px 0; }
+  .k-balken .spur { height: 8px; border-radius: 4px; background: var(--flaeche); overflow: hidden; } .k-balken .spur i { display: block; height: 100%; border-radius: 4px; }
+  .k-balken em { font-style: normal; font-weight: 700; text-align: right; font-variant-numeric: tabular-nums; }
+  .k-status { font: 700 .76rem var(--text); border-radius: 999px; padding: 4px 10px; background: var(--gelb-bg); color: var(--gelb); }
+  .produkt { display: grid; gap: 2px; width: 190px; max-width: 100%; }
+  .produkt .b { background: #F1F1EF; border-radius: 18px; aspect-ratio: 1/1.05; display: grid; place-items: center; position: relative; margin-bottom: 8px; }
+  .produkt .b svg { width: 92%; }
+  .produkt .n { font-size: .86rem; } .produkt .m { font-size: .78rem; color: var(--muted); }
+  .raumkarte { background: #111; color: #fff; border-radius: 24px; padding: 16px; width: 280px; max-width: 100%; }
+  .raumkarte small { color: #B5B5B5; font-size: .76rem; } .raumkarte b { font: 800 1.2rem var(--titel); display: block; }
+  .raumkarte .w { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-top: 8px; }
+  .raumkarte .w div { background: rgb(255 255 255 / .08); border-radius: 10px; padding: 6px 8px; font-size: .68rem; color: #B5B5B5; } .raumkarte .w b { font-size: .95rem; color: #fff; }
+  .tabs { display: flex; justify-content: space-around; align-items: flex-end; background: var(--bg); border: 1px solid var(--linie); border-radius: 22px; padding: 10px 6px 8px; max-width: 420px; }
+  .tabs span { display: grid; justify-items: center; gap: 3px; font: 600 .66rem var(--text); color: var(--muted); position: relative; }
+  .tabs span.an { color: var(--fg); } .tabs span.an::after { content: ""; position: absolute; top: -11px; width: 22px; height: 3px; border-radius: 3px; background: var(--orange); }
+  .tabs svg { width: 24px; height: 24px; }
+  .tabs .mitte { width: 46px; height: 46px; border-radius: 50%; background: #111; color: #fff; display: grid; place-items: center; margin-top: -14px; }
+  .tabs .mitte svg { width: 22px; height: 22px; }
+
+  /* Anwendungen */
+  .kachel { aspect-ratio: 1/1; border-radius: 22px; background: #111; color: #fff; padding: 22px; display: grid; align-content: space-between; }
+  .kachel .gross { font: 800 clamp(1.5rem, 5vw, 2rem) var(--titel); letter-spacing: -.035em; line-height: 1.05; }
+  .kachel .preise { display: flex; gap: 12px; align-items: baseline; flex-wrap: wrap; }
+  .kachel .alt { font: 700 1.3rem var(--titel); color: #9A9A9A; text-decoration: line-through; } .kachel .neu { font: 800 2.6rem var(--titel); color: #5FD39A; letter-spacing: -.03em; }
+  .story { aspect-ratio: 9/16; border-radius: 22px; background: #F1F1EF; color: #111; padding: 20px; display: grid; align-content: space-between; max-width: 260px; }
+  .story .gross { font: 800 1.7rem var(--titel); letter-spacing: -.035em; line-height: 1.05; }
+
+  .fuss { margin-top: 80px; padding-top: 20px; border-top: 1px solid var(--linie); }
+</style>
+
+<div class="wrap">
+  <header class="kopf">
+    <span class="marke">ReRoom<i></i></span>
+    <span class="stand">Corporate Identity · Stand 4. November 2026 · Version 1.0 (Entwurf)</span>
+  </header>
+
+  <div class="hero">
+    <div class="logo">ReRoom<i></i></div>
+    <div class="claim">Ausmessen, Stil wählen, günstiger einrichten.</div>
+  </div>
+
+  <h1 style="margin-top:34px">Wie ReRoom aussieht, klingt und sich anfühlt</h1>
+  <p class="muted">Dieses Handbuch gilt für die App, die Videos, Flyer und alles, was ReRoom nach außen zeigt. Es beschreibt das, was in der App schon umgesetzt ist, und legt fest, was für alles andere gelten soll. Jede Regel hat ein Beispiel.</p>
+
+  <ul class="inhalt" aria-label="Kapitel">
+    <li><a href="#marke">1 Marke</a></li><li><a href="#logo">2 Logo</a></li><li><a href="#farben">3 Farben</a></li><li><a href="#schrift">4 Schrift</a></li>
+    <li><a href="#formen">5 Formen und Raster</a></li><li><a href="#icons">6 Icons</a></li><li><a href="#bild">7 Bildwelt</a></li><li><a href="#komponenten">8 Bausteine</a></li>
+    <li><a href="#sprache">9 Sprache</a></li><li><a href="#bewegung">10 Bewegung</a></li><li><a href="#zugang">11 Zugänglichkeit</a></li><li><a href="#anwendung">12 Anwendungen</a></li><li><a href="#regeln">13 Tun und lassen</a></li><li><a href="#technik">14 Im Code</a></li>
+  </ul>
+
+  <!-- 1 MARKE -->
+  <section id="marke">
+    <span class="kap"><b>01</b> Marke</span>
+    <h2>Wofür ReRoom steht</h2>
+    <p>ReRoom hilft jungen Menschen, ihr Zimmer einzurichten, ohne Fehlkäufe. Das Besondere ist der Passt-Check: Die App weiß, ob ein Möbel in den Raum und durch Tür und Treppenhaus passt.</p>
+    <div class="raster">
+      <div class="karte"><h3 style="margin-top:0">Claim</h3><p class="titel" style="font-size:1.4rem;font-weight:800;letter-spacing:-.02em;line-height:1.15;margin:0">Ausmessen, Stil wählen, günstiger einrichten.</p><p class="muted klein" style="margin-top:8px">Immer in dieser Reihenfolge und mit Punkt am Ende. Kurzform: „Passt, spart, macht Spaß.“ nur in Social Media.</p></div>
+      <div class="karte"><h3 style="margin-top:0">Mission</h3><p style="margin:0">Jeder soll Möbel kaufen können, die zum Stil, zum Budget und zum Raum passen, neu oder gebraucht, aus einer App.</p></div>
+      <div class="karte"><h3 style="margin-top:0">Zielgruppe</h3><p style="margin:0">18 bis 35 Jahre, ziehen um oder richten die erste eigene Wohnung ein. Studierende, Azubis, junge Paare. Start in Chemnitz.</p></div>
+    </div>
+    <h3>Vier Eigenschaften</h3>
+    <div class="raster">
+      <div class="linie"><b class="titel">Klar</b><p class="muted klein" style="margin:6px 0 0">Eine Sache pro Bildschirm. Zahlen vor Text. Keine Fachwörter.</p></div>
+      <div class="linie"><b class="titel">Ehrlich</b><p class="muted klein" style="margin:6px 0 0">Wir sagen „Knapp, bitte nachmessen“, wenn wir nicht sicher sind, und zeigen Preis, Gebühren und Cashback offen.</p></div>
+      <div class="linie"><b class="titel">Hilfsbereit</b><p class="muted klein" style="margin:6px 0 0">Wir zeigen den Weg durch die Tür, nicht nur ein Ergebnis. Fehler erklären, wie es weitergeht.</p></div>
+      <div class="linie"><b class="titel">Nah dran</b><p class="muted klein" style="margin:6px 0 0">Lokal in Chemnitz, gebrauchte Möbel aus der Nachbarschaft, eine Sprache wie unter Freunden.</p></div>
+    </div>
+    <h3>Was ReRoom nicht ist</h3>
+    <p>Kein Möbelhaus mit Lager, sondern Vermittler. Kein Katalog zum Durchblättern, sondern ein Werkzeug, das nur zeigt, was wirklich passt. Auch kein Deko-Magazin: Das Aussehen ist ruhig und hell, damit die Möbel im Vordergrund stehen.</p>
+  </section>
+
+  <!-- 2 LOGO -->
+  <section id="logo">
+    <span class="kap"><b>02</b> Logo</span>
+    <h2>Wortmarke mit orangem Punkt</h2>
+    <p>Das Logo ist das Wort „ReRoom“ in Bricolage Grotesque ExtraBold mit enger Laufweite und einem orangen Punkt dahinter. Der Punkt steht für „passt“ und ist das einzige Orange im Logo. Das ist ein erster Entwurf. Ein ausgearbeitetes Zeichen ist offen (siehe Kapitel 14).</p>
+    <div class="raster">
+      <div class="logo-flaeche weiss"><span class="logo">ReRoom<i></i></span></div>
+      <div class="logo-flaeche tinte"><span class="logo">ReRoom<i></i></span></div>
+      <div class="logo-flaeche grau"><span class="logo">ReRoom<i></i></span></div>
+    </div>
+    <div class="raster">
+      <div class="linie" style="display:grid;place-items:center;gap:12px">
+        <div class="appicon" role="img" aria-label="App-Symbol: R mit orangem Punkt"><span>R<i></i></span></div>
+        <span class="klein muted">App-Symbol, Browser-Tab, Profilbild</span>
+      </div>
+      <div class="linie" style="display:grid;place-items:center;gap:14px">
+        <div class="schutz"><span class="logo" style="font-size:2rem">ReRoom<i></i></span></div>
+        <span class="klein muted" style="text-align:center">Schutzraum rundherum: Höhe des „R“. Nichts darf hineinragen.</span>
+      </div>
+    </div>
+    <div class="tabelle"><table>
+      <thead><tr><th>Regel</th><th>Wert</th></tr></thead>
+      <tbody>
+        <tr><td>Mindestgröße Wortmarke</td><td>80 px Breite am Bildschirm, 20 mm im Druck</td></tr>
+        <tr><td>Mindestgröße App-Symbol</td><td>16 px (Browser-Tab), darunter nur der orange Punkt</td></tr>
+        <tr><td>Erlaubte Untergründe</td><td>Weiß, Hellgrau <code>#F1F1EF</code>, Tinte <code>#111111</code>. Auf Fotos nur mit ruhigem Bereich dahinter.</td></tr>
+        <tr><td>Farben</td><td>Schrift schwarz oder weiß, Punkt immer Orange <code>#FF5B2E</code>. Im Dark Mode <code>#FF6B3D</code>.</td></tr>
+        <tr><td>Einfarbig</td><td>Wenn nur eine Farbe möglich ist (Stempel, Prägung), Schrift und Punkt in dieser Farbe</td></tr>
+      </tbody>
+    </table></div>
+    <div class="raster">
+      <div class="lassen"><h3>Nicht so</h3><ul class="liste"><li>Logo verzerren, drehen oder mit Schatten versehen</li><li>Den Punkt in einer anderen Farbe oder weglassen</li><li>Auf Orange oder Blau setzen (zu wenig Kontrast)</li><li>Serifenschrift oder andere Schrift für das Wort</li></ul></div>
+      <div class="tun"><h3>So</h3><ul class="liste"><li>Immer „ReRoom“ mit großem R am Anfang und am Wort-Gelenk</li><li>Im Text nur ReRoom, nie „Reroom“ oder „RE-ROOM“</li><li>Genug Luft drumherum</li></ul></div>
+    </div>
+  </section>
+
+  <!-- 3 FARBEN -->
+  <section id="farben">
+    <span class="kap"><b>03</b> Farben</span>
+    <h2>Schwarz und Weiß, ein Orange, Ampel für die Wahrheit</h2>
+    <p>Die Möbel sollen Farbe haben, nicht die Oberfläche. Deshalb ist die App weiß und schwarz. Orange ist ein kleiner Punkt Persönlichkeit. Grün gehört dem Preisvorteil, und Grün, Gelb und Rot gehören der Ampel. Jede Farbe gibt es in einer hellen und einer dunklen Variante, die die App nach der Geräteeinstellung wählt.</p>
+    <div class="anteil" role="img" aria-label="Verteilung: etwa 70 Prozent Weiß und Hellgrau, 25 Prozent Schwarz, 5 Prozent Orange und Funktionsfarben">
+      <div style="flex:70;background:#fff;color:#111">Weiß und Hellgrau · ca. 70 %</div>
+      <div style="flex:25;background:#111;color:#fff">Tinte · 25 %</div>
+      <div style="flex:5;background:#FF5B2E;color:#111">5 %</div>
+    </div>
+    <p class="muted klein">Faustregel: Wenn Orange auf einem Bildschirm mehr als ein paar kleine Stellen füllt, ist es zu viel.</p>
+
+    <h3>Basis</h3><div class="raster" id="farbenBasis"></div>
+    <h3>Akzent</h3><div class="raster" id="farbenAkzent" style="grid-template-columns:minmax(230px,320px)"></div>
+    <h3>Funktion: Preisvorteil, Ampel, Hinweis</h3><div class="raster" id="farbenFunktion"></div>
+    <p class="muted klein">Jede Kachel zeigt links den hellen und rechts den dunklen Wert. Die Ampelfarben bleiben auf Produktbildern fest in einem weißen Schild (siehe Kapitel 7), damit sie auf jedem Foto lesbar sind.</p>
+
+    <h3>Lesbarkeit: gerechnet nach WCAG</h3>
+    <p>Die Tabelle wird beim Öffnen aus den Farbwerten berechnet. Ab 4,5 ist Fließtext erlaubt, ab 3 nur große Schrift und Flächen.</p>
+    <div class="tabelle"><table id="kontrast"><thead><tr><th>Paar</th><th>Hell</th><th>Dunkel</th><th>Erlaubt für</th></tr></thead><tbody></tbody></table></div>
+    <div class="lassen"><h3>Wichtig</h3><p style="margin:0">Orange auf Weiß erreicht nur etwa 3,1. Orange ist deshalb <b>nie Textfarbe</b>, sondern nur Fläche, Punkt, Linie oder Fokusring. Text auf Orange ist immer Tinte.</p></div>
+  </section>
+
+  <!-- 4 SCHRIFT -->
+  <section id="schrift">
+    <span class="kap"><b>04</b> Schrift</span>
+    <h2>Eine Schrift mit Charakter, eine, die man nicht merkt</h2>
+    <p>Titel, Preise und das Logo setzen wir in <b>Bricolage Grotesque</b>. Sie ist eng, kräftig und freundlich, und sie unterscheidet ReRoom von den üblichen Möbel-Apps. Alles andere steht in der Systemschrift des Geräts (auf dem iPhone San Francisco, auf Android Roboto). Sie lädt sofort und ist auf kleinen Schirmen am besten lesbar.</p>
+    <div class="karte"><div class="glyphen">Aa Rr 0123</div><p class="muted klein" style="margin:10px 0 0">Bricolage Grotesque · 500, 700, 800 · Google Fonts, Lizenz SIL Open Font License (kostenlos, auch kommerziell)</p></div>
+    <h3>Größen und Gewichte</h3>
+    <div class="skala">
+      <div><div class="meta">Logo<code>800 · 1,65 rem · −3,5 %</code></div><div class="titel" style="font-weight:800;font-size:1.65rem;letter-spacing:-.035em">ReRoom</div></div>
+      <div><div class="meta">Seitentitel<code>800 · 1,75 rem · −3 %</code></div><div class="titel" style="font-weight:800;font-size:1.75rem;letter-spacing:-.03em">Entdecken</div></div>
+      <div><div class="meta">Möbelname im Detail<code>800 · 1,9 rem</code></div><div class="titel" style="font-weight:800;font-size:1.9rem;letter-spacing:-.03em">Sofa Lund</div></div>
+      <div><div class="meta">Zwischentitel<code>700 · 1,25 rem · −2 %</code></div><div class="titel" style="font-weight:700;font-size:1.25rem;letter-spacing:-.02em">Passt in dein Wohnzimmer</div></div>
+      <div><div class="meta">Preis groß<code>800 · 1,45 rem</code></div><div class="titel" style="font-weight:800;font-size:1.45rem;letter-spacing:-.02em;font-variant-numeric:tabular-nums">180,00 €</div></div>
+      <div><div class="meta">Preis in der Karte<code>800 · 1,05 rem</code></div><div class="titel" style="font-weight:800;font-size:1.05rem;font-variant-numeric:tabular-nums">69,00 €</div></div>
+      <div><div class="meta">Text<code>Systemschrift · 400 · 1 rem · 1,45</code></div><div>Tür, Treppenhaus und Raum haben genug Platz.</div></div>
+      <div><div class="meta">Nebentext<code>400 · 0,9 rem · Grau</code></div><div class="muted" style="font-size:.9rem">Privat, Chemnitz-Kaßberg · 3 km · Abholung</div></div>
+      <div><div class="meta">Schild, Badge, Chip<code>700 · 0,7 bis 0,84 rem</code></div><div style="font-weight:700;font-size:.76rem">PASST · KNAPP · NEU · GEBRAUCHT</div></div>
+    </div>
+    <ul class="liste" style="margin-top:14px">
+      <li>Zahlen, die untereinander stehen (Preise, Summen, Maße), immer mit gleich breiten Ziffern (<code>tabular-nums</code>).</li>
+      <li>Fließtext nie unter 14 px, Zeilenlänge höchstens etwa 65 Zeichen.</li>
+      <li>Nie mehr als zwei Schriftgrößen in einem Block. Nie Kursiv und nie durchgehend Großbuchstaben bei Sätzen.</li>
+      <li>Fallback, falls die Schrift nicht lädt: Segoe UI, dann Systemschrift.</li>
+    </ul>
+  </section>
+
+  <!-- 5 FORMEN -->
+  <section id="formen">
+    <span class="kap"><b>05</b> Formen und Raster</span>
+    <h2>Runde Ecken, viel Luft, große Tippflächen</h2>
+    <div class="formen">
+      <div class="form" style="width:130px;height:90px;border-radius:18px">Karten, Bilder<br>18 px</div>
+      <div class="form" style="width:110px;height:60px;border-radius:14px">Knöpfe<br>14 px</div>
+      <div class="form" style="width:110px;height:48px;border-radius:12px">Eingaben<br>12 px</div>
+      <div class="form" style="width:110px;height:38px;border-radius:999px">Chips<br>rund</div>
+      <div class="form" style="width:130px;height:90px;border-radius:24px;background:#111;color:#fff">Raumkarte<br>24 px</div>
+    </div>
+    <div class="tabelle"><table>
+      <thead><tr><th>Regel</th><th>Wert</th></tr></thead>
+      <tbody>
+        <tr><td>Seitenrand</td><td>20 px links und rechts, auf großen Bildschirmen höchstens 560 px Breite</td></tr>
+        <tr><td>Produktraster</td><td>2 Spalten, 12 px zwischen den Spalten, 18 px zwischen den Zeilen</td></tr>
+        <tr><td>Kleinste Tippfläche</td><td>44 × 44 px, Knöpfe 48 px hoch</td></tr>
+        <tr><td>Abstand zwischen Blöcken</td><td>14 px zwischen Karten, 26 px vor einem Zwischentitel</td></tr>
+        <tr><td>Bildformat Produkt</td><td>Quadratisch, leicht höher (1 : 1,05), Möbel zentriert auf Hellgrau</td></tr>
+        <tr><td>Linien</td><td>1 px in <code>#E5E4E1</code> (dunkel <code>#2A2A2A</code>), nie dicker. Keine Schatten außer bei schwebenden Flächen.</td></tr>
+        <tr><td>Navigation</td><td>Unten, fünf Plätze, „Messen“ als runder Knopf in der Mitte</td></tr>
+      </tbody>
+    </table></div>
+    <div class="abstand" aria-label="Abstandsskala"><span class="klein muted">Abstände:</span><i style="width:6px;height:6px"></i><i style="width:10px;height:10px"></i><i style="width:14px;height:14px"></i><i style="width:20px;height:20px"></i><i style="width:26px;height:26px"></i><i style="width:40px;height:40px"></i><span class="klein muted mono">6 · 10 · 14 · 20 · 26 · 40</span></div>
+  </section>
+
+  <!-- 6 ICONS -->
+  <section id="icons">
+    <span class="kap"><b>06</b> Icons</span>
+    <h2>Eigene Strich-Icons, keine Emojis</h2>
+    <p>Alle Icons sind einfache Linien auf einem 24-Pixel-Raster, 1,8 px Strichstärke, runde Enden. Sie erben die Textfarbe. Emojis sind als Icons nicht erlaubt, weil sie auf jedem Gerät anders aussehen.</p>
+    <div class="icons" id="iconRaster"></div>
+  </section>
+
+  <!-- 7 BILDWELT -->
+  <section id="bild">
+    <span class="kap"><b>07</b> Bildwelt</span>
+    <h2>Das Möbel steht im Mittelpunkt</h2>
+    <p>Wenn ein Anbieter ein Produktfoto liefert, zeigen wir das Foto. Solange keines da ist, zeigt die App eine einfache Zeichnung der Möbelart in der Farbe des Möbels. Beides sitzt auf derselben hellgrauen Fläche, damit die Liste ruhig bleibt.</p>
+    <div class="raster" id="bildRaster"></div>
+    <h3>Regeln für Fotos</h3>
+    <ul class="liste">
+      <li>Freigestellt oder vor hellem, ruhigem Hintergrund, Möbel möglichst vollständig sichtbar.</li>
+      <li>Das erste Bild zeigt das ganze Möbel von vorn oder schräg, keine Collagen. (Gilt auch für private Inserate.)</li>
+      <li>Keine Filter, kein Text und keine Preise ins Bild. Die Ampel sitzt als Schild oben links.</li>
+      <li>Nur Fotos, für die wir die Rechte haben. Beispieldaten nennen nur erfundene Marken und Personen.</li>
+    </ul>
+    <h3>Der Grundriss</h3>
+    <p>Der Raum erscheint immer als Draufsicht auf einer schwarzen Karte: weiße Wände, Tür mit orangem Schwenkbogen, Möbel in ihren echten Farben und im richtigen Maßstab. Der orange gestrichelte Weg zeigt, wie ein Möbel durch die Tür kommt. Orange bedeutet im Grundriss immer „Tür und Weg“.</p>
+    <h3>Ton der Bilder in Videos</h3>
+    <p>Vorher-Nachher mit echten Zimmern, Handy-Kamera, Tageslicht. Ruhige Schnitte, die Maße und der Preis stehen eingeblendet in Bricolage Grotesque. Mehr in Kapitel 12.</p>
+  </section>
+
+  <!-- 8 KOMPONENTEN -->
+  <section id="komponenten">
+    <span class="kap"><b>08</b> Bausteine</span>
+    <h2>Die wichtigsten Teile der App</h2>
+    <p>So sehen die Bausteine aus. Die Werte sind dieselben wie im Code, siehe Kapitel 14.</p>
+
+    <h3>Knöpfe</h3>
+    <div class="demo"><span class="k-knopf">In den Warenkorb</span><span class="k-knopf zweit">Erst stöbern</span><span class="k-knopf leise">Neu messen</span></div>
+    <p class="muted klein" style="margin-top:8px">Pro Bildschirm genau ein schwarzer Hauptknopf. Beschriftung ist ein Verb oder ein klares Ziel: „Raum ausmessen“, nicht „Weiter“ wenn es auch genauer geht.</p>
+
+    <h3>Chips für Filter und Stil</h3>
+    <div class="demo"><span class="k-chip an">Passt ins Wohnzimmer</span><span class="k-chip an"><i class="p" style="background:#C9A06E"></i>Skandi</span><span class="k-chip"><i class="p" style="background:#2E2E2E"></i>Industrial</span><span class="k-chip"><i class="p" style="background:#C9694C"></i>Boho</span><span class="k-chip">Gebraucht</span></div>
+
+    <h3>Preis mit ReRoom und Passt-Schild</h3>
+    <div class="demo"><span class="k-preis">649,00 €</span><span class="k-reroom">mit ReRoom 623,04 €</span></div>
+    <p class="muted klein" style="margin-top:8px">Der Preisvorteil steht nur bei neuen Möbeln und immer in Grün. Bei gebrauchten Möbeln steht stattdessen der Käuferschutz in Grau unter dem Preis.</p>
+
+    <h3>Produktkarte, Raumkarte und Navigation</h3>
+    <div class="demo" style="align-items:flex-start;gap:24px">
+      <div class="produkt"><div class="b" id="demoSofa"><span class="schild" style="--c:#C98A00">Knapp</span></div><b class="titel" style="font-size:1.05rem;font-variant-numeric:tabular-nums">180,00 €</b><span class="n">Sofa Lund</span><span class="m">Gebraucht · 3 km</span></div>
+      <div class="raumkarte"><small>Dein Raum</small><b>Wohnzimmer</b>
+        <svg viewBox="0 0 280 150" style="width:100%;margin:6px 0"><rect x="70" y="8" width="140" height="132" fill="rgb(255 255 255 / .05)" stroke="#fff" stroke-width="3"/><rect x="88" y="14" width="86" height="28" rx="4" fill="#A3A7AB"/><rect x="95" y="62" width="70" height="46" rx="4" fill="#C9694C"/><rect x="72" y="138" width="36" height="5" fill="#111"/><path d="M72 140a36 36 0 0 1 36-36" fill="none" stroke="#FF5B2E" stroke-width="1.6" stroke-dasharray="3 3"/></svg>
+        <div class="w"><div><b>20 m²</b>Fläche</div><div><b>90 cm</b>Tür</div><div><b>120 cm</b>Treppe</div></div></div>
+    </div>
+    <div class="tabs" style="margin-top:20px" id="demoTabs"></div>
+
+    <h3>Passt-Check als Balken</h3>
+    <div class="linie" style="max-width:420px">
+      <div style="display:flex;justify-content:space-between;align-items:center"><b class="titel">Passt-Check · Wohnzimmer</b><span class="k-status">Knapp</span></div>
+      <div class="k-balken"><span>Tür</span><span class="spur"><i style="width:17%;background:#A87400"></i></span><em>10 cm</em></div>
+      <div class="k-balken"><span>Treppenhaus</span><span class="spur"><i style="width:58%;background:#12924F"></i></span><em>35 cm</em></div>
+      <div class="k-balken"><span>Raum</span><span class="spur"><i style="width:100%;background:#12924F"></i></span><em>170 cm</em></div>
+      <p class="muted klein" style="margin:10px 0 0">Tür: 10 cm Spielraum. Bitte nachmessen.</p>
+    </div>
+    <p class="muted klein" style="margin-top:8px">Die Ampel gilt nach dem kleinsten Spielraum: Grün über 10 cm, Gelb von 5 bis 10 cm mit „Bitte nachmessen“, Rot darunter. Die Ampel steht nie allein als Farbe, immer mit Wort („Passt“, „Knapp“, „Passt nicht“).</p>
+  </section>
+
+  <!-- 9 SPRACHE -->
+  <section id="sprache">
+    <span class="kap"><b>09</b> Sprache</span>
+    <h2>Wie ReRoom spricht</h2>
+    <p>Wir duzen. Wir schreiben kurz, konkret und ohne Fachwörter. Wenn etwas schiefgeht, sagen wir, was los ist und was man tun kann. Wir entschuldigen uns nicht ständig und wir übertreiben nicht.</p>
+    <div class="tabelle"><table>
+      <thead><tr><th>Statt</th><th>Besser</th><th>Warum</th></tr></thead>
+      <tbody>
+        <tr><td>Referenzobjekt kalibrieren</td><td>Halte eine Bankkarte an die Tür</td><td>Sagt, was man tut, nicht wie es heißt</td></tr>
+        <tr><td>Fehler 403</td><td>Die Kamera konnte nicht starten. Erlaube den Zugriff in den Einstellungen.</td><td>Erklärt den Weg weiter</td></tr>
+        <tr><td>Das Möbel ist inkompatibel</td><td>Passt nicht durch die Tür: 95 cm, Tür nur 90 cm</td><td>Zahlen statt Urteil</td></tr>
+        <tr><td>Sparen Sie jetzt bis zu 4 %!</td><td>Kaufe zum normalen Preis und bekomme 4 % zurück.</td><td>Ehrlich und konkret (Werbesatz aus dem Businessplan)</td></tr>
+        <tr><td>Weiter</td><td>Raum ausmessen</td><td>Der Knopf nennt das Ziel</td></tr>
+        <tr><td>Leere Liste</td><td>Noch leer. Tippe bei einem Möbel auf „In den Warenkorb“.</td><td>Leere Zustände zeigen den ersten Schritt</td></tr>
+      </tbody>
+    </table></div>
+    <h3>Schreibweisen</h3>
+    <div class="tabelle"><table>
+      <thead><tr><th>Was</th><th>So</th><th>Nicht so</th></tr></thead>
+      <tbody>
+        <tr><td>Preise</td><td class="zahl">180,00 €</td><td class="zahl">€180 · 180.- · 180 Euro</td></tr>
+        <tr><td>Prozent</td><td class="zahl">4 % (mit geschütztem Leerzeichen)</td><td class="zahl">4% · 4 Prozent im Fließtext</td></tr>
+        <tr><td>Maße</td><td class="zahl">200 × 85 × 80 cm (B × T × H)</td><td class="zahl">200x85x80 · 2m × 85</td></tr>
+        <tr><td>Raumgrößen</td><td class="zahl">4,00 m · 20 m²</td><td class="zahl">4m · 20qm</td></tr>
+        <tr><td>Entfernung</td><td class="zahl">3 km</td><td class="zahl">3km · ca. 3 Kilometer</td></tr>
+        <tr><td>Zustand</td><td>Neu · Gebraucht</td><td>New · Second Hand · Pre-owned</td></tr>
+        <tr><td>Ampel</td><td>Passt · Knapp · Passt nicht</td><td>OK · Warnung · Fehler</td></tr>
+        <tr><td>Stile</td><td>Skandi · Modern · Industrial · Boho · Vintage</td><td>Skandinavisch-modern-minimalistisch</td></tr>
+      </tbody>
+    </table></div>
+    <div class="raster">
+      <div class="tun"><h3>Tonfall</h3><ul class="liste"><li>Du, nie Sie, nie „wir“ für die App</li><li>Aktiv und kurz: „Miss deinen Raum“</li><li>Humor sparsam und freundlich, nie auf Kosten von Nutzern</li><li>Jugendsprache nur in Social Media und nie erzwungen</li></ul></div>
+      <div class="lassen"><h3>Vermeiden</h3><ul class="liste"><li>Ausrufezeichen-Ketten und Superlative</li><li>Fachwörter wie Kalibrierung, Referenz, Hit-Test</li><li>Versprechen, die wir nicht halten: Messungen sind Schätzungen (etwa ±3 %)</li><li>Druck wie „Nur noch heute!“</li></ul></div>
+    </div>
+  </section>
+
+  <!-- 10 BEWEGUNG -->
+  <section id="bewegung">
+    <span class="kap"><b>10</b> Bewegung</span>
+    <h2>Bewegung hilft, sie dekoriert nicht</h2>
+    <p>Die ersten Entwürfe hatten wiegende Pflanzen und schwingende Lampen. Das wurde bewusst verworfen. In der App bewegt sich nur, was etwas erklärt.</p>
+    <div class="tabelle"><table>
+      <thead><tr><th>Erlaubt</th><th>Dauer</th><th>Beispiel</th></tr></thead>
+      <tbody>
+        <tr><td>Rückmeldung auf Antippen</td><td class="zahl">150 ms</td><td>Knopf ändert Zustand, Chip schaltet um</td></tr>
+        <tr><td>Wischen im Stil-Finder</td><td class="zahl">250 ms</td><td>Karte folgt dem Finger, kippt leicht und springt zurück</td></tr>
+        <tr><td>Fortschritt</td><td class="zahl">300 ms</td><td>Balken oben im Stil-Finder füllt sich</td></tr>
+        <tr><td>Wechsel der Seiten</td><td class="zahl">200 ms</td><td>Einblenden ohne Hüpfen</td></tr>
+      </tbody>
+    </table></div>
+    <p>Nicht erlaubt sind Dauerschleifen, Deko-Animationen und alles, was beim Lesen ablenkt. Wer am Gerät „Bewegung reduzieren“ eingestellt hat, bekommt keine Übergänge.</p>
+  </section>
+
+  <!-- 11 ZUGÄNGLICHKEIT -->
+  <section id="zugang">
+    <span class="kap"><b>11</b> Zugänglichkeit</span>
+    <h2>Für alle benutzbar</h2>
+    <ul class="liste">
+      <li><b>Kontrast:</b> Text erreicht mindestens 4,5 zu 1 (WCAG AA). Ein automatischer Test in der App prüft das bei jeder Änderung.</li>
+      <li><b>Nie nur Farbe:</b> Die Ampel hat immer ein Wort. Der gewählte Chip ist zusätzlich schwarz gefüllt, nicht nur farbig.</li>
+      <li><b>Tippflächen:</b> mindestens 44 × 44 px.</li>
+      <li><b>Fokus:</b> Wer mit Tastatur bedient, sieht einen 3 px dicken orangen Ring.</li>
+      <li><b>Beschriftungen:</b> Alle Icons und Bilder haben einen Text für Screenreader („Zeichnung: Sofa Lund“, „Weitere Filter“).</li>
+      <li><b>Dark Mode:</b> Beide Varianten sind gleich sorgfältig gestaltet, nicht einfach invertiert.</li>
+      <li><b>Schriftgröße:</b> Die App folgt der Schrifteinstellung des Geräts.</li>
+      <li><b>Sprache:</b> Deutsch, einfache Sätze, keine Abkürzungen ohne Erklärung.</li>
+    </ul>
+  </section>
+
+  <!-- 12 ANWENDUNG -->
+  <section id="anwendung">
+    <span class="kap"><b>12</b> Anwendungen</span>
+    <h2>ReRoom nach außen</h2>
+    <p>Aus dem Businessplan: Vorher-Nachher-Videos auf TikTok und Instagram, Pinterest, YouTube Shorts, Flyer in Chemnitz. Zwei Vorlagen zeigen, wie die Marke dort aussieht.</p>
+    <div class="raster" style="grid-template-columns:repeat(auto-fit,minmax(240px,300px))">
+      <div>
+        <div class="kachel"><div class="logo" style="font-size:1.4rem">ReRoom<i></i></div><div><div class="gross">Kaufe zum normalen Preis und bekomme 4&nbsp;% zurück.</div><div class="preise" style="margin-top:14px"><span class="alt">800 €</span><span class="neu">768 €</span></div><div style="font:700 .8rem var(--text);color:#C8C8C8;margin-top:4px">mit ReRoom</div></div></div>
+        <p class="muted klein" style="margin-top:8px">Quadratische Kachel für Instagram und Pinterest. Schwarz, ein Satz, ein Preisvergleich.</p>
+      </div>
+      <div>
+        <div class="story"><div class="logo" style="font-size:1.2rem">ReRoom<i></i></div><div class="gross">Passt das Sofa durch die Tür?</div>
+          <div style="background:#111;border-radius:16px;padding:10px"><div style="display:flex;justify-content:space-between;font:700 .8rem var(--text);color:#fff"><span>Tür 90 cm</span><span style="color:#FFC857">Sofa 85 cm: Knapp</span></div></div></div>
+        <p class="muted klein" style="margin-top:8px">Hochformat für Stories, Reels und Shorts. Eine Frage, ein Ergebnis mit Zahlen.</p>
+      </div>
+    </div>
+    <h3>Formate und Serien</h3>
+    <div class="tabelle"><table>
+      <thead><tr><th>Format</th><th>Inhalt</th><th>Regel</th></tr></thead>
+      <tbody>
+        <tr><td>„Zimmer-Flip“</td><td>12 m² WG-Zimmer für 300 € umgestylt</td><td>Vorher, Messen, Stil, Nachher. Maße und Preis eingeblendet. Eigene Musik, kurzes Sound-Logo am Ende.</td></tr>
+        <tr><td>„Passt das Sofa durch die Tür?“</td><td>Lustige Tests auf YouTube Shorts</td><td>Immer mit echter Messung und Ampel im Bild. Ehrliches Ergebnis, auch wenn es „Passt nicht“ heißt.</td></tr>
+        <tr><td>Einrichtungsideen</td><td>Fertige Räume auf Pinterest</td><td>Grundriss und Möbelliste, Link zum Kauf</td></tr>
+        <tr><td>Start-Aktion</td><td>6 % statt 4 % Cashback in den ersten 3 Monaten</td><td>Zahl groß, Zeitraum klar nennen</td></tr>
+        <tr><td>Flyer und Plakate</td><td>TU Chemnitz, Berufsschulen, Wohnheime</td><td>Schwarzer Grund, Claim, QR-Code zur Web-App. Kein Fließtext.</td></tr>
+      </tbody>
+    </table></div>
+    <h3>Sound-Logo</h3>
+    <p>Noch offen. Es soll zwei bis drei Sekunden dauern, mit einem „Klick“ beim orangen Punkt enden (wie ein Möbel, das einrastet) und ohne Gesang auskommen. Entsteht im Team (Musik und Sound-Logo laut Aufgabenverteilung im Businessplan).</p>
+  </section>
+
+  <!-- 13 REGELN -->
+  <section id="regeln">
+    <span class="kap"><b>13</b> Tun und lassen</span>
+    <h2>Das Wichtigste auf einer Seite</h2>
+    <div class="raster">
+      <div class="tun"><h3>Tun</h3><ul class="liste">
+        <li>Weiß, Schwarz, ein kleiner orange Punkt</li>
+        <li>Bilder der Möbel groß, Text klein und kurz</li>
+        <li>Zahlen zeigen: Maße, Preis, Spielraum</li>
+        <li>Bricolage Grotesque für Titel und Preise</li>
+        <li>Die Ampel immer mit Wort</li>
+        <li>Ehrlich sagen, wenn etwas knapp ist</li>
+        <li>Duzen, kurz, ohne Fachwörter</li>
+        <li>Eine Hauptaktion pro Bildschirm</li>
+      </ul></div>
+      <div class="lassen"><h3>Lassen</h3><ul class="liste">
+        <li>Blaue Knöpfe oder blaue Flächen</li>
+        <li>Creme, Braun und Serifenschrift (wirkt wie jede KI-Vorlage)</li>
+        <li>Emojis als Icons, Verläufe und Schatten auf Karten</li>
+        <li>Deko-Animationen in Dauerschleife</li>
+        <li>Orange als Textfarbe</li>
+        <li>Echte Marken oder Personen in Beispieldaten</li>
+        <li>Versprechen, die eine Schätzung nicht halten kann</li>
+        <li>Mehr als eine schwarze Hauptfläche pro Bildschirm</li>
+      </ul></div>
+    </div>
+  </section>
+
+  <!-- 14 TECHNIK -->
+  <section id="technik">
+    <span class="kap"><b>14</b> Im Code</span>
+    <h2>Wo die Regeln in der App stehen</h2>
+    <div class="tabelle"><table>
+      <thead><tr><th>Was</th><th>Datei</th><th>Hinweis</th></tr></thead>
+      <tbody>
+        <tr><td>Farben (Werte und Kontrastberechnung)</td><td><code>src/theme.ts</code></td><td>Hell und dunkel, mit Rechner für den Kontrast</td></tr>
+        <tr><td>Farben als CSS-Variablen</td><td><code>src/styles/tokens.css</code></td><td>Ein automatischer Test prüft, dass beide Dateien übereinstimmen</td></tr>
+        <tr><td>Alle Bausteine und Abstände</td><td><code>src/styles/app.css</code></td><td>Eckenradien, Raster, Knöpfe, Chips, Navigation</td></tr>
+        <tr><td>Icons, Möbelzeichnungen, Grundriss, Produktkarte</td><td><code>src/views/ui.tsx</code></td><td>Neue Icons hier ergänzen, gleiche Strichstärke</td></tr>
+        <tr><td>Schrift</td><td><code>src/main.tsx</code></td><td>Paket <code>@fontsource-variable/bricolage-grotesque</code>, lädt von der eigenen Seite, nicht von Google</td></tr>
+        <tr><td>Preis- und Cashback-Regeln</td><td><code>src/logic/preisRechner.ts</code></td><td>Rechnet in Cent, „mit ReRoom“-Preis und Käuferschutz</td></tr>
+        <tr><td>Design-Entwurf zum Anschauen</td><td><code>public/design/index.html</code></td><td>Die drei ersten Bildschirme als Bild</td></tr>
+      </tbody>
+    </table></div>
+    <h3>Noch offen</h3>
+    <ul class="liste">
+      <li>Ausgearbeitetes Zeichen statt der ersten Wortmarke, mit Vektordatei (SVG) und Druckfarben (CMYK, Pantone).</li>
+      <li>Sound-Logo und Musik für die Videos.</li>
+      <li>Echte Produktfotos der Partner-Shops und Lizenzklärung.</li>
+      <li>Vorlagen als Figma-Datei für Social Media und Flyer.</li>
+      <li>Gedruckte Farben: Orange und Schwarz auf Papier testen, weil sich Bildschirm und Druck unterscheiden.</li>
+    </ul>
+  </section>
+
+  <footer class="fuss muted klein">ReRoom · Schülerprojekt Mediengestaltung, Chemnitz · Alle Möbel, Shops und Anbieter in Beispielen sind erfunden. Gestaltungsentwurf, Version 1.0.</footer>
+</div>
+
+<script>
+  // ---- Farbdaten (identisch mit src/theme.ts und src/styles/tokens.css) ----
+  const FARBEN = {
+    basis: [
+      { n: "Papier", r: "Hintergrund", t: "--hintergrund", h: "#FFFFFF", d: "#0E0E0E" },
+      { n: "Fläche", r: "Karten, Chips, Bildgrund", t: "--karte", h: "#F1F1EF", d: "#1C1C1C" },
+      { n: "Tinte", r: "Text, Hauptknopf, Raumkarte", t: "--text / --primaer", h: "#111111", d: "#F2F2F2" },
+      { n: "Grau", r: "Nebentext und Hinweise", t: "--text-gedaempft", h: "#686868", d: "#A6A6A6" },
+      { n: "Linie", r: "Trennlinien und Ränder", t: "--linie", h: "#E5E4E1", d: "#2A2A2A" },
+    ],
+    akzent: [
+      { n: "Orange", r: "Logo-Punkt, aktiver Tab, Herz-Knopf, Fokus, Tür im Grundriss", t: "--orange / --akzent", h: "#FF5B2E", d: "#FF6B3D" },
+    ],
+    funktion: [
+      { n: "Preisvorteil", r: "Text bei „mit ReRoom“", t: "--gruen", h: "#0B7A4B", d: "#5FD39A" },
+      { n: "Preisvorteil Grund", r: "Fläche hinter „mit ReRoom“", t: "--gruen-bg", h: "#E3F3EA", d: "#12301F" },
+      { n: "Ampel grün", r: "Passt (mehr als 10 cm)", t: "--ampel-gruen", h: "#12924F", d: "#3FCB7E" },
+      { n: "Ampel gelb", r: "Knapp (5 bis 10 cm)", t: "--ampel-gelb", h: "#A87400", d: "#F2C94C" },
+      { n: "Ampel rot", r: "Passt nicht (unter 5 cm)", t: "--ampel-rot", h: "#D63A2A", d: "#FF6B5B" },
+      { n: "Hinweis Grund", r: "Fläche für Hinweise", t: "--gelb-bg", h: "#FFF1CC", d: "#3A2E0E" },
+    ],
+  };
+  const hex2rgb = h => [1, 3, 5].map(i => parseInt(h.slice(i, i + 2), 16) / 255);
+  const lum = h => { const [r, g, b] = hex2rgb(h).map(c => c <= .03928 ? c / 12.92 : ((c + .055) / 1.055) ** 2.4); return .2126 * r + .7152 * g + .0722 * b; };
+  const kontrast = (a, b) => { const [x, y] = [lum(a), lum(b)].sort((p, q) => q - p); return (x + .05) / (y + .05); };
+  const lesbar = h => kontrast(h, "#111111") > kontrast(h, "#FFFFFF") ? "#111111" : "#FFFFFF";
+
+  const swatches = (id, liste) => {
+    document.getElementById(id).innerHTML = liste.map(f => `
+      <div class="farbe">
+        <div class="paar"><div style="background:${f.h};color:${lesbar(f.h)}"><small>Hell</small>${f.h}</div><div style="background:${f.d};color:${lesbar(f.d)}"><small>Dunkel</small>${f.d}</div></div>
+        <div class="text"><b>${f.n}</b><span>${f.r}</span><code>${f.t}</code></div>
+      </div>`).join("");
+  };
+  swatches("farbenBasis", FARBEN.basis); swatches("farbenAkzent", FARBEN.akzent); swatches("farbenFunktion", FARBEN.funktion);
+
+  // ---- Kontrasttabelle, aus den Werten berechnet ----
+  const PAARE = [
+    ["Text auf Papier", "#111111", "#FFFFFF", "#F2F2F2", "#0E0E0E"],
+    ["Text auf Fläche", "#111111", "#F1F1EF", "#F2F2F2", "#1C1C1C"],
+    ["Grau auf Papier", "#686868", "#FFFFFF", "#A6A6A6", "#0E0E0E"],
+    ["Grau auf Fläche", "#686868", "#F1F1EF", "#A6A6A6", "#1C1C1C"],
+    ["Hauptknopf: Schrift auf Tinte", "#FFFFFF", "#111111", "#0E0E0E", "#F2F2F2"],
+    ["Preisvorteil auf seinem Grund", "#0B7A4B", "#E3F3EA", "#5FD39A", "#12301F"],
+    ["Ampel grün auf Papier", "#12924F", "#FFFFFF", "#3FCB7E", "#0E0E0E"],
+    ["Ampel gelb auf Papier", "#A87400", "#FFFFFF", "#F2C94C", "#0E0E0E"],
+    ["Ampel rot auf Papier", "#D63A2A", "#FFFFFF", "#FF6B5B", "#0E0E0E"],
+    ["Orange auf Papier (nur Fläche)", "#FF5B2E", "#FFFFFF", "#FF6B3D", "#0E0E0E"],
+    ["Tinte auf Orange", "#111111", "#FF5B2E", "#0E0E0E", "#FF6B3D"],
+  ];
+  const urteil = v => v >= 7 ? ["AAA", "ok"] : v >= 4.5 ? ["AA", "ok"] : v >= 3 ? ["nur groß", "mittel"] : ["nein", "nein"];
+  const wofuer = (a, b) => { const m = Math.min(a, b); return m >= 4.5 ? "Fließtext und Beschriftung" : m >= 3 ? "Große Schrift, Flächen, Linien" : "Nur Deko, nicht lesen"; };
+  document.querySelector("#kontrast tbody").innerHTML = PAARE.map(([n, a, b, c, d]) => {
+    const kh = kontrast(a, b), kd = kontrast(c, d), [uh, ch] = urteil(kh), [ud, cd] = urteil(kd);
+    return `<tr><td>${n}</td><td class="zahl">${kh.toFixed(1).replace(".", ",")} <span class="pille ${ch}">${uh}</span></td><td class="zahl">${kd.toFixed(1).replace(".", ",")} <span class="pille ${cd}">${ud}</span></td><td>${wofuer(kh, kd)}</td></tr>`;
+  }).join("");
+
+  // ---- Icons ----
+  const PFADE = {
+    "Start": '<path d="M3 11 12 4l9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z" stroke-linejoin="round"/>',
+    "Entdecken": '<circle cx="11" cy="11" r="6.5"/><path d="m16 16 4.5 4.5" stroke-linecap="round"/>',
+    "Messen": '<path d="M4 8h3l2-3h6l2 3h3v11H4z" stroke-linejoin="round"/><circle cx="12" cy="13" r="3.5"/>',
+    "Warenkorb": '<path d="M5 8h14l-1 12H6z" stroke-linejoin="round"/><path d="M9 8V6a3 3 0 0 1 6 0v2"/>',
+    "Verkaufen": '<path d="M3 12V4h8l10 10-8 8z" stroke-linejoin="round"/><circle cx="7.5" cy="8" r="1" fill="currentColor"/>',
+    "Merken": '<path d="M12 20s-7-4.5-7-10a4 4 0 0 1 7-2.5A4 4 0 0 1 19 10c0 5.5-7 10-7 10z" stroke-linejoin="round"/>',
+    "Filter": '<path d="M4 7h16M7 12h10M10 17h4" stroke-linecap="round"/>',
+    "Zurück": '<path d="m14 6-6 6 6 6" stroke-linecap="round" stroke-linejoin="round"/>',
+    "Raum": '<path d="M4 4h16v16H4zM4 14h6v6" stroke-linejoin="round"/>',
+    "Schließen": '<path d="M6 6l12 12M18 6 6 18" stroke-linecap="round"/>',
+    "Foto": '<rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="10" r="1.5"/><path d="m21 16-5-5-8 8" stroke-linejoin="round"/>',
+    "Hinzufügen": '<path d="M12 5v14M5 12h14" stroke-linecap="round"/>',
+  };
+  const svg = (p, extra = "") => `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true" ${extra}>${p}</svg>`;
+  document.getElementById("iconRaster").innerHTML = Object.entries(PFADE).map(([n, p]) => `<div>${svg(p)}${n}</div>`).join("");
+  document.getElementById("demoTabs").innerHTML = ["Start", "Entdecken", "Messen", "Warenkorb", "Verkaufen"].map(n =>
+    n === "Messen" ? `<span><b class="mitte">${svg(PFADE[n])}</b>${n}</span>` : `<span class="${n === "Start" ? "an" : ""}">${svg(PFADE[n])}${n}</span>`).join("");
+
+  // ---- Möbelzeichnungen ----
+  const mix = (hex, z, a) => "#" + [1, 3, 5].map(i => { const v = parseInt(hex.slice(i, i + 2), 16); return Math.round(v + (z - v) * a).toString(16).padStart(2, "0"); }).join("");
+  const dk = (h, a = .22) => mix(h, 0, a), hl = (h, a = .18) => mix(h, 255, a), H = "#B98C5C";
+  const S = '<ellipse cx="100" cy="134" rx="78" ry="6" fill="#000" opacity=".08"/>';
+  const M = {
+    sofa: c => `${S}<rect x="34" y="54" width="132" height="44" rx="16" fill="${dk(c)}"/><rect x="20" y="86" width="160" height="36" rx="13" fill="${c}"/><rect x="14" y="72" width="28" height="50" rx="13" fill="${dk(c, .12)}"/><rect x="158" y="72" width="28" height="50" rx="13" fill="${dk(c, .12)}"/><rect x="46" y="84" width="52" height="16" rx="7" fill="${hl(c)}"/><rect x="102" y="84" width="52" height="16" rx="7" fill="${hl(c)}"/><rect x="34" y="122" width="6" height="10" fill="${H}"/><rect x="160" y="122" width="6" height="10" fill="${H}"/>`,
+    stuhl: c => `${S}<rect x="70" y="30" width="60" height="54" rx="12" fill="${dk(c, .1)}"/><rect x="62" y="80" width="76" height="16" rx="7" fill="${c}"/><path d="M70 96 64 132M130 96 136 132M82 96 80 128M118 96 120 128" stroke="${H}" stroke-width="5" stroke-linecap="round"/>`,
+    regal: c => `${S}<rect x="58" y="12" width="84" height="120" rx="3" fill="none" stroke="${c}" stroke-width="7"/>${[44, 74, 104].map(y => `<rect x="58" y="${y}" width="84" height="6" fill="${c}"/>`).join("")}<rect x="68" y="22" width="8" height="22" fill="#C9694C"/><rect x="87" y="20" width="9" height="24" fill="#D9C27A"/><circle cx="120" cy="66" r="8" fill="#7E9B7A"/>`,
+    lampe: c => `${S}<ellipse cx="100" cy="130" rx="24" ry="5" fill="${dk(c, .3)}"/><rect x="98" y="46" width="4" height="84" fill="${dk(c, .3)}"/><path d="M72 46h56l-10-32H82z" fill="${c}"/><ellipse cx="100" cy="52" rx="38" ry="10" fill="#FFE7A3" opacity=".55"/>`,
+  };
+  const zeichne = (k, c) => `<svg viewBox="0 0 200 150" role="img" aria-label="Zeichnung: ${k}">${M[k](c)}</svg>`;
+  document.getElementById("demoSofa").insertAdjacentHTML("afterbegin", zeichne("sofa", "#A3A7AB"));
+  const BILDER = [
+    ["sofa", "#A3A7AB", "Passt", "#12924F", "Zeichnung in der Möbelfarbe"], ["stuhl", "#C9A06E", "Passt", "#12924F", "Neue Möbel bekommen den Preisvorteil"],
+    ["regal", "#2E2E2E", "Knapp", "#C98A00", "Gelb bedeutet bitte nachmessen"], ["lampe", "#2E2E2E", "Passt nicht", "#D63A2A", "Rot mit Begründung in der Detailansicht"],
+  ];
+  document.getElementById("bildRaster").innerHTML = BILDER.map(([k, c, t, a, u]) => `<div><div class="bildkachel">${zeichne(k, c)}<span class="schild" style="--c:${a}">${t}</span></div><p class="muted klein" style="margin-top:8px">${u}</p></div>`).join("");
+</script>
