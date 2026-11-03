@@ -8,10 +8,9 @@ const [hellCss, dunkelCss] = css.split("@media");
 const cssName = (k: string) => "--" + k.replace(/[A-Z]/g, (c) => "-" + c.toLowerCase());
 
 describe("Farben", () => {
-  it("Vorgabefarben aus dem gewählten Entwurf „Wohnstube“", () => {
-    expect(FARBEN.hell.hintergrund).toBe("#F4E8CC");
-    expect(FARBEN.hell.primaer).toBe("#3F5B3A");
-    expect(FARBEN.hell.akzent).toBe("#D9A11E");
+  it("Vorgabefarben: Blau als Hauptfarbe, Gelb für Cashback", () => {
+    expect(FARBEN.hell.primaer).toBe("#1F5FD1");
+    expect(FARBEN.hell.akzent).toBe("#FFD23F");
   });
 
   it.each(["hell", "dunkel"] as const)("Text auf Akzent-Badges ist lesbar (%s)", (modus) => {

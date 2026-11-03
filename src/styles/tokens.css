@@ -1,33 +1,35 @@
-/* Stil „Wohnstube" (Vintage). Werte müssen mit src/theme.ts übereinstimmen. */
+/* Werte müssen mit src/theme.ts übereinstimmen. */
 :root {
-  --hintergrund: #F4E8CC;
-  --karte: #FBF3DE;
-  --text: #3A2B1A;
-  --text-gedaempft: #6B5A3E;
-  --primaer: #3F5B3A;
-  --auf-primaer: #FBF3DE;
-  --akzent: #D9A11E;
-  --auf-akzent: #3A2B1A;
-  --ampel-gruen: #3A7A3A;
-  --ampel-gelb: #9A6C00;
-  --ampel-rot: #A8321F;
-  --linie: rgb(58 43 26 / .22);
-  --radius: 10px;
-  --schrift: Georgia, "Palatino Linotype", "Book Antiqua", serif;
+  --hintergrund: #F4F5F7;
+  --karte: #FFFFFF;
+  --text: #14181F;
+  --text-gedaempft: #586272;
+  --primaer: #1F5FD1;
+  --auf-primaer: #FFFFFF;
+  --akzent: #FFD23F;
+  --auf-akzent: #14181F;
+  --ampel-gruen: #1E8E5A;
+  --ampel-gelb: #A87400;
+  --ampel-rot: #C93A2B;
+  --linie: rgb(20 24 31 / .1);
+  --primaer-hell: rgb(31 95 209 / .1);
+  --radius: 14px;
+  --schrift: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 }
 @media (prefers-color-scheme: dark) {
   :root {
-    --hintergrund: #1E1912;
-    --karte: #2A231A;
-    --text: #F1E6CC;
-    --text-gedaempft: #C2B293;
-    --primaer: #9CBF8F;
-    --auf-primaer: #1E1912;
-    --akzent: #E0B04A;
-    --auf-akzent: #1E1912;
-    --ampel-gruen: #6DBF6D;
-    --ampel-gelb: #E8BE4E;
-    --ampel-rot: #F07A62;
-    --linie: rgb(241 230 204 / .18);
+    --hintergrund: #0F1217;
+    --karte: #181C23;
+    --text: #EEF1F5;
+    --text-gedaempft: #A3ACB9;
+    --primaer: #7AA7FF;
+    --auf-primaer: #0F1217;
+    --akzent: #FFD23F;
+    --auf-akzent: #14181F;
+    --ampel-gruen: #4CC38A;
+    --ampel-gelb: #F2C94C;
+    --ampel-rot: #FF7A6B;
+    --linie: rgb(238 241 245 / .12);
+    --primaer-hell: rgb(122 167 255 / .14);
   }
 }

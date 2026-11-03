@@ -5,16 +5,20 @@
 > und am Handy (als Webseite). Die Swift-Planung unten bleibt als Ziel für die iPhone-App erhalten (Stufe 4 wird zu „iPhone und Android").
 >
 > **Ersatz für Apple-Technik im Entwurf:**
-> - RoomPlan-Scan → Kamera-Messung per Foto mit Referenzobjekt (Bankkarte/A4, `src/views/KameraMesser.tsx`, Logik `src/logic/messen.ts`) oder Raum von Hand eingeben (`src/views/Scannen.tsx`), Beispielräume in `src/data/raeume.ts`
+> - RoomPlan-Scan → **AR-Kamera-Messung** im Browser (WebXR mit Hit-Test, `src/services/arSitzung.ts`, `src/views/ArMesser.tsx`, Logik `src/logic/arMessung.ts`): geführt durch Raumecken, Raumhöhe, Tür und Treppenhaus, ohne Zollstock. Läuft auf Android mit Chrome, nur über HTTPS (GitHub Pages) oder localhost.
+>   - Ohne AR (iPhone-Safari kann kein WebXR): Foto-Messung mit Bankkarte/A4 (`src/views/KameraMesser.tsx`, `src/logic/messen.ts`) oder Eintippen. Beispielräume in `src/data/raeume.ts`.
+>   - Vollautomatischer Scan auf iPhones mit LiDAR geht nur als eigene App mit RoomPlan (z. B. Expo + `expo-roomplan`, Build in der Cloud mit EAS). Braucht ein Apple-Entwicklerkonto (99 €/Jahr). Weicht vom Businessplan ab („Web-App, ohne App-Store-Gebühren“), dort als „Ausbaustufe Kamera-Scan“ geplant.
 > - SwiftData → `localStorage` (`src/useLokal.ts`)
 > - `MoebelRepository` → TypeScript-Interface in `src/data/moebelRepository.ts` (später Supabase)
 > - Asset-Katalog mit Dark Mode → `src/styles/tokens.css` + `src/theme.ts` (ein Test prüft, dass beide übereinstimmen und der Kontrast stimmt)
 > - Geld wird in ganzen Cent gerechnet statt mit `Decimal`
 > - `xcodebuild test` → `npm test`
 >
-> **Design-Entwürfe:** 5 Stilrichtungen mit bewegter Deko unter `public/entwuerfe/` (im Browser: `/entwuerfe/`).
+> **Businessplan** (`ReRoom – Businessplan.pdf`) hat Vorrang vor der iPhone-Planung unten. Daraus übernommen: Slogan „Ausmessen, Stil wählen, günstiger einrichten.“, Preisanzeige „649 €, mit ReRoom 623,04 €“, Startseite als geführter Weg.
 >
-> **Noch offen im Web-Entwurf:** 3D-Raum, Stil-Finder mit Wisch-Karten, Möbel-Detailseite, Chatbot, Live-Messung per AR (WebXR, nur Android).
+> **Design:** klar und hell, Systemschrift, Blau `#1F5FD1` als Hauptfarbe (wie im Businessplan), Gelb `#FFD23F` nur für Cashback, kein Creme/Serif/Braun-Look. Die alten Entwürfe unter `public/entwuerfe/` sind verworfen.
+>
+> **Noch offen (laut Businessplan):** Budget fürs ganze Zimmer statt pro Möbel, Farben „mag ich nicht“, Inspo-Bilder wischen und hochladen, 3D-Rundgang, Chatbot, Verkaufserlös als Guthaben mit 5 % Bonus, QR-Übergabe, Transport-Partner, Free = 1 Raum, Möbel-Detailseite, Möbelbilder.
 >
 > **Befehle:** `npm install`, `npm run dev` (Entwicklung), `npm test`, `npm run build`.
 > **CI:** `.github/workflows/ci.yml` (Typen, Tests, Build bei jedem Push und Pull Request).
@@ -151,12 +155,12 @@ TabView unten mit: **Start**, **Scannen**, **Entdecken**, **Warenkorb**, **Verka
 
 ## Design
 
-- Stil „Wohnstube" (Vintage, gewählt aus 5 Entwürfen): warm, viel Weißraum, feine Linien, Karten mit Eckenradius 10, Serifenschrift (Georgia).
-- Illustriertes Titelbild auf der Startseite (Wohnstube mit Pendeluhr, Plattenspieler, Katze). Es bewegt sich nicht.
-- Farben im Asset-Katalog (jeweils mit Dark-Mode-Variante):
-  - Hintergrund `#F4E8CC`, Karten `#FBF3DE`
-  - Primär Waldgrün `#3F5B3A`
-  - Akzent Senfgelb `#D9A11E`
+- Klar und hell, viel Weißraum, Karten mit Eckenradius 14, keine Deko-Animationen. Kein Creme/Serif/Braun-Look.
+- Startseite als geführter Weg: Raum ausmessen → Stil wählen → passende Möbel.
+- Farben (jeweils mit Dark-Mode-Variante, Werte in `src/theme.ts`):
+  - Hintergrund `#F4F5F7`, Karten `#FFFFFF`
+  - Primär Blau `#1F5FD1`
+  - Akzent Gelb `#FFD23F`, nur für Cashback und Preisvorteile
   - Ampel: grün, gelb, rot
 - SF Symbols für Icons, Systemschrift.
 

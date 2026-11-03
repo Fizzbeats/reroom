@@ -1,37 +1,69 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import type { Raum } from "../models/types";
-import KameraMesser from "./KameraMesser";
+import { arVerfuegbar } from "../services/arSitzung";
+import ArMesser from "./ArMesser";
+import KameraMesser, { type Ziel } from "./KameraMesser";
 
-// Auf Windows/Web gibt es kein LiDAR (RoomPlan): Der Raum wird von Hand eingegeben.
-// Ein echter Scan kommt später mit der iPhone-App (siehe CLAUDE.md, Stufe 4).
+type Felder = Record<Ziel, string> & { name: string };
+
+const LEER: Felder = { name: "", breite: "", tiefe: "", hoehe: "", tuerB: "", tuerH: "", treppe: "" };
+
+// Mit AR-Kamera (Android) misst die App selbst. Ohne AR (z. B. iPhone im Browser)
+// gibt es die Foto-Messung mit Bankkarte oder Eintippen.
 export default function Scannen({ onSpeichern }: { onSpeichern: (r: Raum) => void }) {
-  const [f, setF] = useState({ name: "", breite: "400", tiefe: "500", hoehe: "250", tuerB: "85", tuerH: "205", treppe: "110" });
-  const zahl = (s: string) => Number(s);
-  const gueltig = f.name.trim() !== "" && Object.entries(f).every(([k, v]) => k === "name" || zahl(v) > 0);
+  const [ar, setAr] = useState<boolean>();
+  const [f, setF] = useState<Felder>(LEER);
+  const [gemessen, setGemessen] = useState(false);
 
-  const feld = (k: keyof typeof f, label: string) => (
+  useEffect(() => {
+    arVerfuegbar().then(setAr);
+  }, []);
+
+  const zahl = (s: string) => Number(s.replace(",", "."));
+  const gueltig = f.name.trim() !== "" && (Object.keys(LEER) as (keyof Felder)[]).every((k) => k === "name" || zahl(f[k]) > 0);
+
+  const feld = (k: Ziel, label: string, beispiel: string) => (
     <label>
-      {label}
-      <input inputMode="numeric" value={f[k]} onChange={(e) => setF({ ...f, [k]: e.target.value })} />
+      {label} (cm)
+      <input inputMode="numeric" value={f[k]} placeholder={`z. B. ${beispiel}`} onChange={(e) => setF({ ...f, [k]: e.target.value })} />
     </label>
   );
 
   return (
     <section>
-      <h1>Raum anlegen</h1>
-      <p className="gedaempft">Alle Maße in Zentimetern. Miss mit der Kamera oder tippe die Werte ein. Der automatische LiDAR-Scan kommt mit der iPhone-App.</p>
-      <KameraMesser onWert={(ziel, cm) => setF({ ...f, [ziel]: String(cm) })} />
+      <h1>Raum messen</h1>
+
+      {ar === true && (
+        <ArMesser
+          onFertig={(werte) => {
+            setF((alt) => ({ ...alt, ...Object.fromEntries(Object.entries(werte).map(([k, v]) => [k, String(v)])) }));
+            setGemessen(true);
+          }}
+        />
+      )}
+
+      {ar === false && (
+        <>
+          <p className="hinweis">
+            Dieses Gerät kann im Browser nicht live mit der Kamera messen (das betrifft z. B. iPhones). Du kannst mit einem Foto messen oder die Maße eintippen.
+          </p>
+          <KameraMesser onWert={(ziel, cm) => setF({ ...f, [ziel]: String(cm) })} />
+        </>
+      )}
+
       <div className="karte">
+        <h2>{gemessen ? "Gemessene Werte prüfen" : "Maße"}</h2>
+        {gemessen && <p className="gedaempft">Fehlt ein Wert, kannst du ihn hier ergänzen.</p>}
         <label>
-          Name
+          Name des Raums
           <input value={f.name} onChange={(e) => setF({ ...f, name: e.target.value })} placeholder="z. B. Mein Wohnzimmer" />
         </label>
-        {feld("breite", "Raumbreite")}
-        {feld("tiefe", "Raumtiefe")}
-        {feld("hoehe", "Raumhöhe")}
-        {feld("tuerB", "Türbreite")}
-        {feld("tuerH", "Türhöhe")}
-        {feld("treppe", "Treppenhausbreite")}
+        {feld("breite", "Raumbreite", "400")}
+        {feld("tiefe", "Raumtiefe", "500")}
+        {feld("hoehe", "Raumhöhe", "250")}
+        {feld("tuerB", "Türbreite", "85")}
+        {feld("tuerH", "Türhöhe", "205")}
+        {feld("treppe", "Treppenhaus an der engsten Stelle", "110")}
         <button
           className="primaer"
           disabled={!gueltig}

@@ -76,8 +76,11 @@ export default function Entdecken({ katalog, raum, korb, onKorb }: Props) {
             </div>
             <p>{m.beschreibung}</p>
             <div className="reihe trenner">
-              <strong>{euro(alsCent(m.preis))}</strong>
-              {m.zustand === "neu" && <span className="gedaempft">4 % Cashback: {euro(cashbackCent(alsCent(m.preis)))}</span>}
+              <strong className="preis-zahl">{euro(alsCent(m.preis))}</strong>
+              {/* Werbesatz aus dem Businessplan: „800 €, mit ReRoom 768 €“ */}
+              {m.zustand === "neu" && (
+                <span className="cashback">mit ReRoom {euro(alsCent(m.preis) - cashbackCent(alsCent(m.preis)))}</span>
+              )}
             </div>
             {passt && (
               <p className="trenner">

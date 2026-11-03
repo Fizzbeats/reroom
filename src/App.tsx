@@ -9,9 +9,9 @@ import Entdecken from "./views/Entdecken";
 import Warenkorb from "./views/Warenkorb";
 import Verkaufen from "./views/Verkaufen";
 
-const TABS = ["Start", "Scannen", "Entdecken", "Warenkorb", "Verkaufen"] as const;
+const TABS = ["Start", "Messen", "Entdecken", "Warenkorb", "Verkaufen"] as const;
 type Tab = (typeof TABS)[number];
-const ICONS: Record<Tab, string> = { Start: "🏠", Scannen: "📐", Entdecken: "🔍", Warenkorb: "🛒", Verkaufen: "🏷️" };
+const ICONS: Record<Tab, string> = { Start: "🏠", Messen: "📐", Entdecken: "🔍", Warenkorb: "🛒", Verkaufen: "🏷️" };
 
 const repository = new LokalesMoebelRepository();
 
@@ -31,8 +31,8 @@ export default function App() {
   return (
     <div className="app">
       <main>
-        {tab === "Start" && <Start raeume={raeume} aktiverRaum={aktiverRaum} onWaehlen={setAktiverRaum} onScannen={() => setTab("Scannen")} />}
-        {tab === "Scannen" && (
+        {tab === "Start" && <Start raeume={raeume} aktiverRaum={aktiverRaum} onWaehlen={setAktiverRaum} onMessen={() => setTab("Messen")} onEntdecken={() => setTab("Entdecken")} />}
+        {tab === "Messen" && (
           <Scannen
             onSpeichern={(r) => {
               setRaeume([...raeume, r]);
