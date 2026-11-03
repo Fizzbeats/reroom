@@ -1,6 +1,6 @@
 /* Weiß und Schwarz als Basis, Bilder im Vordergrund, Orange nur als Marken-Akzent */
 * { box-sizing: border-box; }
-html { -webkit-text-size-adjust: 100%; -webkit-tap-highlight-color: transparent; }
+html { scrollbar-gutter: stable; -webkit-text-size-adjust: 100%; -webkit-tap-highlight-color: transparent; }
 button, a, input, select, label { touch-action: manipulation; } /* kein Verzögern und kein Zoomen beim Doppeltippen */
 body {
   margin: 0;
