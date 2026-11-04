@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ReRoom Entwurf Wohnstube kombiniert</title>
+<style>
+  :root {
+    /* aus Entwurf 5 (Wohnstube), etwas heller für mehr Weißraum */
+    --bg:#FBF6E9; --szene:#E8D7AE; --karte:#F4EBD3; --text:#3A2B1A; --muted:#6B5A3E; --rand:rgb(58 43 26 / .18);
+    --primaer:#3F5B3A; --auf-primaer:#FBF3DE; --akzent:#D9A11E; --auf-akzent:#3A2B1A;
+    /* aus der CI, bleibt als zweiter Akzent */
+    --pastell:#E3F3EA; --pastell-stark:#CDEBDA; --auf-pastell:#0B5A38;
+    --ampel-gruen:#3A7A3A; --ampel-gelb:#8A5F00; --ampel-rot:#A8321F;
+    --serif: Georgia, "Palatino Linotype", serif; --sans: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  * { box-sizing:border-box; }
+  body { margin:0; background:#CDB98E; font-family:var(--sans); color:var(--text); padding:28px 18px 60px; }
+  .kopf-seite { max-width:1300px; margin:0 auto 24px; }
+  .kopf-seite h1 { font:700 1.8rem var(--serif); margin:0 0 6px; }
+  .kopf-seite p { margin:0; max-width:70ch; color:#3A2E1C; }
+  .reihe { max-width:1300px; margin:0 auto; display:flex; gap:28px; flex-wrap:wrap; justify-content:center; align-items:flex-start; }
+  .telefon { width:390px; background:var(--bg); border-radius:40px; box-shadow:0 10px 40px rgb(0 0 0 / .25); overflow:hidden; position:relative; height:844px; display:flex; flex-direction:column; }
+  .beschriftung { text-align:center; font:600 .9rem var(--sans); color:#3A2E1C; margin:0 0 10px; }
+  .spalte { display:flex; flex-direction:column; }
+  .inhalt { padding:0 28px; flex:1; overflow:hidden; line-height:1.55; }
+  h1.titel { font:700 2.2rem/1.08 var(--serif); letter-spacing:.005em; margin:0; text-wrap:balance; }
+  h2 { font:700 1.15rem var(--serif); margin:34px 0 14px; display:flex; justify-content:space-between; align-items:baseline; }
+  h2 small { font:600 .8rem var(--sans); color:var(--muted); }
+  .unter { color:var(--muted); font-size:1.05rem; margin:12px 0 0; }
+  .szene { line-height:0; background:var(--szene); }
+  .szene svg { width:100%; height:auto; display:block; }
+  .knopf { display:flex; align-items:center; justify-content:center; gap:8px; width:100%; min-height:54px; border-radius:10px; border:1.5px solid var(--text); box-shadow:0 2px 0 var(--text); background:var(--primaer); color:var(--auf-primaer); font:700 1rem var(--sans); }
+  .zweit { text-align:center; color:var(--muted); font:600 .95rem var(--sans); padding:14px 0 0; }
+  .kacheln { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:6px; }
+  .kachel { background:var(--pastell); border-radius:10px; padding:14px; display:grid; gap:2px; border:1px solid rgb(11 90 56 / .15); }
+  .kachel b { font:700 .95rem var(--serif); } .kachel span { font-size:.82rem; color:var(--muted); }
+  .kachel i { width:34px; height:34px; border-radius:50%; background:var(--pastell-stark); color:var(--auf-pastell); display:grid; place-items:center; font-style:normal; margin-bottom:6px; font-size:1rem; }
+  .logo { width:132px; height:40px; border:1.5px dashed var(--text); border-radius:8px; display:grid; place-items:center; font:700 .75rem var(--sans); letter-spacing:.08em; text-transform:uppercase; color:var(--muted); }
+  .kopfzeile { display:flex; justify-content:space-between; align-items:center; padding:26px 28px 12px; }
+  .marke { font:700 1.7rem var(--serif); letter-spacing:.01em; } .marke i { display:inline-block; width:8px; height:8px; border-radius:50%; background:var(--akzent); margin-left:3px; }
+  .rund { width:42px; height:42px; border-radius:50%; background:var(--karte); border:1px solid var(--rand); display:grid; place-items:center; }
+  .aktion { background:var(--akzent); color:var(--auf-akzent); border-radius:8px; padding:10px 14px; font:700 .86rem var(--sans); margin:0 0 20px; border:1px solid rgb(58 43 26 / .3); }
+  .raumkarte { background:var(--karte); border:1px solid var(--rand); border-radius:12px; padding:22px; }
+  .raumkarte small { color:var(--muted); font-size:.8rem; } .raumkarte h3 { margin:2px 0 0; font:700 1.3rem var(--serif); }
+  .raumkarte .zeile { display:flex; justify-content:space-between; align-items:flex-start; }
+  .passt { font:700 .8rem var(--sans); color:var(--ampel-gruen); }
+  .plan { background:#FBF6E9; border-radius:8px; margin:14px 0 12px; border:1px solid var(--rand); }
+  .leiste { display:flex; justify-content:space-between; align-items:center; font-size:.88rem; }
+  .leiste b { font:700 1.15rem var(--serif); margin-left:6px; white-space:nowrap; }
+  .leiste .chips { flex-wrap:nowrap; }
+  .chip { display:inline-flex; align-items:center; gap:6px; padding:9px 15px; border-radius:999px; background:var(--pastell-stark); color:var(--auf-pastell); font:600 .84rem var(--sans); }
+  .chip.dunkel { background:var(--primaer); color:var(--auf-primaer); }
+  .chips { display:flex; gap:8px; flex-wrap:wrap; }
+  .raster { display:grid; grid-template-columns:1fr 1fr; gap:22px 14px; }
+  .produkt .bild { background:var(--karte); border:1px solid var(--rand); border-radius:10px; aspect-ratio:1/.9; display:grid; place-items:center; margin-bottom:8px; position:relative; }
+  .produkt .bild em { position:absolute; left:8px; top:8px; font:700 .72rem var(--sans); font-style:normal; background:var(--bg); border-radius:999px; padding:3px 9px; color:var(--ampel-gruen); }
+  .produkt b { font:700 1.1rem var(--serif); display:block; } .produkt span { font-size:.85rem; color:var(--muted); }
+  .tabs { display:flex; justify-content:space-around; align-items:flex-end; padding:10px 8px 16px; border-top:1px solid var(--rand); background:var(--bg); font:600 .72rem var(--sans); color:var(--muted); }
+  .tabs div { display:grid; justify-items:center; gap:3px; } .tabs .an { color:var(--text); }
+  .tabs .mitte span { width:54px; height:54px; border-radius:50%; background:var(--primaer); display:grid; place-items:center; margin-top:-26px; border:2px solid var(--bg); }
+  .detailbild { background:var(--szene); height:210px; display:grid; place-items:center; }
+  .balken { display:grid; grid-template-columns:90px 1fr 56px; gap:10px; align-items:center; font-size:.9rem; margin:12px 0; }
+  .balken .spur { height:8px; border-radius:4px; background:rgb(58 43 26 / .12); overflow:hidden; } .balken .spur i { display:block; height:100%; }
+  .balken b { text-align:right; font-weight:700; }
+  .kaufleiste { padding:14px 28px 18px; border-top:1px solid var(--rand); display:flex; gap:12px; align-items:center; background:var(--bg); }
+  .kaufleiste b { font:700 1.5rem var(--serif); } .kaufleiste small { display:block; color:var(--muted); font-size:.78rem; font-weight:400; }
+  .vergleich { max-width:1300px; margin:34px auto 0; display:grid; gap:14px; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); }
+  .vergleich div { background:var(--bg); border-radius:12px; padding:18px 20px; border:1px solid var(--rand); }
+  .vergleich h3 { margin:0 0 8px; font:700 1.05rem var(--serif); } .vergleich ul { margin:0; padding-left:18px; display:grid; gap:4px; font-size:.94rem; }
+  @media (max-width:430px) { .telefon { width:100%; } }
+</style>
+</head>
+<body>
+<div class="kopf-seite">
+  <h1>Entwurf: Wohnstube trifft aktuelle App</h1>
+  <p>So würde die App aussehen, wenn ich den Look von Entwurf 5 (Wohnstube) mit dem neuen, ruhigen Aufbau verbinde. Das ist nur ein Bild, die App ist noch nicht verändert. Alles steht still, nichts bewegt sich.</p>
+</div>
+
+<div class="reihe">
+
+<!-- 1: Einstieg -->
+<div class="spalte"><p class="beschriftung">1 · Einstieg</p>
+<div class="telefon">
+  <div class="kopfzeile"><span class="logo">Logo</span><span style="color:var(--muted);font:600 .85rem var(--sans)">Überspringen</span></div>
+  <div class="szene">
+    <svg viewBox="0 0 390 250" aria-hidden="true">
+      <defs><pattern id="tapete" width="26" height="40" patternUnits="userSpaceOnUse"><rect width="26" height="40" fill="#E8D7AE"/><rect width="13" height="40" fill="#E1CE9F"/><circle cx="13" cy="20" r="3" fill="#C9AE6E"/></pattern></defs>
+      <rect width="390" height="250" fill="url(#tapete)"/><rect y="208" width="390" height="42" fill="#7A5230"/>
+      <rect x="40" y="26" width="56" height="44" fill="#F4E8CC" stroke="#5A3A1E" stroke-width="5"/><path d="M46 64l16-18 12 12 10-8 8 14z" fill="#6E8F5A"/><circle cx="80" cy="42" r="5" fill="#D9A11E"/>
+      <rect x="170" y="14" width="46" height="70" rx="8" fill="#5A3A1E"/><circle cx="193" cy="38" r="15" fill="#F4E8CC"/><path d="M193 38V28M193 38l7 4" stroke="#3A2B1A" stroke-width="2" stroke-linecap="round"/><line x1="193" y1="56" x2="193" y2="78" stroke="#D9A11E" stroke-width="2"/><circle cx="193" cy="78" r="5" fill="#D9A11E"/>
+      <rect x="236" y="148" width="136" height="60" rx="4" fill="#8A5A34"/><rect x="244" y="156" width="56" height="44" fill="#6F4526"/><rect x="308" y="156" width="56" height="44" fill="#6F4526"/><rect x="236" y="140" width="136" height="9" fill="#5A3A1E"/>
+      <rect x="246" y="124" width="62" height="17" rx="3" fill="#3A2B1A"/><circle cx="272" cy="125" r="13" fill="#111"/><circle cx="272" cy="125" r="8" fill="none" stroke="#444"/><circle cx="272" cy="125" r="4" fill="#D9A11E"/><path d="M298 112l-20 12" stroke="#C0C0C0" stroke-width="2" stroke-linecap="round"/>
+      <rect x="330" y="128" width="20" height="13" rx="3" fill="#F4E8CC"/><path d="M350 131q8 1 0 7" stroke="#F4E8CC" stroke-width="2.5" fill="none"/>
+      <rect x="72" y="136" width="94" height="52" rx="16" fill="#C9951E"/><rect x="62" y="156" width="114" height="44" rx="14" fill="#D9A11E"/><rect x="82" y="162" width="74" height="24" rx="8" fill="#E8B83E"/><rect x="76" y="198" width="6" height="14" fill="#5A3A1E"/><rect x="156" y="198" width="6" height="14" fill="#5A3A1E"/>
+      <ellipse cx="118" cy="150" rx="18" ry="14" fill="#6A6F78"/><circle cx="118" cy="132" r="11" fill="#6A6F78"/><path d="M109 124l2-10 6 7zM127 124l-2-10-6 7z" fill="#6A6F78"/><circle cx="114" cy="132" r="1.6" fill="#F4E8CC"/><circle cx="122" cy="132" r="1.6" fill="#F4E8CC"/><path d="M134 154q18 2 16-18" stroke="#6A6F78" stroke-width="6" stroke-linecap="round" fill="none"/>
+      <ellipse cx="190" cy="226" rx="100" ry="10" fill="#A8321F" opacity=".85"/>
+    </svg>
+  </div>
+  <div class="inhalt" style="padding-top:34px">
+    <h1 class="titel">Möbel, die wirklich passen.</h1>
+    <p class="unter">Ausmessen, Stil wählen, günstiger einrichten.</p>
+    <div style="margin-top:30px"><div class="knopf">Raum ausmessen</div><div class="zweit">Erst stöbern</div></div>
+    <div class="kacheln" style="margin-top:34px">
+      <div class="kachel"><i>▣</i><b>Passt-Check</b><span>Tür, Treppe, Raum</span></div>
+      <div class="kachel"><i>♡</i><b>Stil finden</b><span>Bilder wischen</span></div>
+    </div>
+  </div>
+</div></div>
+
+<!-- 2: Startseite -->
+<div class="spalte"><p class="beschriftung">2 · Startseite</p>
+<div class="telefon">
+  <div class="kopfzeile" style="padding-bottom:16px"><span class="marke">ReRoom<i></i></span><span class="rund">☺</span></div>
+  <div class="inhalt">
+    <div class="aktion">Start-Aktion: 6 % Cashback bis 31. Januar</div>
+    <div class="raumkarte">
+      <div class="zeile"><div><small>Dein Wohnzimmer · 20 m²</small><h3>So könnte es aussehen</h3></div><span class="passt">5 Möbel passen</span></div>
+      <svg class="plan" viewBox="0 0 300 170" aria-hidden="true">
+        <rect x="95" y="10" width="110" height="150" fill="#FBF6E9" stroke="#3A2B1A" stroke-width="3.5"/>
+        <rect x="114" y="16" width="72" height="30" rx="4" fill="#C9951E"/><rect x="112" y="62" width="76" height="62" rx="4" fill="#A8321F" opacity=".85"/><rect x="130" y="80" width="40" height="22" rx="3" fill="#8A5A34"/>
+        <rect x="160" y="146" width="36" height="9" rx="3" fill="#D9A11E"/><path d="M98 160 A22 22 0 0 1 120 138" fill="none" stroke="#D9A11E" stroke-width="1.6" stroke-dasharray="3 3"/>
+      </svg>
+      <div class="leiste"><span>Zusammen<b>355,00 €</b></span><span class="chips"><span class="chip">3D</span><span class="chip dunkel">In den Korb</span></span></div>
+    </div>
+    <h2>Dein Stil <small>Stil-Finder</small></h2>
+    <div class="chips"><span class="chip">Skandi</span><span class="chip">Modern</span><span class="chip">Vintage</span></div>
+    <h2>Noch Platz für <small>Alle</small></h2>
+    <div class="raster">
+      <div class="produkt"><div class="bild"><em>Passt</em><svg width="70" height="60" viewBox="0 0 70 60"><rect x="14" y="8" width="42" height="26" rx="8" fill="#C9951E"/><rect x="8" y="26" width="54" height="16" rx="6" fill="#D9A11E"/><rect x="14" y="42" width="5" height="12" fill="#5A3A1E"/><rect x="51" y="42" width="5" height="12" fill="#5A3A1E"/></svg></div><b>20,00 €</b><span>Stuhl Schule · 9 km</span></div>
+      <div class="produkt"><div class="bild"><em>Passt</em><svg width="70" height="60" viewBox="0 0 70 60"><rect x="12" y="6" width="46" height="46" rx="3" fill="#8A5A34"/><rect x="34" y="6" width="2" height="46" fill="#5A3A1E"/></svg></div><b>90,00 €</b><span>Sideboard Wiese · 7 km</span></div>
+    </div>
+  </div>
+  <div class="tabs"><div class="an"><span>⌂</span>Start</div><div><span>⌕</span>Entdecken</div><div class="mitte"><span style="color:#FBF3DE">◉</span>Messen</div><div><span>◻</span>Warenkorb</div><div><span>◇</span>Verkaufen</div></div>
+</div></div>
+
+<!-- 3: Detail -->
+<div class="spalte"><p class="beschriftung">3 · Möbel mit Passt-Check</p>
+<div class="telefon">
+  <div class="detailbild"><svg width="190" height="120" viewBox="0 0 190 120"><ellipse cx="95" cy="108" rx="80" ry="8" fill="#C9AE6E" opacity=".6"/><rect x="26" y="40" width="138" height="48" rx="18" fill="#6A6F78"/><rect x="14" y="58" width="30" height="42" rx="12" fill="#7D838C"/><rect x="146" y="58" width="30" height="42" rx="12" fill="#7D838C"/><rect x="40" y="62" width="110" height="30" rx="10" fill="#8E949C"/></svg></div>
+  <div class="inhalt" style="padding-top:26px">
+    <div class="chips"><span class="chip">Gebraucht</span><span class="chip">grau</span></div>
+    <h1 class="titel" style="font-size:1.9rem;margin-top:14px">Sofa Lund</h1>
+    <p class="unter" style="font-size:.95rem">Privat, Chemnitz-Kaßberg · 1 km</p>
+    <h2 style="margin-top:28px">Passt-Check <small>Knapp</small></h2>
+    <div class="balken"><span>Tür</span><div class="spur"><i style="width:20%;background:var(--ampel-gelb)"></i></div><b>10 cm</b></div>
+    <div class="balken"><span>Treppenhaus</span><div class="spur"><i style="width:60%;background:var(--ampel-gruen)"></i></div><b>35 cm</b></div>
+    <div class="balken"><span>Raum</span><div class="spur"><i style="width:95%;background:var(--ampel-gruen)"></i></div><b>170 cm</b></div>
+    <p class="unter" style="font-size:.9rem;margin-top:18px">Passt durch die Tür, aber knapp. Bitte nachmessen.</p>
+  </div>
+  <div class="kaufleiste"><div><b>180,00 €</b><small>+ 7,70 € Käuferschutz</small></div><div class="knopf" style="margin-left:auto;width:auto;padding:0 26px">In den Warenkorb</div></div>
+</div></div>
+
+</div>
+
+<div class="vergleich">
+  <div><h3>Von Entwurf 5 übernommen</h3><ul><li>Warme Wohnstuben-Szene als Kopfbild (Tapete, Sessel, Katze, Plattenspieler)</li><li>Serifenschrift (Georgia) für Überschriften und Preise</li><li>Waldgrün als Hauptfarbe, Senfgelb als Akzent, Cremetöne als Flächen</li><li>Karten mit feinem braunem Rand statt Schatten, Knöpfe mit kleiner Kante</li></ul></div>
+  <div><h3>Von der aktuellen App behalten</h3><ul><li>Wenig Text, ein Knopf pro Bildschirm, viel Weißraum</li><li>Kacheln mit Pastellgrün aus der CI</li><li>Aufbau und Funktionen unverändert, Logo-Platzhalter bleibt</li><li>Statisch: nichts bewegt sich</li></ul></div>
+  <div><h3>Was sich gegenüber heute ändert</h3><ul><li>Hintergrund: warmes Creme statt reines Weiß</li><li>Orange Akzent wird Senfgelb, Schwarz wird Waldgrün</li><li>Titel in Serif statt Bricolage Grotesque</li><li>Texte auf Creme: Kontrast geprüft (über 4,5)</li></ul></div>
+</div>
+</body>
+</html>

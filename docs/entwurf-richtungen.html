@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ReRoom Entwurf zwei Richtungen</title>
+<style>
+  * { box-sizing:border-box; }
+  body { margin:0; background:#E4E2DC; font-family:"Segoe UI Variable Display","Segoe UI",system-ui,sans-serif; color:#111; padding:28px 18px 60px; }
+  .kopf { max-width:1500px; margin:0 auto 22px; } .kopf h1 { margin:0 0 6px; font-size:1.7rem; letter-spacing:-.02em; } .kopf p { margin:0; max-width:75ch; color:#444; }
+  .richtung { max-width:1500px; margin:34px auto 0; }
+  .richtung h2 { margin:0 0 4px; font-size:1.25rem; } .richtung > p { margin:0 0 16px; color:#444; max-width:80ch; }
+  .reihe { display:flex; gap:26px; flex-wrap:wrap; }
+  .telefon { width:390px; height:800px; border-radius:36px; overflow:hidden; box-shadow:0 8px 30px rgb(0 0 0 / .2); display:flex; flex-direction:column; position:relative; }
+  .tab { display:flex; justify-content:space-around; padding:10px 8px 16px; font-size:.72rem; font-weight:600; }
+  .tab span:first-child { font-weight:800; }
+  .tnum { font-variant-numeric:tabular-nums; }
+
+  /* ===== Richtung A: Bauplan ===== */
+  .A { background:#fff; color:#111; --linie:#111; --fein:#D9D8D3; --gedaempft:#5E5E5E; }
+  .A .in { padding:0 28px; flex:1; overflow:hidden; }
+  .A .kopfz { display:flex; justify-content:space-between; align-items:center; padding:26px 28px 0; font-size:.85rem; }
+  .A .logo { width:132px; height:40px; border:1px dashed #111; display:grid; place-items:center; font-size:.72rem; letter-spacing:.1em; text-transform:uppercase; }
+  .A h1 { font-size:2.6rem; line-height:1; letter-spacing:-.045em; font-weight:800; margin:0; }
+  .A .sub { color:var(--gedaempft); margin:14px 0 0; font-size:1.05rem; }
+  .A .knopf { display:flex; align-items:center; justify-content:space-between; padding:0 22px; min-height:58px; background:#111; color:#fff; font-weight:700; border-radius:4px; margin-top:28px; }
+  .A .zeilen { margin-top:30px; border-top:1px solid var(--linie); }
+  .A .zeile { display:grid; grid-template-columns:36px 1fr auto; gap:6px; align-items:baseline; padding:16px 0; border-bottom:1px solid var(--fein); }
+  .A .zeile b { font-weight:700; } .A .zeile i { font-style:normal; color:var(--gedaempft); font-size:.8rem; letter-spacing:.06em; } .A .zeile span { color:var(--gedaempft); font-size:.9rem; }
+  .A .tab { border-top:1px solid var(--fein); background:#fff; } .A .tab span { color:var(--gedaempft); } .A .tab span:first-child { color:#111; }
+  .A .marke { font-size:1.6rem; font-weight:800; letter-spacing:-.04em; } .A .marke i { display:inline-block; width:8px; height:8px; background:#FF5B2E; border-radius:50%; margin-left:3px; }
+  .A .band { background:#E3F3EA; color:#0B5A38; padding:11px 28px; font-weight:700; font-size:.88rem; margin-top:18px; }
+  .A .raum { padding:22px 28px 0; display:flex; justify-content:space-between; align-items:baseline; }
+  .A .raum small { color:var(--gedaempft); } .A .raum b { font-size:1.35rem; letter-spacing:-.02em; }
+  .A .plan { margin:6px 12px 0; }
+  .A .summe { display:flex; justify-content:space-between; align-items:baseline; border-top:1px solid var(--linie); margin:6px 28px 0; padding-top:14px; }
+  .A .summe b { font-size:1.5rem; letter-spacing:-.02em; }
+  .A .aktionen { display:flex; gap:20px; margin:10px 28px 0; font-weight:700; font-size:.92rem; }
+  .A .aktionen u { text-underline-offset:4px; }
+  .A .liste { margin:26px 28px 0; display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  .A .liste .b { background:#F1F1EF; aspect-ratio:1/.85; display:grid; place-items:center; border-radius:2px; position:relative; }
+  .A .liste .b em { position:absolute; left:8px; top:8px; font-style:normal; font-size:.72rem; font-weight:700; background:#E3F3EA; color:#0B5A38; padding:2px 8px; }
+  .A .liste b { display:block; margin-top:8px; font-size:1.1rem; } .A .liste span { color:var(--gedaempft); font-size:.84rem; }
+
+  /* ===== Richtung B: Wohnstube leise ===== */
+  .B { background:#F7F1E1; color:#2B2418; --fein:rgb(43 36 24 / .16); --gedaempft:#6B5E45; }
+  .B .in { padding:0 28px; flex:1; overflow:hidden; }
+  .B .kopfz { display:flex; justify-content:space-between; align-items:center; padding:26px 28px 0; font-size:.85rem; }
+  .B .logo { width:132px; height:40px; border:1px dashed #2B2418; border-radius:6px; display:grid; place-items:center; font-size:.72rem; letter-spacing:.1em; text-transform:uppercase; }
+  .B .bild { margin:22px 0 0; background:#E6D9B8; height:210px; display:grid; place-items:center; }
+  .B h1 { font-size:2.4rem; line-height:1.02; letter-spacing:-.04em; font-weight:800; margin:30px 0 0; }
+  .B .sub { color:var(--gedaempft); margin:12px 0 0; font-size:1.05rem; }
+  .B .knopf { display:flex; align-items:center; justify-content:center; min-height:56px; background:#3F5B3A; color:#F7F1E1; font-weight:700; border-radius:6px; margin-top:26px; }
+  .B .zeilen { margin-top:26px; border-top:1px solid var(--fein); }
+  .B .zeile { display:flex; justify-content:space-between; gap:12px; padding:15px 0; border-bottom:1px solid var(--fein); } .B .zeile span { color:var(--gedaempft); font-size:.9rem; }
+  .B .tab { border-top:1px solid var(--fein); } .B .tab span { color:var(--gedaempft); } .B .tab span:first-child { color:#2B2418; }
+  .B .marke { font-size:1.6rem; font-weight:800; letter-spacing:-.04em; } .B .marke i { display:inline-block; width:8px; height:8px; background:#D9A11E; border-radius:50%; margin-left:3px; }
+  .B .band { border-top:1px solid var(--fein); border-bottom:1px solid var(--fein); padding:11px 0; font-weight:700; font-size:.88rem; margin:18px 28px 0; color:#3F5B3A; }
+  .B .raum { padding:22px 28px 0; display:flex; justify-content:space-between; align-items:baseline; } .B .raum small { color:var(--gedaempft); } .B .raum b { font-size:1.35rem; letter-spacing:-.02em; }
+  .B .planbox { margin:8px 28px 0; background:#EFE6CC; padding:6px 0; }
+  .B .summe { display:flex; justify-content:space-between; align-items:baseline; border-top:1px solid var(--fein); margin:14px 28px 0; padding-top:14px; } .B .summe b { font-size:1.5rem; letter-spacing:-.02em; }
+  .B .aktionen { display:flex; gap:20px; margin:10px 28px 0; font-weight:700; font-size:.92rem; color:#3F5B3A; }
+  .B .liste { margin:24px 28px 0; display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+  .B .liste .b { background:#EFE6CC; aspect-ratio:1/.85; display:grid; place-items:center; position:relative; }
+  .B .liste .b em { position:absolute; left:8px; top:8px; font-style:normal; font-size:.72rem; font-weight:700; color:#3F5B3A; }
+  .B .liste b { display:block; margin-top:8px; font-size:1.1rem; } .B .liste span { color:var(--gedaempft); font-size:.84rem; }
+
+  .begruendung { max-width:1500px; margin:34px auto 0; background:#fff; border-radius:12px; padding:20px 24px; }
+  .begruendung h3 { margin:0 0 8px; } .begruendung ul { margin:0; padding-left:20px; display:grid; gap:4px; max-width:100ch; }
+</style>
+</head>
+<body>
+<div class="kopf">
+  <h1>Weniger KI-Look: zwei Richtungen</h1>
+  <p>Das, was „nach KI“ aussieht, ist meist: Creme-Töne mit Serifenschrift, niedliche Szenen mit Katze und Plattenspieler, runde Icon-Kreise, lauter weiche Karten und Chips. Beide Richtungen unten lassen das weg. Nur ein Bild, die App ist nicht verändert. Die Schrift ist hier eine Ersatzschrift, in der App bleibt Bricolage Grotesque.</p>
+</div>
+
+<!-- ============ A ============ -->
+<div class="richtung">
+  <h2>A · Bauplan</h2>
+  <p>Weiß und Schwarz mit feinen Linien wie bei einer Bauzeichnung. Das Bild ist kein Bild von Möbeln, sondern dein echter Grundriss mit Maßen. Listen statt Karten, Pastellgrün nur als flache Fläche, ein orangener Punkt als Marke.</p>
+  <div class="reihe">
+    <div class="telefon A">
+      <div class="kopfz"><span class="logo">Logo</span><span>Überspringen</span></div>
+      <div class="in">
+        <svg viewBox="0 0 334 230" style="margin-top:26px;width:100%" aria-hidden="true">
+          <g fill="none" stroke="#111" stroke-width="2.5"><rect x="60" y="22" width="190" height="170"/></g>
+          <g stroke="#111" stroke-width="1" fill="none"><path d="M60 208h190M60 203v10M250 203v10M274 22v170M269 22h10M269 192h10"/></g>
+          <g font-size="11" fill="#5E5E5E" font-family="Segoe UI, system-ui"><text x="155" y="224" text-anchor="middle">4,00 m</text><text x="292" y="110" >5,00 m</text></g>
+          <rect x="88" y="32" width="134" height="40" fill="#E3F3EA" stroke="#0B5A38" stroke-width="1.5"/><text x="155" y="56" text-anchor="middle" font-size="11" fill="#0B5A38" font-weight="700" font-family="Segoe UI, system-ui">Sofa 200 × 85</text>
+          <path d="M60 192v-44a44 44 0 0 1 44 44" fill="none" stroke="#FF5B2E" stroke-width="1.3" stroke-dasharray="4 4"/>
+        </svg>
+        <h1 style="margin-top:22px">Möbel, die wirklich passen.</h1>
+        <p class="sub">Ausmessen, Stil wählen, günstiger einrichten.</p>
+        <div class="knopf"><span>Raum ausmessen</span><span>→</span></div>
+        <div class="zeilen">
+          <div class="zeile"><i>01</i><b>Passt-Check</b><span>Tür, Treppe, Raum</span></div>
+          <div class="zeile"><i>02</i><b>Stil finden</b><span>Bilder wischen</span></div>
+          <div class="zeile"><i>03</i><b>6 % Cashback</b><span>auf neue Möbel</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="telefon A">
+      <div class="kopfz" style="padding-top:26px"><span class="marke">ReRoom<i></i></span><span>Konto</span></div>
+      <div class="band">Start-Aktion: 6 % Cashback bis 31. Januar</div>
+      <div class="raum"><span><small>Wohnzimmer</small><br><b class="tnum">4,00 × 5,00 m</b></span><small style="color:#0B5A38;font-weight:700">5 Möbel passen</small></div>
+      <svg class="plan" viewBox="0 0 310 180" aria-hidden="true">
+        <rect x="85" y="8" width="120" height="150" fill="none" stroke="#111" stroke-width="2.5"/>
+        <rect x="102" y="14" width="86" height="26" fill="#F1F1EF" stroke="#111"/><text x="145" y="31" text-anchor="middle" font-size="9" font-family="Segoe UI, system-ui">Sofa</text>
+        <rect x="108" y="64" width="74" height="60" fill="#F1F1EF" stroke="#111"/><rect x="128" y="82" width="34" height="22" fill="#fff" stroke="#111"/>
+        <rect x="160" y="146" width="36" height="8" fill="#F1F1EF" stroke="#111"/><path d="M85 158v-34a34 34 0 0 1 34 34" fill="none" stroke="#FF5B2E" stroke-width="1.2" stroke-dasharray="3 3"/>
+      </svg>
+      <div class="summe"><span>Zusammen</span><b class="tnum">355,00 €</b></div>
+      <div class="aktionen"><u>3D</u><u>Teilen</u><u>Alle in den Korb</u></div>
+      <div class="liste">
+        <div><div class="b"><em>Passt</em><svg width="64" height="56"><rect x="14" y="8" width="38" height="24" rx="6" fill="#B58A58"/><rect x="8" y="26" width="50" height="14" rx="5" fill="#C9A06E"/><rect x="14" y="40" width="5" height="12" fill="#8A6A44"/><rect x="47" y="40" width="5" height="12" fill="#8A6A44"/></svg></div><b class="tnum">20,00 €</b><span>Stuhl Schule · 9 km</span></div>
+        <div><div class="b"><em>Passt</em><svg width="64" height="56"><rect x="10" y="4" width="44" height="46" fill="#C9A06E"/><rect x="31" y="4" width="2" height="46" fill="#8A6A44"/></svg></div><b class="tnum">90,00 €</b><span>Sideboard Wiese</span></div>
+      </div>
+      <div style="flex:1"></div>
+      <div class="tab"><span>Start</span><span>Entdecken</span><span>Messen</span><span>Korb</span><span>Verkaufen</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ B ============ -->
+<div class="richtung">
+  <h2>B · Wohnstube, leise</h2>
+  <p>Die warmen Farben von Entwurf 5 bleiben, aber ohne Serifenschrift, ohne Szene mit Katze und ohne Chips. Eine einzige ruhige Möbelzeichnung, Linien statt Karten, Waldgrün für den Hauptknopf.</p>
+  <div class="reihe">
+    <div class="telefon B">
+      <div class="kopfz"><span class="logo">Logo</span><span>Überspringen</span></div>
+      <div class="in">
+        <div class="bild"><svg width="250" height="150" viewBox="0 0 250 150" aria-hidden="true"><ellipse cx="125" cy="136" rx="105" ry="8" fill="#CDBB8E" opacity=".7"/><rect x="38" y="52" width="150" height="56" rx="20" fill="#C9951E"/><rect x="26" y="74" width="34" height="50" rx="13" fill="#D9A11E"/><rect x="166" y="74" width="34" height="50" rx="13" fill="#D9A11E"/><rect x="52" y="78" width="122" height="34" rx="11" fill="#E0AE35"/><rect x="40" y="122" width="7" height="14" fill="#5A3A1E"/><rect x="179" y="122" width="7" height="14" fill="#5A3A1E"/><rect x="214" y="30" width="3" height="100" fill="#5A3A1E"/><path d="M200 34h32l-6 20h-20z" fill="#EFE0B4" stroke="#5A3A1E"/></svg></div>
+        <h1 style="margin-top:26px">Möbel, die wirklich passen.</h1>
+        <p class="sub">Ausmessen, Stil wählen, günstiger einrichten.</p>
+        <div class="knopf">Raum ausmessen</div>
+        <div class="zeilen">
+          <div class="zeile"><b>Passt-Check</b><span>Tür, Treppe, Raum</span></div>
+          <div class="zeile"><b>Stil finden</b><span>Bilder wischen</span></div>
+          <div class="zeile"><b>6 % Cashback</b><span>auf neue Möbel</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="telefon B">
+      <div class="kopfz" style="padding-top:26px"><span class="marke">ReRoom<i></i></span><span>Konto</span></div>
+      <div class="band">Start-Aktion: 6 % Cashback bis 31. Januar</div>
+      <div class="raum"><span><small>Wohnzimmer</small><br><b class="tnum">4,00 × 5,00 m</b></span><small style="color:#3F5B3A;font-weight:700">5 Möbel passen</small></div>
+      <div class="planbox"><svg viewBox="0 0 310 180" style="width:100%;display:block" aria-hidden="true">
+        <rect x="85" y="8" width="120" height="150" fill="#F7F1E1" stroke="#2B2418" stroke-width="2.5"/>
+        <rect x="102" y="14" width="86" height="26" rx="3" fill="#C9951E"/>
+        <rect x="108" y="64" width="74" height="60" rx="3" fill="#A8321F" opacity=".85"/><rect x="128" y="82" width="34" height="22" rx="2" fill="#8A5A34"/>
+        <rect x="160" y="146" width="36" height="8" rx="2" fill="#D9A11E"/><path d="M85 158v-34a34 34 0 0 1 34 34" fill="none" stroke="#2B2418" stroke-width="1.2" stroke-dasharray="3 3"/>
+      </svg></div>
+      <div class="summe"><span>Zusammen</span><b class="tnum">355,00 €</b></div>
+      <div class="aktionen"><span>3D</span><span>Teilen</span><span>Alle in den Korb</span></div>
+      <div class="liste">
+        <div><div class="b"><em>Passt</em><svg width="64" height="56"><rect x="14" y="8" width="38" height="24" rx="6" fill="#C9951E"/><rect x="8" y="26" width="50" height="14" rx="5" fill="#D9A11E"/><rect x="14" y="40" width="5" height="12" fill="#5A3A1E"/><rect x="47" y="40" width="5" height="12" fill="#5A3A1E"/></svg></div><b class="tnum">20,00 €</b><span>Stuhl Schule · 9 km</span></div>
+        <div><div class="b"><em>Passt</em><svg width="64" height="56"><rect x="10" y="4" width="44" height="46" fill="#8A5A34"/><rect x="31" y="4" width="2" height="46" fill="#5A3A1E"/></svg></div><b class="tnum">90,00 €</b><span>Sideboard Wiese</span></div>
+      </div>
+      <div style="flex:1"></div>
+      <div class="tab"><span>Start</span><span>Entdecken</span><span>Messen</span><span>Korb</span><span>Verkaufen</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="begruendung">
+  <h3>Was ich bewusst weggelassen habe</h3>
+  <ul>
+    <li>Serifenschrift und Creme als Hauptfläche (wirkt wie das Standard-„Warm-und-gemütlich“ einer KI)</li>
+    <li>Niedliche Szenen mit Katze, Plattenspieler und Tasse</li>
+    <li>Runde Icon-Kreise über jeder Kachel, viele weiche Karten und Pillen-Chips</li>
+    <li>Pastellfläche hinter jedem Abschnitt: Pastellgrün bleibt, aber nur als Band oder kleines Etikett (A)</li>
+  </ul>
+  <h3 style="margin-top:14px">Was dafür sorgt, dass es nach eigener Arbeit aussieht</h3>
+  <ul>
+    <li>Dein Grundriss mit echten Maßen als Hauptbild: Das gibt es nur bei ReRoom</li>
+    <li>Linien und Listen mit Zahlen statt gleich großer Kacheln, Preise in Tabellenziffern</li>
+    <li>Linksbündig, kräftige Überschrift, ein einziger Akzent</li>
+  </ul>
+</div>
+</body>
+</html>

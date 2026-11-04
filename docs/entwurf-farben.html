@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ReRoom Entwurf vier Farbwelten</title>
+<style>
+  * { box-sizing:border-box; }
+  body { margin:0; background:#D9D7D1; font-family:"Segoe UI Variable Display","Segoe UI",system-ui,sans-serif; color:#111; padding:28px 18px 60px; }
+  .kopf { max-width:1200px; margin:0 auto 10px; } .kopf h1 { margin:0 0 6px; font-size:1.7rem; letter-spacing:-.02em; } .kopf p { margin:0; max-width:80ch; color:#444; }
+  .richtung { max-width:1200px; margin:38px auto 0; }
+  .richtung h2 { margin:0 0 2px; font-size:1.2rem; } .richtung > p { margin:0 0 14px; color:#444; max-width:90ch; font-size:.95rem; }
+  .farben { display:flex; gap:6px; margin:0 0 14px; } .farben i { width:44px; height:26px; border-radius:4px; box-shadow:inset 0 0 0 1px rgb(0 0 0 / .12); }
+  .reihe { display:flex; gap:24px; flex-wrap:wrap; }
+  .telefon { width:360px; height:740px; border-radius:34px; overflow:hidden; box-shadow:0 8px 28px rgb(0 0 0 / .22); display:flex; flex-direction:column; background:var(--bg); color:var(--ink); }
+  .tnum { font-variant-numeric:tabular-nums; }
+  .zeile3 { margin-top:24px; border-top:1px solid var(--linie); } .zeile3 div { display:flex; justify-content:space-between; gap:10px; padding:14px 0; border-bottom:1px solid var(--linie); } .zeile3 span { color:var(--muted); font-size:.9rem; }
+  .logo { width:132px; height:40px; border:1px dashed currentColor; border-radius:6px; display:grid; place-items:center; font-size:.7rem; letter-spacing:.1em; text-transform:uppercase; opacity:.85; }
+  .knopf { display:flex; align-items:center; justify-content:center; min-height:56px; border-radius:8px; font-weight:700; background:var(--akz); color:var(--auf-akz); }
+  .tab { display:flex; justify-content:space-around; padding:10px 6px 16px; font-size:.7rem; font-weight:600; border-top:1px solid var(--linie); margin-top:auto; color:var(--muted); } .tab span:first-child { color:var(--ink); font-weight:800; }
+  /* Startseite, gemeinsamer Aufbau */
+  .st .oben { display:flex; justify-content:space-between; align-items:center; padding:24px 24px 0; font-size:.85rem; }
+  .st .marke { font-size:1.5rem; font-weight:800; letter-spacing:-.04em; }
+  .st .band { margin:16px 24px 0; padding:10px 14px; font-weight:700; font-size:.85rem; background:var(--band); color:var(--auf-band); border-radius:6px; }
+  .st .raum { margin:18px 24px 0; background:var(--flaeche); color:var(--auf-flaeche); border-radius:10px; padding:18px 18px 14px; }
+  .st .raum .z { display:flex; justify-content:space-between; align-items:baseline; } .st .raum small { opacity:.75; } .st .raum b { font-size:1.2rem; letter-spacing:-.02em; }
+  .st .summe { display:flex; justify-content:space-between; align-items:baseline; margin-top:10px; padding-top:12px; border-top:1px solid currentColor; } .st .summe b { font-size:1.4rem; }
+  .st .akt { display:flex; gap:18px; margin-top:8px; font-weight:700; font-size:.88rem; } .st .akt u { text-underline-offset:4px; }
+  .st .liste { margin:22px 24px 0; display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .st .liste .b { background:var(--kachel); aspect-ratio:1/.8; display:grid; place-items:center; border-radius:6px; position:relative; }
+  .st .liste em { position:absolute; left:8px; top:8px; font-style:normal; font-size:.7rem; font-weight:800; color:var(--passt); }
+  .st .liste b { display:block; margin-top:6px; font-size:1.05rem; } .st .liste span { color:var(--muted); font-size:.8rem; }
+
+  /* 1 Poster: Orange-Fläche, schwarze Schrift */
+  .p1 { --bg:#fff; --ink:#111; --muted:#5E5E5E; --linie:#D9D8D3; --akz:#111; --auf-akz:#fff; --band:#FF5B2E; --auf-band:#111; --flaeche:#FF5B2E; --auf-flaeche:#111; --kachel:#F1F1EF; --passt:#111; }
+  .p1 .block { background:#FF5B2E; padding:20px 24px 28px; flex:none; }
+  .p1 .block h1 { font-size:3.1rem; line-height:.95; letter-spacing:-.05em; margin:46px 0 0; font-weight:800; color:#111; }
+  .p1 .rest { padding:22px 24px 0; flex:1; }
+  .p1 .rest p { margin:0 0 20px; font-size:1.05rem; color:var(--muted); }
+
+  /* 2 Waldgrün: dunkle Fläche, Mint aus der CI */
+  .p2 { --bg:#14382A; --ink:#F1F7F2; --muted:#B9D3C4; --linie:rgb(241 247 242 / .22); --akz:#CDEBDA; --auf-akz:#0B3A24; --band:#CDEBDA; --auf-band:#0B3A24; --flaeche:#1E4A39; --auf-flaeche:#F1F7F2; --kachel:#1E4A39; --passt:#CDEBDA; }
+  .p2 .in { padding:24px 26px 0; flex:1; display:flex; flex-direction:column; }
+  .p2 h1 { font-size:2.5rem; line-height:1; letter-spacing:-.04em; margin:26px 0 0; font-weight:800; }
+  .p2 .sub { color:var(--muted); margin:12px 0 0; font-size:1.05rem; }
+
+  /* 3 Terrakotta: warme Tonfläche unten */
+  .p3 { --bg:#FAF5EF; --ink:#2A1A14; --muted:#6E5A50; --linie:rgb(42 26 20 / .16); --akz:#2A1A14; --auf-akz:#FAF5EF; --band:#2A1A14; --auf-band:#FAF5EF; --flaeche:#B04A2E; --auf-flaeche:#FFF8F2; --kachel:#EFE3D6; --passt:#8E3A24; }
+  .p3 .oben-t { padding:24px 26px 0; display:flex; justify-content:space-between; font-size:.85rem; }
+  .p3 h1 { font-size:2.7rem; line-height:1; letter-spacing:-.045em; margin:34px 26px 0; font-weight:800; }
+  .p3 .fl { margin:26px 0 0; flex:1; background:#B04A2E; color:#FFF8F2; padding:28px 26px 0; border-radius:28px 28px 0 0; }
+  .p3 .fl p { margin:0 0 22px; font-size:1.05rem; opacity:.95; }
+  .p3 .fl .knopf { background:#FFF8F2; color:#8E3A24; }
+  .p3 .fl .zeile3 { border-color:rgb(255 248 242 / .35); } .p3 .fl .zeile3 div { border-color:rgb(255 248 242 / .35); } .p3 .fl .zeile3 span { color:#FFE9DC; }
+
+  /* 4 Beton und Limette: technisch, Gitter */
+  .p4 { --bg:#E7E7E3; --ink:#151515; --muted:#555; --linie:#151515; --akz:#D4F53C; --auf-akz:#151515; --band:#151515; --auf-band:#D4F53C; --flaeche:#F4F4F1; --auf-flaeche:#151515; --kachel:#F4F4F1; --passt:#151515; }
+  .p4 .in { padding:24px 24px 0; flex:1; display:flex; flex-direction:column; }
+  .p4 .etikett { font:700 .7rem Consolas,"Cascadia Mono",monospace; letter-spacing:.12em; text-transform:uppercase; }
+  .p4 h1 { font-size:2.7rem; line-height:.98; letter-spacing:-.045em; margin:18px 0 0; font-weight:800; }
+  .p4 .raster { margin-top:22px; border:1.5px solid #151515; display:grid; grid-template-columns:1fr 1fr; }
+  .p4 .raster div { padding:14px; border-right:1.5px solid #151515; border-bottom:1.5px solid #151515; } .p4 .raster div:nth-child(2n) { border-right:0; } .p4 .raster div:nth-child(n+3) { border-bottom:0; }
+  .p4 .raster b { display:block; font-size:1.05rem; } .p4 .raster span { color:var(--muted); font-size:.82rem; }
+  .p4 .knopf { border:1.5px solid #151515; border-radius:0; margin-top:22px; justify-content:space-between; padding:0 20px; box-shadow:4px 4px 0 #151515; }
+  .p4 .raum, .p4 .liste .b, .p4 .band { border-radius:0; border:1.5px solid #151515; }
+  .p4 .raum { border-radius:0; }
+
+  .hinweise { max-width:1200px; margin:36px auto 0; background:#fff; border-radius:12px; padding:20px 24px; }
+  .hinweise h3 { margin:0 0 8px; } .hinweise ul { margin:0; padding-left:20px; display:grid; gap:4px; max-width:100ch; }
+</style>
+</head>
+<body>
+<div class="kopf">
+  <h1>Vier Farbwelten, vier verschiedene Looks</h1>
+  <p>Diesmal wirklich unterschiedlich: andere Farben, andere Schrift-Stimmung, anderer Aufbau. Keine Creme-Töne, keine Szene mit Katze, keine Icon-Kreise. Nur ein Bild, die App ist nicht verändert. Die Schrift ist hier eine Ersatzschrift, in der App bleibt Bricolage Grotesque.</p>
+</div>
+
+<!-- ============ 1 Poster ============ -->
+<div class="richtung">
+  <h2>1 · Signal-Orange (Plakat)</h2>
+  <p>Eine große orange Fläche mit riesiger schwarzer Schrift, der Rest bleibt weiß. Laut, klar, wie ein Plakat. Orange ist die Hauptfarbe statt nur ein Punkt.</p>
+  <div class="farben"><i style="background:#FF5B2E"></i><i style="background:#111"></i><i style="background:#fff"></i><i style="background:#F1F1EF"></i></div>
+  <div class="reihe">
+    <div class="telefon p1">
+      <div class="block"><span class="logo">Logo</span><h1>Möbel, die wirklich passen.</h1></div>
+      <div class="rest"><p>Ausmessen, Stil wählen, günstiger einrichten.</p><div class="knopf">Raum ausmessen</div>
+        <div class="zeile3"><div><b>Passt-Check</b><span>Tür, Treppe, Raum</span></div><div><b>Stil finden</b><span>Bilder wischen</span></div><div><b>6 % Cashback</b><span>auf neue Möbel</span></div></div></div>
+    </div>
+    <div class="telefon p1 st">
+      <div class="oben"><span class="marke">ReRoom</span><span>Konto</span></div>
+      <div class="band">Start-Aktion: 6 % Cashback bis 31. Januar</div>
+      <div class="raum"><div class="z"><span><small>Wohnzimmer</small><br><b class="tnum">4,00 × 5,00 m</b></span><b>5 passen</b></div>
+        <svg viewBox="0 0 300 150" style="width:100%;margin-top:6px"><rect x="90" y="6" width="120" height="140" fill="#fff" stroke="#111" stroke-width="3"/><rect x="106" y="12" width="88" height="24" fill="#111"/><rect x="112" y="56" width="76" height="56" fill="#FFD3C4" stroke="#111"/><path d="M90 146v-30a30 30 0 0 1 30 30" fill="none" stroke="#111" stroke-dasharray="3 3"/></svg>
+        <div class="summe"><span>Zusammen</span><b class="tnum">355,00 €</b></div><div class="akt"><u>3D</u><u>Teilen</u><u>Alle in den Korb</u></div></div>
+      <div class="liste"><div><div class="b"><em>Passt</em><svg width="56" height="48"><rect x="12" y="6" width="32" height="20" rx="5" fill="#B58A58"/><rect x="6" y="22" width="44" height="12" rx="4" fill="#C9A06E"/><rect x="12" y="34" width="4" height="10" fill="#8A6A44"/><rect x="40" y="34" width="4" height="10" fill="#8A6A44"/></svg></div><b class="tnum">20,00 €</b><span>Stuhl Schule</span></div><div><div class="b"><em>Passt</em><svg width="56" height="48"><rect x="8" y="3" width="40" height="40" fill="#C9A06E"/></svg></div><b class="tnum">90,00 €</b><span>Sideboard Wiese</span></div></div>
+      <div class="tab"><span>Start</span><span>Entdecken</span><span>Messen</span><span>Korb</span><span>Verkaufen</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 2 Waldgrün ============ -->
+<div class="richtung">
+  <h2>2 · Waldgrün (dunkel, ruhig)</h2>
+  <p>Ganze Fläche in tiefem Grün, helle Schrift, das Pastellgrün aus der CI als Knopf und Band. Der Grundriss ist hell auf dunkel gezeichnet. Ruhig und edel, mit dem CI-Grün als Hauptfarbe.</p>
+  <div class="farben"><i style="background:#14382A"></i><i style="background:#1E4A39"></i><i style="background:#CDEBDA"></i><i style="background:#F1F7F2"></i></div>
+  <div class="reihe">
+    <div class="telefon p2">
+      <div class="in"><span class="logo">Logo</span>
+        <svg viewBox="0 0 300 180" style="margin-top:26px;width:100%"><rect x="60" y="14" width="180" height="140" fill="none" stroke="#F1F7F2" stroke-width="2.5"/><rect x="82" y="22" width="130" height="34" fill="none" stroke="#CDEBDA" stroke-width="2"/><rect x="100" y="76" width="94" height="52" fill="#1E4A39" stroke="#CDEBDA"/><path d="M60 154v-36a36 36 0 0 1 36 36" fill="none" stroke="#CDEBDA" stroke-dasharray="3 3"/><path d="M60 170h180M60 165v10M240 165v10" stroke="#B9D3C4"/><text x="150" y="178" font-size="9" fill="#B9D3C4" text-anchor="middle" font-family="Segoe UI">4,00 m</text></svg>
+        <h1>Möbel, die wirklich passen.</h1><p class="sub">Ausmessen, Stil wählen, günstiger einrichten.</p>
+        <div class="knopf" style="margin-top:26px">Raum ausmessen</div>
+        <div class="zeile3"><div><b>Passt-Check</b><span>Tür, Treppe, Raum</span></div><div><b>Stil finden</b><span>Bilder wischen</span></div></div></div>
+    </div>
+    <div class="telefon p2 st">
+      <div class="oben"><span class="marke">ReRoom</span><span>Konto</span></div>
+      <div class="band">Start-Aktion: 6 % Cashback bis 31. Januar</div>
+      <div class="raum"><div class="z"><span><small>Wohnzimmer</small><br><b class="tnum">4,00 × 5,00 m</b></span><b style="color:#CDEBDA">5 passen</b></div>
+        <svg viewBox="0 0 300 150" style="width:100%;margin-top:6px"><rect x="90" y="6" width="120" height="140" fill="none" stroke="#F1F7F2" stroke-width="2.5"/><rect x="106" y="12" width="88" height="24" fill="none" stroke="#CDEBDA" stroke-width="1.8"/><rect x="112" y="56" width="76" height="56" fill="#14382A" stroke="#CDEBDA"/><path d="M90 146v-30a30 30 0 0 1 30 30" fill="none" stroke="#CDEBDA" stroke-dasharray="3 3"/></svg>
+        <div class="summe"><span>Zusammen</span><b class="tnum">355,00 €</b></div><div class="akt"><u>3D</u><u>Teilen</u><u>Alle in den Korb</u></div></div>
+      <div class="liste"><div><div class="b"><em>Passt</em><svg width="56" height="48"><rect x="12" y="6" width="32" height="20" rx="5" fill="#CDEBDA"/><rect x="6" y="22" width="44" height="12" rx="4" fill="#9FD3B7"/><rect x="12" y="34" width="4" height="10" fill="#B9D3C4"/><rect x="40" y="34" width="4" height="10" fill="#B9D3C4"/></svg></div><b class="tnum">20,00 €</b><span>Stuhl Schule</span></div><div><div class="b"><em>Passt</em><svg width="56" height="48"><rect x="8" y="3" width="40" height="40" fill="#9FD3B7"/></svg></div><b class="tnum">90,00 €</b><span>Sideboard Wiese</span></div></div>
+      <div class="tab"><span>Start</span><span>Entdecken</span><span>Messen</span><span>Korb</span><span>Verkaufen</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 3 Terrakotta ============ -->
+<div class="richtung">
+  <h2>3 · Terrakotta (warm, erdig)</h2>
+  <p>Helle Fläche oben, unten eine große Terrakotta-Fläche wie ein Schild, auf der der Knopf sitzt. Warm, aber ohne Creme-Gemütlichkeit und ohne Serifenschrift.</p>
+  <div class="farben"><i style="background:#B04A2E"></i><i style="background:#2A1A14"></i><i style="background:#FAF5EF"></i><i style="background:#EFE3D6"></i></div>
+  <div class="reihe">
+    <div class="telefon p3">
+      <div class="oben-t"><span class="logo">Logo</span><span style="align-self:center">Überspringen</span></div>
+      <h1>Möbel, die wirklich passen.</h1>
+      <div class="fl"><p>Ausmessen, Stil wählen, günstiger einrichten.</p><div class="knopf">Raum ausmessen</div>
+        <div class="zeile3"><div><b>Passt-Check</b><span>Tür, Treppe, Raum</span></div><div><b>Stil finden</b><span>Bilder wischen</span></div><div><b>6 % Cashback</b><span>auf neue Möbel</span></div></div></div>
+    </div>
+    <div class="telefon p3 st">
+      <div class="oben"><span class="marke">ReRoom</span><span>Konto</span></div>
+      <div class="band">Start-Aktion: 6 % Cashback bis 31. Januar</div>
+      <div class="raum"><div class="z"><span><small>Wohnzimmer</small><br><b class="tnum">4,00 × 5,00 m</b></span><b>5 passen</b></div>
+        <svg viewBox="0 0 300 150" style="width:100%;margin-top:6px"><rect x="90" y="6" width="120" height="140" fill="#FAF5EF" stroke="#2A1A14" stroke-width="3"/><rect x="106" y="12" width="88" height="24" fill="#2A1A14"/><rect x="112" y="56" width="76" height="56" fill="#EFC3B2" stroke="#2A1A14"/><path d="M90 146v-30a30 30 0 0 1 30 30" fill="none" stroke="#FFF8F2" stroke-dasharray="3 3"/></svg>
+        <div class="summe"><span>Zusammen</span><b class="tnum">355,00 €</b></div><div class="akt"><u>3D</u><u>Teilen</u><u>Alle in den Korb</u></div></div>
+      <div class="liste"><div><div class="b"><em>Passt</em><svg width="56" height="48"><rect x="12" y="6" width="32" height="20" rx="5" fill="#B04A2E"/><rect x="6" y="22" width="44" height="12" rx="4" fill="#D47A60"/><rect x="12" y="34" width="4" height="10" fill="#2A1A14"/><rect x="40" y="34" width="4" height="10" fill="#2A1A14"/></svg></div><b class="tnum">20,00 €</b><span>Stuhl Schule</span></div><div><div class="b"><em>Passt</em><svg width="56" height="48"><rect x="8" y="3" width="40" height="40" fill="#C9A06E"/></svg></div><b class="tnum">90,00 €</b><span>Sideboard Wiese</span></div></div>
+      <div class="tab"><span>Start</span><span>Entdecken</span><span>Messen</span><span>Korb</span><span>Verkaufen</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 4 Beton und Limette ============ -->
+<div class="richtung">
+  <h2>4 · Beton und Limette (technisch)</h2>
+  <p>Hellgrauer Beton, schwarze Linien, ein knalliges Limettengelb nur für den Hauptknopf. Rahmen mit harter Kante und Kleinschrift in Konsole-Optik wie bei einem Messgerät.</p>
+  <div class="farben"><i style="background:#E7E7E3"></i><i style="background:#151515"></i><i style="background:#D4F53C"></i><i style="background:#F4F4F1"></i></div>
+  <div class="reihe">
+    <div class="telefon p4">
+      <div class="in"><div style="display:flex;justify-content:space-between;align-items:center"><span class="logo">Logo</span><span class="etikett">Überspringen</span></div>
+        <span class="etikett" style="margin-top:34px">ReRoom · Raum messen</span>
+        <h1>Möbel, die wirklich passen.</h1>
+        <p style="margin:12px 0 0;color:var(--muted);font-size:1.05rem">Ausmessen, Stil wählen, günstiger einrichten.</p>
+        <div class="knopf"><span>Raum ausmessen</span><span>→</span></div>
+        <div class="raster"><div><b>Passt-Check</b><span>Tür, Treppe, Raum</span></div><div><b>Stil finden</b><span>Bilder wischen</span></div><div><b>6 %</b><span>Cashback</span></div><div><b>3D</b><span>Rundgang</span></div></div></div>
+    </div>
+    <div class="telefon p4 st">
+      <div class="oben"><span class="marke">ReRoom</span><span>Konto</span></div>
+      <div class="band">START-AKTION · 6 % CASHBACK BIS 31. JANUAR</div>
+      <div class="raum"><div class="z"><span><small>Wohnzimmer</small><br><b class="tnum">4,00 × 5,00 m</b></span><b>5 passen</b></div>
+        <svg viewBox="0 0 300 150" style="width:100%;margin-top:6px"><rect x="90" y="6" width="120" height="140" fill="#fff" stroke="#151515" stroke-width="3"/><rect x="106" y="12" width="88" height="24" fill="#D4F53C" stroke="#151515"/><rect x="112" y="56" width="76" height="56" fill="#E7E7E3" stroke="#151515"/><path d="M90 146v-30a30 30 0 0 1 30 30" fill="none" stroke="#151515" stroke-dasharray="3 3"/></svg>
+        <div class="summe"><span>Zusammen</span><b class="tnum">355,00 €</b></div><div class="akt"><u>3D</u><u>Teilen</u><u>Alle in den Korb</u></div></div>
+      <div class="liste"><div><div class="b"><em>PASST</em><svg width="56" height="48"><rect x="12" y="6" width="32" height="20" fill="#B8B8B2"/><rect x="6" y="22" width="44" height="12" fill="#8E8E88"/><rect x="12" y="34" width="4" height="10" fill="#151515"/><rect x="40" y="34" width="4" height="10" fill="#151515"/></svg></div><b class="tnum">20,00 €</b><span>Stuhl Schule</span></div><div><div class="b"><em>PASST</em><svg width="56" height="48"><rect x="8" y="3" width="40" height="40" fill="#8E8E88"/></svg></div><b class="tnum">90,00 €</b><span>Sideboard Wiese</span></div></div>
+      <div class="tab"><span>Start</span><span>Entdecken</span><span>Messen</span><span>Korb</span><span>Verkaufen</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="hinweise">
+  <h3>Wie sie sich unterscheiden</h3>
+  <ul>
+    <li><b>1 Signal-Orange:</b> große Farbfläche, riesige Schrift, sehr laut und klar. Orange wird Hauptfarbe.</li>
+    <li><b>2 Waldgrün:</b> dunkle Fläche, helle Linien, das CI-Pastellgrün als Knopf. Ruhig und edel, am nächsten an der CI.</li>
+    <li><b>3 Terrakotta:</b> warme Schild-Fläche unten, dunkelbraune Schrift. Warm ohne Creme und Serif.</li>
+    <li><b>4 Beton und Limette:</b> grau mit harten Kanten, Konsole-Schrift, ein knalliger Knopf. Technisch wie ein Messgerät, passt zum Ausmessen.</li>
+  </ul>
+  <p style="margin:12px 0 0">Gemeinsam bei allen: wenig Text, Grundriss als Hauptbild, Linien und Zahlen statt Icon-Kreise, nichts bewegt sich. Pastellgrün aus der CI ist nur in 2 die Hauptfarbe, in den anderen Richtungen würde es auf kleine Etiketten wie „Passt“ beschränkt oder entfallen.</p>
+</div>
+</body>
+</html>
