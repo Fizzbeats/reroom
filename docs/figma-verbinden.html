@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Figma verbinden Schritt für Schritt</title>
+<style>
+  :root { --bg:#F6F4EF; --ink:#1E1E1E; --muted:#5A5A5A; --rot:#E5322D; --dunkel:#242424; --d2:#333; --text:#EAEAEA; --dim:#9A9A9A; --gruen:#3FB26B; --blau:#0D99FF; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font:16px/1.5 system-ui,"Segoe UI",sans-serif; padding:28px 18px 70px; }
+  .wrap { max-width:960px; margin:0 auto; } h1 { font-size:1.9rem; margin:0 0 6px; letter-spacing:-.02em; } .lead { color:var(--muted); max-width:70ch; margin:0 0 18px; }
+  .hinweis { background:#FFF1CC; border-radius:10px; padding:10px 14px; font-size:.92rem; max-width:80ch; margin:10px 0; }
+  .karte { display:grid; grid-template-columns:1fr 1fr; gap:20px; background:#fff; border-radius:16px; padding:20px; margin:18px 0; align-items:center; box-shadow:0 1px 3px rgb(0 0 0 / .08); }
+  .nr { display:inline-grid; place-items:center; width:34px; height:34px; border-radius:50%; background:var(--rot); color:#fff; font-weight:800; margin-right:10px; flex:none; }
+  h3 { display:flex; align-items:center; margin:0 0 8px; font-size:1.15rem; } p { margin:0 0 8px; } .tipp { color:var(--muted); font-size:.9rem; }
+  b.k { background:#EEE; border-radius:5px; padding:1px 7px; font-weight:600; font-size:.9em; border:1px solid #D5D5D5; }
+  .fenster { background:var(--dunkel); border-radius:10px; color:var(--text); font:13px/1.4 ui-monospace,Consolas,monospace; padding:14px; position:relative; min-height:150px; }
+  .zeile { padding:6px 10px; border-radius:5px; display:flex; justify-content:space-between; gap:10px; } .zeile.an { background:#3A3A3A; } .ok { color:var(--gruen); } .warn { color:#E8B84C; } .dim { color:var(--dim); }
+  .mark { outline:3px solid var(--rot); outline-offset:3px; border-radius:6px; }
+  .browser { background:#fff; color:#222; border-radius:10px; font:13px system-ui; overflow:hidden; box-shadow:0 0 0 1px #ccc; } .browser .leiste { background:#E8E8E8; padding:8px 12px; display:flex; gap:8px; align-items:center; } .browser .url { background:#fff; border-radius:12px; padding:3px 12px; flex:1; color:#555; } .browser .inhalt { padding:18px; display:grid; gap:10px; justify-items:center; }
+  .btn { background:var(--blau); color:#fff; border-radius:6px; padding:8px 18px; font-weight:700; } .btn.grau { background:#eee; color:#222; }
+  .feld { border:1px solid #bbb; border-radius:6px; padding:7px 10px; width:220px; color:#888; }
+  @media (max-width:760px) { .karte { grid-template-columns:1fr; } }
+</style>
+</head>
+<body><div class="wrap">
+  <h1>Figma verbinden: Schritt für Schritt</h1>
+  <p class="lead">So meldest du Figma bei Claude an oder wechselst das Konto, zum Beispiel auf das Konto mit „Full seat“. Die Bilder sind gezeichnete Schemata, keine echten Screenshots. Namen können je nach Version leicht anders heißen.</p>
+  <p class="hinweis"><b>Stand jetzt:</b> Figma ist hier mit dem Konto <b>Felix</b> (Tarif Starter) verbunden. Genau dieses Konto hat das Aufruflimit erreicht. Für den kompletten Bau brauchst du ein Konto mit größerem Limit.</p>
+
+  <div class="karte"><div><h3><span class="nr">1</span>Verbindungen öffnen</h3><p>Hier im Chat <b class="k">/mcp</b> eintippen und Enter drücken. Es öffnet sich eine Liste aller Verbindungen.</p><p class="tipp">Geht <b class="k">/mcp</b> in der Desktop-App nicht, öffnest du ein normales Terminal, startest dort <b class="k">claude</b> und tippst es dort ein. Du findest die Verbindungen auch über das <b class="k">+</b> im Eingabefeld unter „Connectors“.</p></div>
+    <div class="fenster"><div class="dim">&gt; <span class="mark" style="padding:0 4px;color:#fff">/mcp</span></div><div style="margin-top:12px" class="dim">Verbindungen</div>
+      <div class="zeile an"><span>plugin:figma:figma</span><span class="ok">verbunden</span></div><div class="zeile"><span>Claude Docs</span><span class="ok">verbunden</span></div><div class="zeile"><span>scheduled-tasks</span><span class="ok">verbunden</span></div></div></div>
+
+  <div class="karte"><div><h3><span class="nr">2</span>Figma auswählen und neu anmelden</h3><p>Mit den Pfeiltasten auf <b class="k">plugin:figma:figma</b> gehen und Enter. Dort wählst du <b class="k">Clear authentication</b> (Anmeldung löschen) und danach <b class="k">Authenticate</b> (Anmelden).</p><p class="tipp">Das Löschen brauchst du nur, wenn schon ein anderes Konto verbunden ist, so wie jetzt.</p></div>
+    <div class="fenster"><div class="dim">plugin:figma:figma</div><div style="margin-top:10px">Status: <span class="ok">verbunden</span> (Felix)</div>
+      <div class="zeile"><span>View tools</span></div><div class="zeile"><span>Reconnect</span></div><div class="zeile an mark"><span>Clear authentication</span></div><div class="zeile"><span>Authenticate</span></div></div></div>
+
+  <div class="karte"><div><h3><span class="nr">3</span>Im Browser mit dem richtigen Konto anmelden</h3><p>Es öffnet sich eine Figma-Seite im Browser. <b>Wichtig:</b> Figma nimmt das Konto, mit dem dein Browser schon angemeldet ist.</p><ul style="margin:6px 0 0;padding-left:20px"><li>Du bist im Browser noch bei Felix angemeldet? Dann erst bei Figma <b class="k">abmelden</b>, oder die Adresse in ein <b class="k">privates Fenster</b> kopieren.</li><li>Dann mit dem Konto anmelden, das den größeren Tarif hat.</li></ul><p class="tipp">E-Mail, Passwort und Code gibst du nur auf dieser Figma-Seite ein, nie im Chat.</p></div>
+    <div class="browser"><div class="leiste"><span>●●●</span><span class="url">figma.com/oauth …</span></div><div class="inhalt"><b>Bei Figma anmelden</b><div class="feld mark">E-Mail</div><div class="feld">Passwort</div><span class="btn">Anmelden</span></div></div></div>
+
+  <div class="karte"><div><h3><span class="nr">4</span>Zugriff erlauben und Team wählen</h3><p>Figma fragt, ob Claude auf deine Dateien zugreifen darf. Wähle das <b class="k">Team</b> mit dem größeren Tarif aus und klicke auf <b class="k">Zulassen</b>.</p><p class="tipp">Hat dich deine Kollegin nur eingeladen, wählst du ihr Team. Dort muss dein Platz <b>Full seat</b> sein.</p></div>
+    <div class="browser"><div class="leiste"><span>●●●</span><span class="url">figma.com/oauth/authorize …</span></div><div class="inhalt"><b>Claude möchte auf Figma zugreifen</b><div class="feld">Team: Arbeit (Full seat) ▾</div><span><span class="btn grau">Ablehnen</span>&nbsp; <span class="btn mark">Zulassen</span></span></div></div></div>
+
+  <div class="karte"><div><h3><span class="nr">5</span>Zurück zu Claude, „verbunden“ schreiben</h3><p>Schreib mir im Chat kurz <b class="k">verbunden</b>. Ich prüfe dann selbst, welches Konto und welcher Tarif aktiv sind, und starte erst, wenn die Aufrufe angenommen werden.</p></div>
+    <div class="fenster"><div class="dim">Du:</div><div class="mark" style="display:inline-block;padding:2px 8px">verbunden</div><div class="dim" style="margin-top:12px">Claude prüft:</div><div class="ok">Konto: (neues Konto), Tarif: Full seat ✓</div></div></div>
+
+  <h2 style="margin-top:40px">Wenn etwas nicht klappt</h2>
+  <div class="karte" style="grid-template-columns:1fr"><ul style="margin:0;padding-left:20px">
+    <li><b>Es meldet wieder Felix an:</b> Der Browser war noch bei Figma angemeldet. Abmelden oder privates Fenster nehmen, dann Schritt 2 wiederholen.</li>
+    <li><b>Der Status bleibt „needs auth“:</b> Nochmal <b class="k">Authenticate</b> wählen und die Seite im Browser bis zum Ende durchklicken.</li>
+    <li><b>Mein Team fehlt in der Liste:</b> Du bist dort nur Betrachter. Die Kollegin muss dir „Kann bearbeiten“ und einen Full seat geben.</li>
+  </ul></div>
+</div></body></html>
