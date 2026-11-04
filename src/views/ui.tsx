@@ -215,8 +215,8 @@ export function Grundriss({ raum, platziert = [], hervorheben, weg, onMoebel, on
       <defs>
         <marker id="pfeil" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0 10 5 0 10z" fill="var(--orange)" /></marker>
       </defs>
-      <rect x={x0} y={y0} width={w} height={h} fill="rgb(255 255 255 / .04)" stroke="#fff" strokeWidth="3.5" />
-      <rect x={tx} y={ty - 2} width={tuer} height="5" fill="var(--raumkarte)" />
+      <rect x={x0} y={y0} width={w} height={h} fill="var(--hintergrund)" stroke="var(--text)" strokeWidth="3.5" />
+      <rect x={tx} y={ty - 2} width={tuer} height="5" fill="var(--pastell)" />
       <path d={`M${tx} ${ty} A${tuer} ${tuer} 0 0 1 ${tx + tuer} ${ty - tuer}`} fill="none" stroke="var(--orange)" strokeWidth="1.6" strokeDasharray="3 3" />
       <line x1={tx} y1={ty} x2={tx} y2={ty - tuer} stroke="var(--orange)" strokeWidth="2.5" />
 

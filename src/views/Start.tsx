@@ -6,8 +6,8 @@ import { pruefeMoebel } from "../logic/passtCheck";
 import { einrichten, kannStehen, type FestePlatz, type Platzierung } from "../logic/einrichten";
 import { zimmerSet } from "../logic/stilAuswertung";
 import { alsCent, euro } from "../logic/preisRechner";
-import { aktionText } from "../logic/aktion";
-import { START_MESSEN_TEXT, SLOGAN, DEMO_HINWEIS } from "../logic/texte";
+import { aktionKurz } from "../logic/aktion";
+import { START_MESSEN_TEXT, DEMO_HINWEIS } from "../logic/texte";
 import { Grundriss, Icon, ProduktKarte } from "./ui";
 
 export const STIL_INFO: Record<Stil, { name: string; farbe: string }> = {
@@ -75,8 +75,7 @@ export default function Start(props: Props) {
           <button className="rund" onClick={onKonto} aria-label="Dein Konto und Preise"><Icon name="person" groesse={20} /></button>
         </span>
       </div>
-      <p className="slogan" style={{ margin: "-6px 0 14px" }}>{SLOGAN}</p>
-      {aktionText() && <button className="aktion-banner" style={{ width: "100%", border: 0, textAlign: "left", margin: "0 0 14px" }} onClick={onKonto}>{aktionText()}</button>}
+      {aktionKurz() && <button className="aktion-banner start-aktion" onClick={onKonto}>Start-Aktion: {aktionKurz()}</button>}
 
       {raum && plan ? (
         <div className="raumkarte">
@@ -116,7 +115,7 @@ export default function Start(props: Props) {
               </span>
             </div>
           )}
-          <p className="plan-tipp" role="status">{platzHinweis || "Ziehe ein Möbel mit dem Finger, tippe darauf, um es anzusehen."}</p>
+          <p className="plan-tipp" role="status">{platzHinweis || "Möbel ziehen zum Verschieben, tippen zum Ansehen."}</p>
           {Object.keys(feste).length > 0 && <button className="chip hell" onClick={() => { setPlatzHinweis(""); onFeste({}); }}>Anordnung zurücksetzen</button>}
           {alleRaeume.length > 1 && (
             <div className="raumwahl" aria-label="Raum wechseln">

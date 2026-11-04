@@ -1,7 +1,7 @@
 /* Verkaufen */
-.ablauf { list-style: none; margin: 16px 0 0; padding: 0; display: grid; gap: 8px; }
-.ablauf li { display: flex; gap: 12px; align-items: flex-start; background: var(--karte); border-radius: 14px; padding: 12px 14px; }
-.ablauf .nr { width: 24px; height: 24px; border-radius: 50%; background: var(--primaer); color: var(--auf-primaer); display: grid; place-items: center; font: 800 .78rem var(--titel); flex: none; margin-top: 1px; }
+.ablauf { list-style: none; margin: var(--abstand-s) 0 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: var(--abstand-s); }
+.ablauf li { display: grid; gap: 8px; align-content: start; background: var(--pastell); border-radius: var(--radius); padding: 16px; }
+.ablauf .nr { width: 32px; height: 32px; border-radius: 50%; background: var(--pastell-stark); color: var(--auf-pastell); display: grid; place-items: center; font: 800 .9rem var(--titel); flex: none; }
 .ablauf small { display: block; color: var(--text-gedaempft); font-size: .82rem; }
 
 .inserat { background: var(--karte); border-radius: var(--radius); padding: 14px; margin: 12px 0; display: grid; gap: 10px; }

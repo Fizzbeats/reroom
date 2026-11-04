@@ -26,6 +26,7 @@
   --abstand-m: 24px;
   --abstand-l: 40px;
   --abstand-xl: 64px;
+  --seite-rand: 24px;
   /* Platz für das Logo: feste Größe, damit es später einfach getauscht werden kann */
   --logo-breite: 132px;
   --logo-hoehe: 40px;

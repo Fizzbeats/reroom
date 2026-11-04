@@ -82,7 +82,7 @@ export default function Konto({ konto, katalog, onKonto, onSchliessen }: Props) 
           <span>{gueltigBisText(konto, jetzt)}</span>
         </div>
         {aktion && <p className="aktion-banner">{aktion}</p>}
-        <p className="gedaempft" style={{ fontSize: ".84rem", margin: "4px 0 0" }}>In dieser Demo wird nichts bezahlt. „Freischalten“ zeigt, wie es später aussieht.</p>
+        <p className="gedaempft" style={{ fontSize: ".84rem", margin: "4px 0 0" }}>Freischalten ist eine Demo, es wird nichts bezahlt.</p>
 
         <label className="profil-feld">
           Dein Name (Demo-Profil, bleibt auf diesem Gerät)

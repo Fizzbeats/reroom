@@ -1,10 +1,11 @@
 /* Konto und Preise */
 .kopf-rechts { display: flex; gap: 8px; align-items: center; }
-.konto-karte { background: var(--raumkarte); color: #fff; border-radius: 22px; padding: 18px 20px; margin-top: 16px; display: grid; gap: 2px; }
-.konto-karte small { color: #B5B5B5; }
+.konto-karte { background: var(--pastell); color: var(--text); border-radius: 22px; padding: 22px 24px; margin-top: var(--abstand-m); display: grid; gap: 2px; }
+.konto-karte small { color: var(--text-gedaempft); }
 .konto-karte strong { font: 800 1.6rem var(--titel); letter-spacing: -.02em; }
-.konto-karte span { color: #D8D8D8; font-size: .9rem; }
-.aktion-banner { margin: 10px 0 0; background: var(--akzent); color: var(--auf-akzent); border-radius: 12px; padding: 9px 14px; font: 700 .84rem var(--schrift); }
+.konto-karte span { color: var(--text-gedaempft); font-size: .9rem; }
+.aktion-banner { margin: var(--abstand-s) 0 0; background: var(--pastell-stark); color: var(--auf-pastell); border-radius: 12px; padding: 10px 16px; font: 700 .86rem var(--schrift); }
+.start-aktion { display: block; width: 100%; border: 0; text-align: left; margin: 0 0 var(--abstand-s); cursor: pointer; }
 .tarif-karte { border: 1.5px solid var(--linie); border-radius: var(--radius); padding: 16px; margin: 12px 0; display: grid; gap: 8px; }
 .tarif-karte.aktiv { border-color: var(--gruen); background: var(--gruen-bg); }
 .tarif-preis { margin: 0; font: 700 1rem var(--titel); }

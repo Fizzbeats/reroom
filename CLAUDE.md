@@ -41,6 +41,8 @@
 > - Stil-Finder zum Wischen (`src/views/StilFinder.tsx`, Karten in `src/data/inspo.ts`, Auswertung und Zimmer-Set in `src/logic/stilAuswertung.ts`) mit Budget fürs ganze Zimmer.
 > - Teppiche werden im Passt-Check für Tür und Treppe gerollt gerechnet (`pruefeMoebel`).
 >
+> **Hauptapp im gleichen Stil (umgesetzt):** Raumkarte, Konto-Karte, Verkaufen-Ablauf, Chips und Start-Aktion nutzen Pastellgrün statt Schwarz bzw. Orange (Grundriss mit dunklen Linien auf hellem Boden). Abstände und Seitenrand über `--abstand-*` und `--seite-rand`. Startseite ohne Slogan, Aktion kurz (`aktionKurz`), Verkaufen als vier kurze Kacheln.
+>
 > **Kamera im Entwurf (umgesetzt):** Eingebaute Kamera `src/views/FotoAufnahme.tsx` (`getUserMedia`, Dienst `src/services/kamera.ts`, Fehlertexte `src/logic/kameraText.ts`) mit Rahmen, Auslöser, Kamerawechsel und Galerie als Ausweg. Genutzt beim Inserat (mehrere Fotos), beim Foto-Messen mit Bankkarte und für eigene Inspo-Bilder.
 >
 > **Tarife und Konto (umgesetzt, Businessplan):** `src/logic/tarif.ts` (Free 1 Raum und 5 Chatfragen/Tag, Umzugs-Pass 7,99 € einmalig 3 Monate, Premium 24,99 €/Jahr mit Preisalarm, Business Starter/Pro für Makler), Seite `src/views/Konto.tsx` über den Personen-Knopf auf der Startseite. „Freischalten“ ist eine Demo ohne Zahlung. Empfehlungsprogramm: Freund einladen gibt den Umzugs-Pass (Demo-Knopf „Ein Freund tritt bei“). Free = 1 Raum: Scannen zeigt eine Limit-Karte. Start-Aktion 6 % Cashback bis 31.1.2027, danach 4 % (`src/logic/aktion.ts`, überall dynamisch). Transport ab 40 € im Warenkorb wählbar (`TRANSPORT_CENT`). Preisalarm-Chip auf der Detailseite (nur Premium, Benachrichtigungen gibt es noch nicht).

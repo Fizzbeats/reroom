@@ -216,3 +216,12 @@ describe("Möbel mit dem Finger verschieben", () => {
     expect(kannStehen(wohn, r.platziert, sofa, { x: p.x + 5, y: p.y, w: p.w, h: p.h })).toBe(true);
   });
 });
+
+import { aktionKurz } from "./aktion";
+
+describe("Aktion kurz", () => {
+  it("nennt Prozent und letzten Tag, nur während der Aktion", () => {
+    expect(aktionKurz(new Date(2026, 10, 5))).toBe("6\u00a0% Cashback bis 31. Januar");
+    expect(aktionKurz(new Date(2027, 1, 2))).toBeUndefined();
+  });
+});

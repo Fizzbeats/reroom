@@ -18,11 +18,12 @@ interface Props {
   onOeffnen: (id: string) => void;
 }
 
+// Kurz und bildhaft: der Weg vom Einstellen bis zum Geld
 const SCHRITTE = [
-  ["Einstellen", "Fotos und Maße, kostenlos"],
-  ["Bezahlen", "Der Käufer zahlt in der App. Das Geld hält ein Zahlungsdienstleister."],
-  ["Abholen", "Der Käufer holt ab oder bucht einen Transport."],
-  ["Übergabe", "Er scannt deinen QR-Code. Erst dann bekommst du dein Geld."],
+  ["Einstellen", "Fotos und Maße"],
+  ["Bezahlen", "Geld bleibt geschützt"],
+  ["Abholen", "oder Transport buchen"],
+  ["Übergabe", "QR-Code scannen"],
 ];
 
 /** Verkaufen: Möbel einstellen, Status verfolgen, per QR-Code übergeben, Erlös auszahlen oder als Guthaben nutzen. */
@@ -95,12 +96,12 @@ export default function Verkaufen({ inserate, onInserate, guthabenCent: guthaben
         <h1 style={{ margin: 0 }}>Verkaufen</h1>
         {guthaben > 0 && <span className="chip" title="Wird im Warenkorb abgezogen"><Icon name="tasche" groesse={14} /> Guthaben {euro(guthaben)}</span>}
       </div>
-      <p className="gedaempft" style={{ marginTop: 0 }}>Alte Möbel verkaufen und den Erlös für neue nutzen.</p>
+      <p className="gedaempft" style={{ marginTop: 0 }}>Alte Möbel verkaufen, Erlös für Neues nutzen.</p>
 
       <button className="knopf breit" onClick={() => setAssistent(true)}><Icon name="plus" groesse={20} /> Möbel einstellen</button>
 
-      <h2 style={{ marginBottom: 4 }}>So läuft Verkaufen</h2>
-      <p className="gedaempft" style={{ margin: "0 0 6px", fontSize: ".84rem" }}>In dieser Demo gibt es keine echte Zahlung. Die Schritte zeigen, wie es später abläuft.</p>
+      <h2 style={{ marginBottom: 4 }}>So läuft es</h2>
+      <p className="gedaempft" style={{ margin: "0 0 var(--abstand-s)", fontSize: ".84rem" }}>Bezahlen ist hier eine Demo.</p>
       <ol className="ablauf" aria-label="So funktioniert Verkaufen">
         {SCHRITTE.map(([titel, text], i) => (
           <li key={titel}><span className="nr" aria-hidden="true">{i + 1}</span><span><strong>{titel}</strong><small>{text}</small></span></li>

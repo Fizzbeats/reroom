@@ -17,6 +17,14 @@ export function cashbackProzent(jetzt: Date = new Date()): number {
 
 const DATUM = new Intl.DateTimeFormat("de-DE", { day: "numeric", month: "long", year: "numeric" });
 
+/** Kurzfassung für schmale Bildschirme: „6 % Cashback bis 31. Januar“ (ohne Jahr). */
+export function aktionKurz(jetzt: Date = new Date()): string | undefined {
+  if (!aktionAktiv(jetzt)) return undefined;
+  const letzterTag = new Date(AKTION_BIS.getTime() - 24 * 60 * 60 * 1000);
+  const tag = new Intl.DateTimeFormat("de-DE", { day: "numeric", month: "long" }).format(letzterTag);
+  return `${AKTION_PROZENT}\u00a0% Cashback bis ${tag}`;
+}
+
 export function aktionText(jetzt: Date = new Date()): string | undefined {
   if (!aktionAktiv(jetzt)) return undefined;
   const letzterTag = new Date(AKTION_BIS.getTime() - 24 * 60 * 60 * 1000);
