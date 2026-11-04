@@ -38,6 +38,14 @@ export function Icon({ name, groesse = 22, gefuellt = false }: { name: IconName;
   );
 }
 
+/**
+ * Platz für das Logo mit fester Größe (--logo-breite × --logo-hoehe in tokens.css).
+ * Zum Austauschen den Inhalt durch <img src="/reroom/logo.svg" alt="ReRoom" /> ersetzen, Größe und Platz bleiben gleich.
+ */
+export function Logo() {
+  return <span className="logo-platz" role="img" aria-label="Platzhalter für das Logo">Logo</span>;
+}
+
 // ---------- Möbel-Zeichnungen ----------
 
 export const FARBE: Record<string, string> = {

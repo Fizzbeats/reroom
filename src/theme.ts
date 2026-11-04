@@ -13,6 +13,9 @@ export const FARBEN = {
     ampelGruen: "#12924F",
     ampelGelb: "#A87400",
     ampelRot: "#D63A2A",
+    pastell: "#E3F3EA",
+    pastellStark: "#CDEBDA",
+    aufPastell: "#0B5A38",
   },
   dunkel: {
     hintergrund: "#0E0E0E",
@@ -26,6 +29,9 @@ export const FARBEN = {
     ampelGruen: "#3FCB7E",
     ampelGelb: "#F2C94C",
     ampelRot: "#FF6B5B",
+    pastell: "#12301F",
+    pastellStark: "#1C4A31",
+    aufPastell: "#A8E8C8",
   },
 } as const;
 

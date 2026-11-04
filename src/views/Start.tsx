@@ -131,7 +131,7 @@ export default function Start(props: Props) {
           <h3>Passt das Sofa durch die Tür?</h3>
           <p>{START_MESSEN_TEXT}</p>
           <button className="knopf breit" onClick={onMessen}><Icon name="kamera" /> Raum ausmessen</button>
-          <button className="link" style={{ color: "#C8C8C8" }} onClick={() => onWaehlen(BEISPIELRAEUME[2]!.id)}>
+          <button className="link" onClick={() => onWaehlen(BEISPIELRAEUME[2]!.id)}>
             Erst mit einem Beispielraum ausprobieren
           </button>
         </div>

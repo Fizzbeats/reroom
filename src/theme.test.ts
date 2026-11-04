@@ -33,6 +33,17 @@ describe("Farben", () => {
     expect(kontrast(f.aufPrimaer, f.primaer)).toBeGreaterThanOrEqual(4.5);
   });
 
+  it.each(["hell", "dunkel"] as const)("Text auf Pastellgrün erreicht WCAG AA (%s)", (modus) => {
+    const f = FARBEN[modus];
+    expect(kontrast(f.aufPastell, f.pastell)).toBeGreaterThanOrEqual(4.5);
+    expect(kontrast(f.aufPastell, f.pastellStark)).toBeGreaterThanOrEqual(4.5);
+    expect(kontrast(f.text, f.pastell)).toBeGreaterThanOrEqual(4.5);
+  });
+
+  it("Pastellgrün ist der grüne Pastellton aus der CI (gruen-bg)", () => {
+    expect(FARBEN.hell.pastell).toBe("#E3F3EA");
+  });
+
   it("Ampelfarben sind auf der Karte erkennbar (Kontrast ab 3)", () => {
     for (const f of [FARBEN.hell, FARBEN.dunkel]) {
       for (const a of [f.ampelGruen, f.ampelGelb, f.ampelRot]) {

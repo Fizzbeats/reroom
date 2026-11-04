@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { chatBegruessung, DEMO_HINWEIS, messArt, SLOGAN, START_MESSEN_TEXT, willkommenMessText } from "./texte";
+import { chatBegruessung, DEMO_HINWEIS, messArt, messKachel, SLOGAN, START_MESSEN_TEXT, willkommenMessText } from "./texte";
 
 describe("Slogan und Hinweise", () => {
   it("der Slogan lautet wie im Businessplan", () => {
@@ -76,6 +76,21 @@ describe("Chat-Begrüßung", () => {
     for (const t of [chatBegruessung(), chatBegruessung("Wohnzimmer")]) {
       expect(t).toContain("ohne KI");
       expect(t).toContain("Möbelart");
+    }
+  });
+});
+
+describe("Mess-Kachel im Einstieg", () => {
+  it("verspricht die Kamera nur dort, wo sie misst", () => {
+    expect(messKachel("ar").zusatz).toMatch(/Kamera/);
+    expect(messKachel("apple").zusatz).not.toMatch(/Kamera/);
+    expect(messKachel("sonst").zusatz).not.toMatch(/Kamera/);
+  });
+  it("Kacheltexte bleiben kurz (höchstens 4 Wörter je Zeile)", () => {
+    for (const art of ["ar", "apple", "sonst"] as const) {
+      const k = messKachel(art);
+      expect(k.titel.split(" ").length).toBeLessThanOrEqual(4);
+      expect(k.zusatz.split(" ").length).toBeLessThanOrEqual(4);
     }
   });
 });

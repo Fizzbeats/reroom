@@ -1,11 +1,9 @@
 import { useEffect, useState } from "react";
-import { INSPO_KARTEN } from "../data/inspo";
 import { arPruefen } from "../services/arSitzung";
 import { istApple } from "../logic/arStatus";
 import { cashbackProzent } from "../logic/aktion";
-import { DEMO_HINWEIS, messArt, SLOGAN, willkommenMessText, type MessArt } from "../logic/texte";
-import { Moodboard } from "./Moodboard";
-import { FARBE, Icon, MoebelZeichnung } from "./ui";
+import { DEMO_HINWEIS, messArt, messKachel, SLOGAN, type MessArt } from "../logic/texte";
+import { FARBE, Icon, Logo, MoebelZeichnung, type IconName } from "./ui";
 
 interface Props {
   onMessen: () => void;
@@ -13,108 +11,70 @@ interface Props {
   onStoebern: () => void;
 }
 
-// Bild 1: Handy misst den Raum
-function BildMessen() {
+/** Kleine Szene für den Einstieg: Sofa mit Maßlinie, ohne Text. */
+function Szene() {
   return (
-    <svg viewBox="0 0 340 300" role="img" aria-label="Ein Handy misst den Raum mit der Kamera">
-      <rect width="340" height="300" rx="24" fill="var(--karte)" />
-      <path d="M20 210 120 150h200v150H20z" fill="#E2DCD2" /><path d="M120 20v130M120 150 20 210" stroke="#CFC8BC" strokeWidth="2" />
-      <rect x="200" y="60" width="70" height="90" fill="#E8E4DC" stroke="#CFC8BC" strokeWidth="2" />
-      <g transform="translate(150 110) rotate(-8)">
-        <rect width="120" height="200" rx="18" fill="#111" /><rect x="6" y="10" width="108" height="180" rx="12" fill="#3A3A3A" />
-        <path d="M20 150 60 120h50v60H20z" fill="#5A544B" /><ellipse cx="62" cy="140" rx="14" ry="5" fill="none" stroke="#fff" strokeWidth="2.5" />
-        <circle cx="30" cy="160" r="4" fill="#FF5B2E" /><circle cx="96" cy="128" r="4" fill="#FF5B2E" />
-        <line x1="30" y1="160" x2="96" y2="128" stroke="#FF5B2E" strokeWidth="2" />
-        <rect x="34" y="96" width="54" height="20" rx="10" fill="#fff" />
-        <text x="61" y="106.5" textAnchor="middle" dominantBaseline="middle" className="bild-text">412 cm</text>
-      </g>
-      <path d="M40 60h24M40 60v24M300 260h-24M300 260v-24" stroke="#FF5B2E" strokeWidth="4" strokeLinecap="round" />
-    </svg>
-  );
-}
-
-// Bild 3: Preisschild mit Cashback
-function BildSparen({ prozent }: { prozent: number }) {
-  return (
-    <svg viewBox="0 0 340 300" role="img" aria-label={`Sofa mit Preisschild: 800 Euro, mit ReRoom ${Math.round(800 * (100 - prozent)) / 100} Euro`}>
-      <rect width="340" height="300" rx="24" fill="var(--karte)" />
-      <g transform="translate(40 40) scale(1.3)"><MoebelZeichnung art="sofa" c={FARBE.terrakotta!} /></g>
-      <g transform="translate(196 28) rotate(8)">
-        <rect width="120" height="92" rx="14" fill="#fff" stroke="#111" strokeWidth="2" />
-        <circle cx="18" cy="18" r="6" fill="none" stroke="#111" strokeWidth="2" />
-        <text x="60" y="40" textAnchor="middle" className="bild-preis alt">800 €</text>
-        <text x="60" y="72" textAnchor="middle" className="bild-preis">{Math.round(800 * (100 - prozent)) / 100} €</text>
-      </g>
-      <g transform="translate(36 214)">
-        <rect width="150" height="44" rx="22" fill="#111" />
-        <text x="75" y="23" textAnchor="middle" dominantBaseline="middle" className="bild-text hell">− {prozent} % Cashback</text>
+    <svg className="einstieg-szene" viewBox="0 0 320 200" aria-hidden="true">
+      <defs><clipPath id="einstieg-rahmen"><rect width="320" height="200" rx="28" /></clipPath></defs>
+      <g clipPath="url(#einstieg-rahmen)">
+        <rect width="320" height="200" fill="var(--pastell)" />
+        <ellipse cx="160" cy="176" rx="120" ry="10" fill="var(--pastell-stark)" />
+        <g transform="translate(48 56) scale(1.1)"><MoebelZeichnung art="sofa" c={FARBE.grau!} /></g>
+        <g transform="translate(232 92) scale(.5)"><MoebelZeichnung art="pflanze" c={FARBE.holz!} /></g>
+        <path d="M56 36h208M56 30v12M264 30v12" stroke="var(--orange)" strokeWidth="3" strokeLinecap="round" fill="none" />
       </g>
     </svg>
   );
 }
 
-const baueSeiten = (prozent: number) => [
-  {
-    bild: <BildMessen />,
-    ...willkommenMessText("sonst"), // wird je Gerät ersetzt, siehe unten
-  },
-  {
-    bild: <div className="willkommen-moodboard"><Moodboard karte={INSPO_KARTEN[0]!} /></div>,
-    titel: "Finde deinen Stil",
-    text: "Wisch durch Einrichtungsbilder. ReRoom erkennt deinen Stil und stellt ein Set fürs ganze Zimmer zusammen, passend zu deinem Budget.",
-  },
-  {
-    bild: <BildSparen prozent={prozent} />,
-    titel: `Neu und gebraucht. Mit ${prozent}\u00a0% zurück.`,
-    text: `Neue Möbel von Partner-Shops und gebrauchte aus deiner Nähe in Chemnitz. Bei neuen Möbeln bekommst du ${prozent}\u00a0% zurück.`,
-  },
-];
-
-/** Einstieg beim ersten Besuch: drei Karten, jederzeit überspringbar. */
+/** Einstieg beim ersten Besuch: am Handy erst nur Überschrift, ein Satz und ein Knopf, die Erklärung darunter als Kacheln. */
 export default function Willkommen({ onMessen, onStilFinder, onStoebern }: Props) {
-  const [seite, setSeite] = useState(0);
   const [art, setArt] = useState<MessArt>(messArt(false, istApple(navigator.userAgent)));
   useEffect(() => {
     arPruefen().then((status) => setArt(messArt(status.ok, istApple(navigator.userAgent))));
   }, []);
-  // Die Mess-Karte verspricht die Kamera nur, wo sie wirklich misst
-  const seiten = baueSeiten(cashbackProzent()).map((x, i) => (i === 0 ? { ...x, ...willkommenMessText(art) } : x));
-  const s = seiten[seite]!;
-  const letzte = seite === seiten.length - 1;
+
+  const prozent = cashbackProzent();
+  const messen = messKachel(art);
+  const kacheln: { icon: IconName; titel: string; zusatz: string }[] = [
+    { icon: "kamera", ...messen },
+    { icon: "raum", titel: "Passt-Check", zusatz: "Tür, Treppe, Raum" },
+    { icon: "herz", titel: "Stil finden", zusatz: "Bilder wischen" },
+    { icon: "etikett", titel: "Neu und gebraucht", zusatz: "in einer App" },
+    { icon: "tasche", titel: `${prozent} % Cashback`, zusatz: "auf neue Möbel" },
+    { icon: "wuerfel", titel: "3D-Rundgang", zusatz: "dein Zimmer fertig" },
+  ];
 
   return (
     <div className="vollbild willkommen" role="dialog" aria-modal="true" aria-label="Willkommen bei ReRoom">
-      <div className="vollbild-innen">
-        <div className="reihe">
-          <p className="marke" style={{ fontSize: "1.3rem" }}>ReRoom<i /></p>
+      <div className="vollbild-innen einstieg">
+        <header className="einstieg-kopf">
+          <Logo />
           <button className="link" onClick={onStoebern}>Überspringen</button>
-        </div>
-        <p className="slogan" style={{ margin: "2px 0 0" }}>{SLOGAN}</p>
-        <div className="willkommen-bild">{s.bild}</div>
-        <div className="seiten" aria-label={`Seite ${seite + 1} von ${seiten.length}`}>
-          {seiten.map((_, i) => (
-            <button key={i} className={i === seite ? "an" : ""} onClick={() => setSeite(i)} aria-label={`Seite ${i + 1}`} />
-          ))}
-        </div>
-        <h1 className="willkommen-titel">{s.titel}</h1>
-        <p className="gedaempft willkommen-text">{s.text}</p>
-        {letzte && <p className="gedaempft" style={{ fontSize: ".8rem", margin: "8px 0 0" }}>{DEMO_HINWEIS}</p>}
+        </header>
 
-        <div className="willkommen-knoepfe">
-          {seite === 0 && <button className="knopf breit" onClick={() => setSeite(1)}>Weiter</button>}
-          {seite === 1 && (
-            <>
-              <button className="knopf breit" onClick={() => setSeite(2)}>Weiter</button>
-              <button className="knopf breit zweit" onClick={onStilFinder}>Stil-Finder ausprobieren</button>
-            </>
-          )}
-          {letzte && (
-            <>
-              <button className="knopf breit" onClick={onMessen}><Icon name="kamera" /> Raum ausmessen</button>
-              <button className="knopf breit zweit" onClick={onStoebern}>Erst stöbern</button>
-            </>
-          )}
-        </div>
+        <section className="einstieg-hero" aria-label="Start">
+          <Szene />
+          <h1 className="einstieg-titel">Möbel, die wirklich passen.</h1>
+          <p className="einstieg-unter">{SLOGAN}</p>
+          <button className="knopf breit pastell" onClick={onMessen}><Icon name="kamera" /> Raum ausmessen</button>
+          <button className="link einstieg-zweit" onClick={onStoebern}>Erst stöbern</button>
+        </section>
+
+        <section className="einstieg-mehr" aria-label="Das kann ReRoom">
+          <h2>Das kann ReRoom</h2>
+          <ul className="kacheln">
+            {kacheln.map((k) => (
+              <li key={k.titel} className="kachel">
+                <span className="kachel-icon"><Icon name={k.icon} groesse={24} /></span>
+                <strong>{k.titel}</strong>
+                <span>{k.zusatz}</span>
+              </li>
+            ))}
+          </ul>
+          <button className="knopf breit zweit" onClick={onStilFinder}>Stil-Finder ausprobieren</button>
+          <p className="einstieg-hinweis">{DEMO_HINWEIS}</p>
+        </section>
       </div>
     </div>
   );

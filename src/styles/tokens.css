@@ -11,6 +11,9 @@
   --ampel-gruen: #12924F;
   --ampel-gelb: #A87400;
   --ampel-rot: #D63A2A;
+  --pastell: #E3F3EA;
+  --pastell-stark: #CDEBDA;
+  --auf-pastell: #0B5A38;
   --orange: #FF5B2E;
   --gruen: #0B7A4B;
   --gruen-bg: #E3F3EA;
@@ -18,6 +21,14 @@
   --linie: #E5E4E1;
   --raumkarte: #111111;
   --radius: 18px;
+  /* Abstände für Einstieg und Startseite: zentral, nicht im Code verteilt */
+  --abstand-s: 12px;
+  --abstand-m: 24px;
+  --abstand-l: 40px;
+  --abstand-xl: 64px;
+  /* Platz für das Logo: feste Größe, damit es später einfach getauscht werden kann */
+  --logo-breite: 132px;
+  --logo-hoehe: 40px;
   --titel: "Bricolage Grotesque Variable", "Segoe UI", system-ui, sans-serif;
   --schrift: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 }
@@ -34,6 +45,9 @@
     --ampel-gruen: #3FCB7E;
     --ampel-gelb: #F2C94C;
     --ampel-rot: #FF6B5B;
+    --pastell: #12301F;
+    --pastell-stark: #1C4A31;
+    --auf-pastell: #A8E8C8;
     --orange: #FF6B3D;
     --gruen: #5FD39A;
     --gruen-bg: #12301F;

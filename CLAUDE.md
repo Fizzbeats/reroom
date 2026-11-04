@@ -36,7 +36,7 @@
 > - **Bezahlung, Auszahlung und der „Käufer kauft“-Schritt sind eine Demo** (kein Zahlungsdienstleister, kein zweites Gerät).
 >
 > **Erlebnis für neue Kunden (umgesetzt):**
-> - Willkommen-Karten beim ersten Besuch (`src/views/Willkommen.tsx`): Messen, Stil finden, Sparen.
+> - Einstieg beim ersten Besuch (`src/views/Willkommen.tsx`, Styles `src/styles/einstieg.css`): am Handy nur Szene, Überschrift „Möbel, die wirklich passen.“, ein Satz (Slogan) und ein Knopf. Darunter sechs Pastellgrün-Kacheln (Icon + 2 bis 4 Wörter), ganz unten der Schulprojekt-Hinweis. Pastellgrün (`--pastell`, `--pastell-stark`, `--auf-pastell` in `tokens.css` und `theme.ts`, Text darauf mit WCAG-AA-Test) ist der grüne Pastellton der CI (gruen-bg). Abstände als `--abstand-*`. Logo: Platzhalter `Logo()` in `ui.tsx` mit fester Größe (`--logo-breite`, `--logo-hoehe`), später durch `<img>` ersetzen. Die leere Startseite zeigt dieselbe Pastellkarte.
 > - Möbel im eigenen Grundriss: automatische Platzierung (`src/logic/einrichten.ts`), Startseite zeigt „So könnte es aussehen“, Detailseite hat „Foto / In meinem Raum“ mit Weg durch die Tür. Eigene Auswahl je Raum in `reroom.imRaum`.
 > - Stil-Finder zum Wischen (`src/views/StilFinder.tsx`, Karten in `src/data/inspo.ts`, Auswertung und Zimmer-Set in `src/logic/stilAuswertung.ts`) mit Budget fürs ganze Zimmer.
 > - Teppiche werden im Passt-Check für Tür und Treppe gerollt gerechnet (`pruefeMoebel`).

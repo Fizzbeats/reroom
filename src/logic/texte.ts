@@ -37,7 +37,13 @@ export function willkommenMessText(art: MessArt): MessText {
 }
 
 /** Text im Aufruf auf der Startseite, solange noch kein Raum gemessen ist. */
-export const START_MESSEN_TEXT = "Miss Tür, Treppenhaus und Raum, Schritt für Schritt. ReRoom zeigt dir dann nur Möbel, die wirklich passen.";
+export const START_MESSEN_TEXT = "Miss Tür, Treppenhaus und Raum. Dann siehst du nur Möbel, die passen.";
+
+/** Kurze Zusätze für die Mess-Kachel im Einstieg. Verspricht die Kamera nur dort, wo sie wirklich misst. */
+export function messKachel(art: MessArt): { titel: string; zusatz: string } {
+  const zusatz = art === "ar" ? "mit der Kamera" : art === "apple" ? "mit der Maßband-App" : "mit Zollstock oder Foto";
+  return { titel: "Raum messen", zusatz };
+}
 
 /** Erste Nachricht des Chats. Sagt ehrlich, was er kann und ob er deinen Raum schon kennt. */
 export function chatBegruessung(raumName?: string, mitKi = false): string {

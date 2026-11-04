@@ -75,10 +75,6 @@ input[type="file"] { padding: 10px; }
 .raumwahl { display: flex; gap: 8px; overflow-x: auto; margin-top: 12px; scrollbar-width: none; }
 .raumwahl .chip { background: rgb(255 255 255 / .08); color: #ddd; }
 .raumwahl .chip[aria-pressed="true"] { background: #fff; color: #111; }
-.messen-cta { background: var(--raumkarte); color: #fff; border-radius: 24px; padding: 24px 20px; display: grid; gap: 12px; }
-.messen-cta h3 { margin: 0; font-size: 1.45rem; font-weight: 800; letter-spacing: -.02em; }
-.messen-cta p { margin: 0; color: #C8C8C8; }
-.messen-cta .knopf { background: #fff; color: #111; }
 
 /* Produktraster */
 .raster { display: grid; grid-template-columns: 1fr 1fr; gap: 18px 12px; }
@@ -203,21 +199,6 @@ input[type="file"] { padding: 10px; }
 .vollbild .kaufleiste { z-index: 41; }
 .vollbild .position .mini { border: 0; }
 
-.willkommen-bild { margin-top: 10px; }
-.willkommen-bild svg { display: block; width: 100%; height: auto; border-radius: 24px; }
-.willkommen-moodboard { border-radius: 24px; overflow: hidden; height: 300px; background: #EFE9DF; display: flex; justify-content: center; }
-.willkommen-moodboard .moodboard { width: auto; height: 100%; }
-.bild-text { font: 700 11px var(--schrift); fill: #111; }
-.bild-text.hell { fill: #fff; font-size: 15px; }
-.bild-preis { font: 800 26px var(--titel); fill: #0B7A4B; }
-.bild-preis.alt { font-size: 20px; fill: #999; text-decoration: line-through; }
-.seiten { display: flex; gap: 6px; justify-content: center; margin: 18px 0; }
-.seiten button { width: 7px; height: 7px; border-radius: 4px; background: #D0D0CC; border: 0; padding: 0; transition: width .2s; }
-.seiten button.an { width: 22px; background: var(--primaer); }
-.willkommen-titel { font-size: 1.9rem; line-height: 1.1; }
-.willkommen-text { font-size: 1rem; margin: 6px 0 0; }
-.willkommen-knoepfe { margin-top: auto; padding-top: 24px; display: grid; gap: 10px; }
-.willkommen .vollbild-innen { padding-bottom: calc(24px + env(safe-area-inset-bottom)); }
 
 /* Mess-Assistent */
 .assistent > * + * { margin-top: 10px; }

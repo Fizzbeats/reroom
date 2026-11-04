@@ -8,6 +8,7 @@ import "./styles/chat3d.css";
 import "./styles/verkaufen.css";
 import "./styles/kamera.css";
 import "./styles/konto.css";
+import "./styles/einstieg.css";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
