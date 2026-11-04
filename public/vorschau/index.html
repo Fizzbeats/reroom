@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#FFF8EE">
+<title>ReRoom Vorschau</title>
+<link rel="icon" href="data:,">
+<style>
+  :root { --bg:#FFF8EE; --ink:#3A0F18; --muted:#7A5058; --linie:#E2D8CE; --spur:#E8DDD3; --wein:#7B1E2E; --auf-wein:#FFF1E4; --kachel:#F6E6DA; --passt:#4C6B2E; --knapp:#8A5F00; --hell:#E7C3C0; --orange:#FF5B2E;
+    --serif:"Source Serif 4",Georgia,"Times New Roman",serif; --sans:Inter,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; --rand:24px; }
+  * { box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  html,body { margin:0; height:100%; background:#CDBFB0; font-family:var(--sans); color:var(--ink); }
+  #app { position:relative; max-width:430px; height:100dvh; margin:0 auto; background:var(--bg); overflow:hidden; }
+  @media (min-width:600px) { #app { height:min(100dvh,880px); margin-top:max(0px,calc((100dvh - 880px)/2)); border-radius:34px; box-shadow:0 12px 40px rgb(0 0 0 / .25); } }
+  .screen { position:absolute; inset:0 0 62px 0; overflow-y:auto; overscroll-behavior:contain; opacity:0; pointer-events:none; transform:translateX(18px); transition:opacity .22s ease, transform .22s ease; padding-bottom:24px; }
+  .screen.aktiv { opacity:1; pointer-events:auto; transform:none; }
+  .screen.voll { inset:0; }
+  h1,h2,h3 { font-family:var(--serif); margin:0; letter-spacing:-.02em; }
+  h1 { font-size:2.05rem; line-height:1.1; } h2 { font-size:1.2rem; } p { margin:0; }
+  .pad { padding:max(24px,env(safe-area-inset-top)) var(--rand) 8px; } .muted { color:var(--muted); } .klein { font-size:.85rem; }
+  .stack > * + * { margin-top:16px; }
+  button { font:inherit; color:inherit; cursor:pointer; border:0; background:none; padding:0; }
+  .knopf { display:flex; align-items:center; justify-content:center; width:100%; min-height:56px; border-radius:2px; background:var(--ink); color:var(--bg); font-weight:700; font-size:1rem; transition:background .15s ease, transform .1s ease, opacity .15s ease; }
+  .knopf:hover { background:var(--wein); } .knopf:active { transform:scale(.98); background:var(--wein); opacity:.85; }
+  .knopf.hell { background:var(--bg); color:var(--wein); box-shadow:inset 0 0 0 1px var(--linie); } .knopf.hell:hover { background:var(--kachel); } .knopf.hell:active { background:var(--hell); }
+  .knopf:disabled { opacity:.4; pointer-events:none; }
+  .logo { display:inline-grid; place-items:center; width:132px; height:40px; border:1px dashed currentColor; border-radius:2px; font-size:.7rem; letter-spacing:.1em; text-transform:uppercase; }
+  .hero { background:var(--wein); color:var(--auf-wein); padding:max(24px,env(safe-area-inset-top)) var(--rand) 28px; }
+  .hero h1 { font-size:2.9rem; line-height:1; margin-top:64px; letter-spacing:-.03em; }
+  .zeilen { border-top:1px solid var(--linie); } .zeile { display:flex; justify-content:space-between; align-items:center; gap:12px; padding:14px 0; border-bottom:1px solid var(--linie); width:100%; text-align:left; } .zeile b { font-weight:700; } .zeile span { color:var(--muted); font-size:.85rem; }
+  .band { background:var(--ink); color:var(--bg); padding:10px 16px; border-radius:2px; font-weight:700; font-size:.85rem; width:100%; text-align:left; }
+  .raumkarte { background:var(--wein); color:var(--auf-wein); border-radius:2px; padding:16px; }
+  .raumkarte .kopf { display:flex; justify-content:space-between; align-items:flex-start; } .raumkarte small { opacity:.75; font-size:.8rem; } .raumkarte h3 { font-size:1.15rem; }
+  .raumkarte .summe { display:flex; justify-content:space-between; align-items:center; border-top:1px solid rgb(255 241 228 / .5); margin-top:8px; padding-top:10px; } .raumkarte .summe b { font-family:var(--serif); font-size:1.5rem; }
+  .raumkarte .aktionen { display:flex; gap:16px; margin-top:8px; font-weight:700; font-size:.85rem; } .raumkarte .aktionen button { text-decoration:underline; text-underline-offset:3px; padding:6px 0; }
+  .raster { display:grid; grid-template-columns:1fr 1fr; gap:24px 12px; }
+  .karte { text-align:left; display:block; width:100%; transition:transform .12s ease; } .karte:active { transform:scale(.98); }
+  .karte .bild { background:var(--kachel); height:112px; position:relative; display:grid; place-items:center; border-radius:2px; margin-bottom:6px; }
+  .karte .bild em { position:absolute; left:10px; top:8px; font-style:normal; font-size:.7rem; font-weight:700; color:var(--passt); } .karte .bild em.knapp { color:var(--knapp); }
+  .karte b { font-family:var(--serif); font-size:1.05rem; display:block; } .karte span { color:var(--muted); font-size:.82rem; }
+  .chips { display:flex; gap:8px; overflow-x:auto; margin:0 calc(-1*var(--rand)); padding:0 var(--rand) 2px; scrollbar-width:none; } .chips::-webkit-scrollbar { display:none; }
+  .chip { flex:none; padding:9px 14px; border-radius:2px; box-shadow:inset 0 0 0 1px var(--linie); font-weight:700; font-size:.82rem; background:var(--bg); transition:background .15s, color .15s; } .chip[aria-pressed="true"] { background:var(--ink); color:var(--bg); box-shadow:none; }
+  .tabs { position:absolute; left:0; right:0; bottom:0; height:62px; background:var(--bg); border-top:1px solid var(--linie); display:flex; padding-bottom:env(safe-area-inset-bottom); z-index:5; transition:transform .2s; } .tabs.weg { transform:translateY(100%); }
+  .tabs button { flex:1; position:relative; font-size:.7rem; color:var(--muted); font-weight:500; } .tabs button.an { color:var(--ink); font-weight:800; } .tabs i { position:absolute; top:10px; right:calc(50% - 26px); min-width:16px; height:16px; border-radius:8px; background:var(--wein); color:#fff; font:700 .65rem/16px var(--sans); text-align:center; font-style:normal; padding:0 4px; }
+  .detailbild { background:var(--kachel); height:230px; display:grid; place-items:center; position:relative; }
+  .zurueck { position:absolute; left:24px; top:max(24px,env(safe-area-inset-top)); width:40px; height:40px; border-radius:50%; background:var(--bg); font-size:1.4rem; font-family:var(--serif); }
+  .balken { display:grid; grid-template-columns:100px 1fr 60px; gap:12px; align-items:center; margin:12px 0; font-size:.92rem; } .balken .spur { height:8px; background:var(--spur); border-radius:2px; overflow:hidden; } .balken .spur i { display:block; height:100%; width:0; transition:width .7s cubic-bezier(.2,.8,.2,1); } .balken b { text-align:right; }
+  #detail { display:flex; flex-direction:column; } #detail .kaufleiste { margin-top:auto; }
+  .kaufleiste { position:sticky; bottom:0; display:flex; justify-content:space-between; align-items:center; gap:12px; padding:14px var(--rand) 18px; background:var(--bg); border-top:1px solid var(--linie); } .kaufleiste b { font-family:var(--serif); font-size:1.5rem; display:block; } .kaufleiste .knopf { width:190px; min-height:52px; }
+  .position { display:flex; gap:12px; align-items:flex-start; padding:14px 0; border-bottom:1px solid var(--linie); } .position .mini { width:64px; height:64px; background:var(--kachel); display:grid; place-items:center; flex:none; border-radius:2px; } .position .mid { flex:1; min-width:0; } .position b { display:block; } .position .info { color:var(--muted); font-size:.82rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; } .position .preis { font-family:var(--serif); font-weight:700; }
+  .x { width:36px; height:36px; box-shadow:inset 0 0 0 1px var(--linie); border-radius:2px; font-weight:700; }
+  .summenbox { background:var(--kachel); border-radius:2px; padding:16px; margin-top:16px; } .summenbox .r { display:flex; justify-content:space-between; margin:0 0 12px; } .summenbox .r.gross { font-family:var(--serif); font-weight:700; font-size:1.1rem; } .summenbox .r.gruen { color:var(--passt); font-weight:700; font-size:.85rem; }
+  .kacheln { display:grid; grid-template-columns:1fr 1fr; gap:12px; } .kachel { background:var(--kachel); padding:16px; border-radius:2px; } .kachel i { font:700 1.2rem var(--serif); color:var(--wein); font-style:normal; display:block; margin-bottom:8px; } .kachel b { display:block; } .kachel span { color:var(--muted); font-size:.82rem; }
+  .inserat { display:flex; gap:12px; background:var(--kachel); padding:16px; border-radius:2px; align-items:flex-start; } .inserat .foto { width:76px; height:76px; background:var(--bg); display:grid; place-items:center; flex:none; border-radius:2px; }
+  .tarif { border:1px solid var(--linie); padding:16px; border-radius:2px; } .tarif.an { background:var(--kachel); box-shadow:inset 0 0 0 2px var(--wein); } .tarif ul { list-style:none; padding:0; margin:8px 0 0; display:grid; gap:4px; font-size:.92rem; } .tarif .kopf { display:flex; justify-content:space-between; } .tarif .knopf { margin-top:12px; min-height:44px; }
+  .kartekonto { background:var(--wein); color:var(--auf-wein); padding:20px; border-radius:2px; }
+  input.feld { width:100%; border:1px solid var(--linie); background:var(--bg); padding:14px 16px; font:inherit; border-radius:2px; min-height:48px; }
+  .messkarte { background:var(--kachel); padding:16px; border-radius:2px; } .messkarte .skizze { background:var(--bg); height:150px; display:grid; place-items:center; border-radius:2px; margin:12px 0; } .fortschritt { height:4px; background:var(--spur); } .fortschritt i { display:block; height:100%; background:var(--ink); transition:width .3s; }
+  .kamera { background:#150A0D; color:var(--bg); } .kamera video { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:.0; transition:opacity .3s; } .kamera video.an { opacity:1; }
+  .kamera .rahmen { position:absolute; left:50%; top:30%; width:min(78%,320px); height:190px; transform:translateX(-50%); border:3px solid var(--orange); border-radius:10px; }
+  .kamera .unter { position:absolute; left:20px; right:20px; top:calc(30% + 206px); text-align:center; font-size:.9rem; text-shadow:0 1px 3px rgb(0 0 0 / .6); }
+  .kamera .leiste { position:absolute; left:0; right:0; bottom:0; padding:0 30px max(34px,env(safe-area-inset-bottom)); display:flex; justify-content:space-between; align-items:center; }
+  .kamera .rund { width:56px; height:56px; border-radius:50%; background:rgb(255 248 238 / .2); font-size:1.3rem; } .kamera .galerie { border-radius:10px; font-size:.7rem; }
+  .ausloeser { width:80px; height:80px; border-radius:50%; border:4px solid var(--bg); display:grid; place-items:center; } .ausloeser i { width:60px; height:60px; border-radius:50%; background:var(--bg); transition:transform .1s; } .ausloeser:active i { transform:scale(.88); }
+  .kamera .zu { position:absolute; left:24px; top:max(24px,env(safe-area-inset-top)); width:40px; height:40px; border-radius:50%; background:rgb(255 248 238 / .2); font-size:1.3rem; }
+  .kamera .titel { position:absolute; top:max(32px,calc(env(safe-area-inset-top) + 8px)); left:0; right:0; text-align:center; font-weight:700; } .blitz { position:absolute; inset:0; background:#fff; opacity:0; pointer-events:none; }
+  .toast { position:absolute; left:50%; bottom:78px; transform:translate(-50%,20px); background:var(--ink); color:var(--bg); padding:10px 16px; border-radius:2px; font-size:.85rem; font-weight:600; opacity:0; transition:opacity .2s, transform .2s; z-index:20; max-width:90%; text-align:center; pointer-events:none; } .toast.an { opacity:1; transform:translate(-50%,0); }
+  .hinweisbox { background:var(--kachel); padding:12px 16px; font-size:.85rem; border-radius:2px; }
+  .hinweis-vorschau { position:absolute; top:6px; left:50%; transform:translateX(-50%); z-index:30; background:#FFF1CC; color:#8A5F00; font-size:.68rem; font-weight:700; padding:3px 10px; border-radius:0 0 8px 8px; pointer-events:none; }
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- 1 Einstieg -->
+  <section class="screen" id="einstieg" aria-label="Einstieg">
+    <div class="hero"><div style="display:flex;justify-content:space-between;align-items:center"><span class="logo">Logo</span><button data-gehe="start" class="klein" style="padding:8px">Überspringen</button></div><h1>Möbel, die wirklich passen.</h1></div>
+    <div class="pad stack" style="padding-top:24px"><p class="muted">Ausmessen, Stil wählen, günstiger einrichten.</p>
+      <button class="knopf" data-gehe="messen">Raum ausmessen</button>
+      <div class="zeilen"><button class="zeile" data-gehe="entdecken"><b>Passt-Check</b><span>Tür, Treppe, Raum</span></button><button class="zeile" data-gehe="entdecken"><b>Stil finden</b><span>Bilder wischen</span></button><button class="zeile" data-gehe="korb"><b>6 % Cashback</b><span>auf neue Möbel</span></button></div>
+      <p class="klein muted">ReRoom ist ein Schulprojekt. Möbel, Shops und Preise sind Beispiele.</p></div>
+  </section>
+
+  <!-- 2 Start -->
+  <section class="screen" id="start" aria-label="Startseite">
+    <div class="pad" style="display:flex;justify-content:space-between;align-items:center"><h2 style="font-size:1.6rem">ReRoom</h2><button data-gehe="konto" style="padding:8px">Konto</button></div>
+    <div class="pad stack" style="padding-top:8px">
+      <button class="band" data-gehe="konto">Start-Aktion: 6 % Cashback bis 31. Januar</button>
+      <div class="raumkarte"><div class="kopf"><div><small>Wohnzimmer</small><h3>4,00 × 5,00 m</h3></div><b class="klein">5 passen</b></div>
+        <div style="display:grid;place-items:center" id="plan"></div>
+        <div class="summe"><span>Zusammen</span><b>355,00 €</b></div>
+        <div class="aktionen"><button data-toast="3D-Rundgang: gibt es in der App">3D</button><button data-toast="Link kopiert (Demo)">Teilen</button><button data-gehe="korb">Alle in den Korb</button></div></div>
+      <div class="raster" id="startkarten"></div></div>
+  </section>
+
+  <!-- 3 Entdecken -->
+  <section class="screen" id="entdecken" aria-label="Entdecken">
+    <div class="pad stack"><h1>Entdecken</h1>
+      <div class="chips" id="filter"><button class="chip" data-f="neu" aria-pressed="false">Neu</button><button class="chip" data-f="gebraucht" aria-pressed="false">Gebraucht</button><button class="chip" data-f="passt" aria-pressed="false">Passt</button><button class="chip" data-f="alle" aria-pressed="true">Alle</button></div>
+      <p class="muted klein" id="anzahl"></p><div class="raster" id="alleKarten"></div></div>
+  </section>
+
+  <!-- 4 Detail -->
+  <section class="screen voll" id="detail" aria-label="Möbel-Detail" style="padding:0">
+    <div class="detailbild" id="dbild"><button class="zurueck" data-zurueck aria-label="Zurück">‹</button></div>
+    <div class="pad stack" style="padding-top:24px"><p class="muted klein" id="dmeta"></p><h1 id="dtitel"></h1>
+      <div style="display:flex;justify-content:space-between;align-items:baseline;margin-top:24px"><h2>Passt-Check</h2><b class="klein" id="dstatus"></b></div>
+      <div id="dbalken"></div><p class="muted klein" id="dhinweis"></p></div>
+    <div class="kaufleiste"><div><b id="dpreis"></b><span class="muted" style="font-size:.7rem" id="dschutz"></span></div><button class="knopf" id="dkorb">In den Warenkorb</button></div>
+  </section>
+
+  <!-- 5 Korb -->
+  <section class="screen" id="korb" aria-label="Warenkorb"><div class="pad"><h1>Warenkorb</h1><div id="positionen"></div><div class="summenbox" id="summen"></div></div></section>
+
+  <!-- 6 Verkaufen -->
+  <section class="screen" id="verkaufen" aria-label="Verkaufen"><div class="pad stack"><h1>Verkaufen</h1><p class="muted">Alte Möbel verkaufen, Erlös für Neues nutzen.</p>
+    <button class="knopf" data-toast="Einstell-Assistent: hier öffnet sich die Kamera für Fotos">+&nbsp; Möbel einstellen</button>
+    <h2>So läuft es</h2><p class="muted klein" style="margin-top:4px">Bezahlen ist hier eine Demo.</p>
+    <div class="kacheln"><div class="kachel"><i>1</i><b>Einstellen</b><span>Fotos und Maße</span></div><div class="kachel"><i>2</i><b>Bezahlen</b><span>Geld bleibt geschützt</span></div><div class="kachel"><i>3</i><b>Abholen</b><span>oder Transport buchen</span></div><div class="kachel"><i>4</i><b>Übergabe</b><span>QR-Code scannen</span></div></div>
+    <h2>Meine Inserate</h2>
+    <div class="inserat"><div class="foto" id="insfoto"></div><div style="flex:1"><b>Sofa Lund</b><div class="muted klein">Gut · 200 × 85 × 80 cm</div><b style="font-family:var(--serif)">180,00 €</b></div><b class="klein" style="color:var(--passt)">Online</b></div></div></section>
+
+  <!-- 7 Konto -->
+  <section class="screen voll" id="konto" aria-label="Konto" style="padding-bottom:40px"><div class="pad stack"><div style="display:flex;justify-content:space-between;align-items:center"><h1>Dein Konto</h1><button class="rund" data-zurueck aria-label="Schließen" style="width:40px;height:40px;border-radius:50%;background:var(--kachel);font-size:1.3rem">×</button></div>
+    <div class="kartekonto"><small style="opacity:.75">Dein Tarif</small><h2 id="aktuellerTarif" style="font-size:1.5rem">ReRoom Free</h2><small style="opacity:.75" id="tarifZusatz">Gratis, ohne Laufzeit</small></div>
+    <div class="band" style="background:var(--ink)">Start-Aktion: 6 % Cashback bis 31. Januar</div><p class="muted klein">Freischalten ist eine Demo, es wird nichts bezahlt.</p>
+    <label class="klein" style="font-weight:700;display:block">Dein Name (Demo-Profil, bleibt auf diesem Gerät)<input class="feld" placeholder="z. B. Alex" style="margin-top:8px"></label>
+    <h2>Tarife</h2><div class="stack" id="tarife"></div></div></section>
+
+  <!-- 8 Messen -->
+  <section class="screen" id="messen" aria-label="Messen"><div class="pad stack"><h1>Raum messen</h1>
+    <p class="hinweisbox" id="messhinweis">Dein Handy misst nicht automatisch. Du kannst stattdessen mit einem Foto messen.</p>
+    <div class="messkarte"><div style="display:flex;justify-content:space-between" class="klein"><span class="muted" id="mschritt"></span><b>Alles auf einmal eintippen</b></div>
+      <div class="fortschritt" style="margin-top:8px"><i id="mfort"></i></div><div class="skizze"><svg width="200" height="120" viewBox="0 0 200 120" aria-hidden="true"><rect x="65" y="5" width="70" height="110" rx="2" fill="none" stroke="#3A0F18" stroke-width="3"/><path d="M50 60H150M50 52V68M150 52V68" stroke="#FF5B2E" stroke-width="3" fill="none"/></svg></div>
+      <h2 id="mfrage"></h2><p class="muted klein" id="mhilfe" style="margin:6px 0 12px"></p>
+      <label class="klein" style="font-weight:700;display:block" id="mlabel"></label><input class="feld" id="mwert" inputmode="decimal" placeholder="" style="margin:8px 0 12px">
+      <div class="stack"><button class="knopf hell" id="mfoto">Mit Foto messen</button><button class="knopf" id="mweiter" disabled>Weiter</button></div></div></div></section>
+
+  <!-- 9 Kamera -->
+  <section class="screen voll kamera" id="kamera" aria-label="Kamera"><video id="video" playsinline muted></video>
+    <button class="zu" id="kzu" aria-label="Schließen">×</button><div class="titel">Messen mit Foto</div><div class="rahmen"></div><div class="unter" id="kunter">Karte flach an die Stelle halten, die du misst</div>
+    <div class="leiste"><button class="rund galerie" id="kgalerie">Galerie</button><button class="ausloeser" id="kausloeser" aria-label="Foto aufnehmen"><i></i></button><button class="rund" id="kwechsel" aria-label="Kamera wechseln">↻</button></div><div class="blitz" id="blitz"></div></section>
+
+  <nav class="tabs" id="tabs" aria-label="Hauptmenü"><button data-gehe="start">Start</button><button data-gehe="entdecken">Entdecken</button><button data-gehe="messen">Messen</button><button data-gehe="korb">Korb<i id="badge" hidden>0</i></button><button data-gehe="verkaufen">Verkaufen</button></nav>
+  <div class="toast" id="toast" role="status"></div>
+</div>
+
+<script>
+const $ = (s, r = document) => r.querySelector(s), $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const EUR = n => n.toLocaleString("de-DE", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " €";
+const DUNKEL = "#3A0F18", HELL = "#E7C3C0";
+const MOTIV = {
+  Stuhl: `<svg width="70" height="62" viewBox="0 0 70 62"><rect x="14" y="0" width="38" height="24" rx="6" fill="${DUNKEL}"/><rect x="7" y="20" width="52" height="14" rx="4" fill="${HELL}"/><rect x="14" y="34" width="5" height="14" fill="${DUNKEL}"/><rect x="47" y="34" width="5" height="14" fill="${DUNKEL}"/></svg>`,
+  Sideboard: `<svg width="70" height="62" viewBox="0 0 70 62"><rect x="10" y="4" width="50" height="50" rx="2" fill="${HELL}"/><rect x="34" y="4" width="2" height="50" fill="${DUNKEL}"/></svg>`,
+  Sofa: `<svg width="84" height="62" viewBox="0 0 84 62"><rect x="10" y="4" width="64" height="30" rx="12" fill="${DUNKEL}"/><rect x="0" y="22" width="20" height="30" rx="7" fill="${HELL}"/><rect x="64" y="22" width="20" height="30" rx="7" fill="${HELL}"/><rect x="14" y="26" width="56" height="22" rx="6" fill="${HELL}"/></svg>`
+};
+const M = [
+  { id: "sofa-lund", name: "Sofa Lund", art: "Sofa", preis: 180, z: "gebraucht", info: "Privat, Chemnitz-Kaßberg", km: 1, status: "Knapp", tuer: [10, 20], treppe: [35, 60], raum: [170, 100] },
+  { id: "stuhl-schule", name: "Stuhl Schule", art: "Stuhl", preis: 20, z: "gebraucht", info: "Privat, Chemnitz-Sonnenberg", km: 9, status: "Passt", tuer: [40, 80], treppe: [60, 100], raum: [190, 100] },
+  { id: "sideboard-wiese", name: "Sideboard Wiese", art: "Sideboard", preis: 90, z: "gebraucht", info: "Privat, Chemnitz-Hilbersdorf", km: 7, status: "Passt", tuer: [25, 60], treppe: [45, 80], raum: [150, 90] },
+  { id: "stuhl-ahorn", name: "Stuhl Ahorn", art: "Stuhl", preis: 69, z: "neu", info: "Stilhaus Elbe", status: "Passt", tuer: [40, 80], treppe: [60, 100], raum: [190, 100] },
+  { id: "sofa-bruk", name: "Sofa Bruk", art: "Sofa", preis: 260, z: "gebraucht", info: "Privat, Chemnitz-Zentrum", km: 7, status: "Knapp", tuer: [8, 16], treppe: [30, 50], raum: [150, 90] },
+  { id: "regal-leiter", name: "Regal Leiter", art: "Sideboard", preis: 129, z: "neu", info: "Möbelmanufaktur Sonnenberg", status: "Passt", tuer: [30, 60], treppe: [50, 90], raum: [160, 100] },
+  { id: "esstisch-birke", name: "Esstisch Birke", art: "Stuhl", preis: 299, z: "neu", info: "Möbelmanufaktur Sonnenberg", status: "Passt", tuer: [20, 40], treppe: [40, 70], raum: [140, 100] },
+];
+const byId = id => M.find(m => m.id === id);
+const state = { korb: ["sofa-lund"], transport: new Set(), filter: "alle", tarif: "Free", verlauf: [], aktuell: "einstieg", detail: null, schritt: 0, werte: [] };
+
+// ---------- Anzeige ----------
+const bilderKarte = m => `<button class="karte" data-detail="${m.id}"><div class="bild"><em class="${m.status === "Knapp" ? "knapp" : ""}">${m.status}</em>${MOTIV[m.art]}</div><b>${EUR(m.preis)}</b><span>${m.name}${m.km ? " · " + m.km + " km" : ""}</span></button>`;
+function zeichnePlan() {
+  $("#plan").innerHTML = `<svg width="190" height="190" viewBox="0 0 190 190" aria-label="Grundriss"><rect x="32" y="0" width="126" height="186" fill="#FFF8EE" stroke="#3A0F18" stroke-width="2.6"/><rect x="48" y="6" width="94" height="28" rx="3" fill="#3A0F18"/><rect x="50" y="72" width="90" height="66" rx="3" fill="#E7C3C0"/><rect x="74" y="92" width="42" height="26" rx="2" fill="#7B1E2E"/><rect x="104" y="174" width="34" height="7" rx="2" fill="#3A0F18"/><path d="M32 186V148C52 148 70 166 70 186" fill="none" stroke="#FF5B2E" stroke-width="1.4" stroke-dasharray="3 3"/></svg>`;
+}
+function zeichneStart() { $("#startkarten").innerHTML = [byId("stuhl-schule"), byId("sideboard-wiese")].map(bilderKarte).join(""); }
+function zeichneEntdecken() {
+  const f = state.filter;
+  const liste = M.filter(m => f === "alle" || (f === "neu" && m.z === "neu") || (f === "gebraucht" && m.z === "gebraucht") || (f === "passt" && m.status === "Passt"));
+  $("#anzahl").textContent = `${liste.length} Möbel passen in dein Wohnzimmer`;
+  $("#alleKarten").innerHTML = liste.map(bilderKarte).join("");
+  $$("#filter .chip").forEach(c => c.setAttribute("aria-pressed", String(c.dataset.f === f)));
+}
+function schutz(m) { return m.z === "gebraucht" ? Math.round((m.preis * 0.04 + 0.5) * 100) / 100 : 0; }
+function zeichneDetail(id) {
+  const m = byId(id); state.detail = id;
+  $("#dbild").innerHTML = `<button class="zurueck" data-zurueck aria-label="Zurück">‹</button>${MOTIV[m.art].replace(/width="\d+" height="\d+"/, 'width="140" height="110"')}`;
+  $("#dmeta").textContent = `${m.z === "neu" ? "Neu" : "Gebraucht"} · ${m.info}${m.km ? " · " + m.km + " km" : ""}`;
+  $("#dtitel").textContent = m.name; const st = $("#dstatus"); st.textContent = m.status; st.style.color = m.status === "Knapp" ? "var(--knapp)" : "var(--passt)";
+  const zeile = (n, [cm, anteil]) => `<div class="balken"><span>${n}</span><div class="spur"><i data-w="${anteil}" style="background:${anteil < 40 ? "var(--knapp)" : "var(--passt)"}"></i></div><b>${cm} cm</b></div>`;
+  $("#dbalken").innerHTML = zeile("Tür", m.tuer) + zeile("Treppenhaus", m.treppe) + zeile("Raum", m.raum);
+  $("#dhinweis").textContent = m.status === "Knapp" ? "Passt durch die Tür, aber knapp. Bitte nachmessen." : "Passt mit ausreichend Platz durch Tür und Treppenhaus.";
+  $("#dpreis").textContent = EUR(m.preis); $("#dschutz").textContent = m.z === "gebraucht" ? `+ ${EUR(schutz(m))} Käuferschutz` : "mit 6 % Cashback";
+  requestAnimationFrame(() => setTimeout(() => $$("#dbalken i").forEach(i => i.style.width = i.dataset.w + "%"), 60));
+}
+function zeichneKorb() {
+  const ps = state.korb.map(byId);
+  $("#positionen").innerHTML = ps.length ? ps.map(m => `<div class="position"><button class="mini" data-detail="${m.id}" aria-label="${m.name} ansehen">${MOTIV[m.art].replace(/width="\d+" height="\d+"/, 'width="46" height="42"')}</button><div class="mid"><b>${m.name}</b><div class="info">${m.z === "neu" ? "Neu · " : "Gebraucht · "}${m.km ? m.km + " km" : m.info}</div><span class="preis">${EUR(m.preis)}</span>${m.z === "gebraucht" ? `<div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap"><button class="chip" data-t="${m.id}" aria-pressed="${!state.transport.has(m.id)}" data-w="ab">Ich hole es ab</button><button class="chip" data-t="${m.id}" aria-pressed="${state.transport.has(m.id)}" data-w="tr">Transport (+ 40,00 €)</button></div>` : ""}</div><button class="x" data-weg="${m.id}" aria-label="${m.name} entfernen">×</button></div>`).join("") : `<p class="muted" style="padding:24px 0">Noch leer. Tippe bei einem Möbel auf „In den Warenkorb“.</p>`;
+  const zw = ps.reduce((s, m) => s + m.preis, 0), sch = ps.reduce((s, m) => s + schutz(m), 0), tr = ps.filter(m => state.transport.has(m.id)).length * 40;
+  const cash = Math.round(ps.filter(m => m.z === "neu").reduce((s, m) => s + m.preis, 0) * 6) / 100;
+  $("#summen").style.display = ps.length ? "" : "none";
+  $("#summen").innerHTML = `<div class="r"><span>Zwischensumme</span><span>${EUR(zw)}</span></div>${sch ? `<div class="r"><span>Käuferschutz (gebraucht)</span><span>${EUR(sch)}</span></div>` : ""}${tr ? `<div class="r"><span>Transport in Chemnitz</span><span>${EUR(tr)}</span></div>` : ""}<div class="r gross"><span>Du zahlst</span><span>${EUR(zw + sch + tr)}</span></div>${cash ? `<div class="r gruen"><span>Du bekommst zurück (6 % Cashback)</span><span>${EUR(cash)}</span></div>` : ""}<button class="knopf" data-toast="Testkasse: hier wird nichts bezahlt (Demo)">Zur Testkasse</button>`;
+  const b = $("#badge"); b.textContent = state.korb.length; b.hidden = !state.korb.length;
+}
+const TARIFE = [["Free", "0 €", ["1 Raum", "Stil-Finder", "5 Chatbot-Fragen pro Tag"]], ["Umzugs-Pass", "7,99 € einmalig für 3 Monate", ["Unbegrenzt Räume und Chatbot", "3D-Rundgang als Video", "Einmal zahlen, kein Abo"]], ["Premium", "24,99 € im Jahr", ["Wie der Umzugs-Pass, ganzjährig", "Preisalarm für Möbel", "Unbegrenzt Räume und Chatbot"]]];
+function zeichneKonto() {
+  $("#aktuellerTarif").textContent = "ReRoom " + state.tarif; $("#tarifZusatz").textContent = state.tarif === "Free" ? "Gratis, ohne Laufzeit" : "Freigeschaltet (Demo)";
+  $("#tarife").innerHTML = TARIFE.map(([n, p, f]) => `<div class="tarif ${n === state.tarif ? "an" : ""}"><div class="kopf"><h2>ReRoom ${n}</h2>${n === state.tarif ? '<b class="klein" style="color:var(--wein)">Dein Tarif</b>' : ""}</div><b style="display:block;margin-top:4px">${p}</b><ul>${f.map(x => `<li>✓ ${x}</li>`).join("")}</ul>${n === state.tarif ? "" : `<button class="knopf hell" data-tarif="${n}">${n === "Free" ? "Zu Free wechseln" : "Freischalten (Demo, ohne Zahlung)"}</button>`}</div>`).join("");
+}
+const SCHRITTE = [["Wie breit ist deine Tür?", "Türbreite in cm", "z. B. 85", "Miss von Rahmen zu Rahmen, an der schmalsten Stelle."], ["Wie hoch ist deine Tür?", "Türhöhe in cm", "z. B. 205", "Miss vom Boden bis zum oberen Rahmen."], ["Wie breit ist dein Treppenhaus?", "Breite in cm", "z. B. 110", "Miss an der engsten Stelle der Treppe."], ["Wie breit ist dein Raum?", "Raumbreite in cm", "z. B. 400", "Von Wand zu Wand, ohne Möbel zu messen."], ["Wie tief ist dein Raum?", "Raumtiefe in cm", "z. B. 500", "Von Wand zu Wand, die andere Richtung."], ["Wie hoch ist dein Raum?", "Raumhöhe in cm", "z. B. 250", "Vom Boden bis zur Decke."]];
+function zeichneMessen() {
+  const [fr, lab, ph, hi] = SCHRITTE[state.schritt];
+  $("#mschritt").textContent = `Schritt ${state.schritt + 1} von ${SCHRITTE.length}`; $("#mfort").style.width = ((state.schritt + 1) / SCHRITTE.length * 100) + "%";
+  $("#mfrage").textContent = fr; $("#mhilfe").textContent = hi; $("#mlabel").textContent = lab; const w = $("#mwert"); w.placeholder = ph; w.value = state.werte[state.schritt] || "";
+  $("#mweiter").textContent = state.schritt === SCHRITTE.length - 1 ? "Raum speichern" : "Weiter"; $("#mweiter").disabled = !/^\d+([.,]\d+)?$/.test(w.value.trim());
+}
+
+// ---------- Wechsel zwischen Bildschirmen ----------
+const TABS = ["start", "entdecken", "messen", "korb", "verkaufen"];
+function gehe(ziel, opts = {}) {
+  if (ziel === state.aktuell) return;
+  if (!opts.zurueck) state.verlauf.push(state.aktuell);
+  $$(".screen").forEach(s => s.classList.toggle("aktiv", s.id === ziel));
+  state.aktuell = ziel;
+  $("#tabs").classList.toggle("weg", ziel === "kamera" || ziel === "detail" || ziel === "konto");
+  $$("#tabs button").forEach(b => b.classList.toggle("an", b.dataset.gehe === ziel || (ziel === "einstieg" && false)));
+  if (ziel === "start") { zeichnePlan(); zeichneStart(); } if (ziel === "entdecken") zeichneEntdecken(); if (ziel === "korb") zeichneKorb(); if (ziel === "konto") zeichneKonto(); if (ziel === "messen") zeichneMessen();
+  $("#" + ziel).scrollTop = 0;
+  if (ziel === "kamera") kameraStart(); else kameraStopp();
+}
+function zurueck() { const z = state.verlauf.pop() || "start"; gehe(z, { zurueck: true }); }
+let tt; function toast(t) { const e = $("#toast"); e.textContent = t; e.classList.add("an"); clearTimeout(tt); tt = setTimeout(() => e.classList.remove("an"), 2200); }
+
+// ---------- Kamera (echt, wenn der Browser es erlaubt) ----------
+let strom = null, seite = "environment";
+async function kameraStart() {
+  const v = $("#video"); $("#kunter").textContent = "Karte flach an die Stelle halten, die du misst";
+  if (!navigator.mediaDevices?.getUserMedia) { $("#kunter").textContent = "Dieser Browser hat keine Kamera-Funktion. Wähle ein Foto aus der Galerie."; return; }
+  try { strom = await navigator.mediaDevices.getUserMedia({ video: { facingMode: seite }, audio: false }); v.srcObject = strom; await v.play(); v.classList.add("an"); }
+  catch { v.classList.remove("an"); $("#kunter").textContent = "Die Kamera ist nicht erlaubt oder nicht vorhanden. Du kannst ein Foto aus der Galerie wählen."; }
+}
+function kameraStopp() { if (strom) strom.getTracks().forEach(t => t.stop()); strom = null; const v = $("#video"); v.srcObject = null; v.classList.remove("an"); }
+
+// ---------- Ereignisse ----------
+document.addEventListener("click", e => {
+  const t = e.target.closest("button, [data-gehe]"); if (!t) return;
+  if (t.dataset.gehe) { return gehe(t.dataset.gehe); }
+  if (t.hasAttribute("data-zurueck")) return zurueck();
+  if (t.dataset.detail) { zeichneDetail(t.dataset.detail); return gehe("detail"); }
+  if (t.dataset.toast) return toast(t.dataset.toast);
+  if (t.dataset.f) { state.filter = t.dataset.f; return zeichneEntdecken(); }
+  if (t.dataset.weg) { state.korb = state.korb.filter(x => x !== t.dataset.weg); state.transport.delete(t.dataset.weg); return zeichneKorb(); }
+  if (t.dataset.t) { t.dataset.w === "tr" ? state.transport.add(t.dataset.t) : state.transport.delete(t.dataset.t); return zeichneKorb(); }
+  if (t.dataset.tarif) { state.tarif = t.dataset.tarif === "Free" ? "Free" : t.dataset.tarif; zeichneKonto(); return toast("Tarif gewechselt (Demo, ohne Zahlung)"); }
+});
+$("#dkorb").onclick = () => { const id = state.detail; if (!state.korb.includes(id)) state.korb.push(id); zeichneKorb(); toast("Im Warenkorb"); setTimeout(() => gehe("korb"), 500); };
+$("#mwert").addEventListener("input", () => { $("#mweiter").disabled = !/^\d+([.,]\d+)?$/.test($("#mwert").value.trim()); });
+$("#mweiter").onclick = () => { state.werte[state.schritt] = $("#mwert").value.trim(); if (state.schritt < SCHRITTE.length - 1) { state.schritt++; zeichneMessen(); } else { state.schritt = 0; state.werte = []; toast("Raum gespeichert (Demo)"); gehe("start"); } };
+$("#mfoto").onclick = () => gehe("kamera");
+$("#kzu").onclick = zurueck;
+$("#kgalerie").onclick = () => { toast("Galerie: hier öffnet sich dein Fotoalbum"); };
+$("#kwechsel").onclick = async () => { seite = seite === "environment" ? "user" : "environment"; kameraStopp(); await kameraStart(); };
+$("#kausloeser").onclick = () => { const b = $("#blitz"); b.style.transition = "none"; b.style.opacity = ".9"; requestAnimationFrame(() => { b.style.transition = "opacity .35s"; b.style.opacity = "0"; }); $("#kunter").textContent = "Foto gemacht. Lies den Wert an der Karte ab und tippe ihn ein."; setTimeout(() => { zurueck(); toast("Foto gemacht. Wert jetzt eintippen."); }, 700); };
+document.addEventListener("keydown", e => { if (e.key === "Escape" && ["detail", "konto", "kamera"].includes(state.aktuell)) zurueck(); });
+
+// ---------- Start ----------
+zeichnePlan(); zeichneStart(); zeichneKorb(); zeichneKonto(); $("#insfoto").innerHTML = MOTIV.Sofa.replace(/width="\d+" height="\d+"/, 'width="60" height="44"');
+(function () { const s = $("#einstieg"); s.classList.add("aktiv"); const h = location.hash.slice(1); if (h && $("#" + h) && h !== "einstieg") { state.aktuell = "einstieg"; gehe(h); } })();
+</script>
+</body>
+</html>

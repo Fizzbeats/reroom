@@ -1,0 +1,197 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Figma Animationen Schritt für Schritt</title>
+<style>
+  :root { --bg:#F6F4EF; --ink:#1E1E1E; --muted:#5A5A5A; --rot:#E5322D; --panel:#2C2C2C; --panel2:#383838; --text:#E8E8E8; --dim:#A0A0A0; --blau:#0D99FF; --wein:#7B1E2E; --creme:#FFF8EE; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font:16px/1.5 system-ui,"Segoe UI",sans-serif; padding:28px 18px 80px; }
+  .wrap { max-width:1000px; margin:0 auto; }
+  h1 { font-size:2rem; margin:0 0 6px; letter-spacing:-.02em; } h2 { font-size:1.5rem; margin:48px 0 6px; letter-spacing:-.02em; }
+  .lead { color:var(--muted); max-width:70ch; margin:0 0 20px; }
+  .hinweis { background:#FFF1CC; border-radius:10px; padding:10px 14px; font-size:.92rem; max-width:80ch; }
+  .karte { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:20px; background:#fff; border-radius:16px; padding:20px; margin:18px 0; align-items:center; box-shadow:0 1px 3px rgb(0 0 0 / .08); }
+  .nr { display:inline-grid; place-items:center; width:34px; height:34px; border-radius:50%; background:var(--rot); color:#fff; font-weight:800; margin-right:10px; flex:none; }
+  .karte h3 { display:flex; align-items:center; margin:0 0 8px; font-size:1.15rem; } .karte p { margin:0 0 8px; } .karte ul { margin:6px 0 0; padding-left:20px; }
+  .tipp { color:var(--muted); font-size:.9rem; }
+  b.k { background:#EEE; border-radius:5px; padding:1px 7px; font-weight:600; font-size:.9em; border:1px solid #D5D5D5; }
+  /* schematisches Figma-Fenster */
+  .fig { background:#1E1E1E; border-radius:10px; overflow:hidden; font:12px/1.35 system-ui,sans-serif; color:var(--text); position:relative; min-height:230px; display:grid; grid-template-columns:90px 1fr 150px; }
+  .links { background:var(--panel); padding:8px; border-right:1px solid #111; } .links div { padding:3px 6px; border-radius:4px; color:var(--dim); } .links .an { background:#3D3D3D; color:#fff; }
+  .mitte { background:#2A2A2A; position:relative; padding:12px; display:flex; gap:12px; align-items:flex-start; overflow:hidden; }
+  .rechts { background:var(--panel); padding:8px; border-left:1px solid #111; }
+  .tabs { display:flex; gap:10px; border-bottom:1px solid #444; padding-bottom:6px; margin-bottom:8px; } .tabs span { color:var(--dim); } .tabs .an { color:#fff; font-weight:700; border-bottom:2px solid var(--blau); padding-bottom:4px; margin-bottom:-7px; }
+  .sek { display:flex; justify-content:space-between; color:#fff; font-weight:600; margin:6px 0; } .plus { color:#fff; background:#444; border-radius:4px; width:18px; text-align:center; }
+  .feld { background:var(--panel2); border-radius:4px; padding:5px 7px; margin:4px 0; display:flex; justify-content:space-between; } .feld span:first-child { color:var(--dim); }
+  .bs { width:62px; height:120px; border-radius:6px; background:var(--creme); position:relative; flex:none; overflow:hidden; } .bs i { position:absolute; left:6px; right:6px; height:14px; border-radius:2px; background:#3A0F18; } .bs .h { left:0; right:0; top:0; height:34px; background:var(--wein); border-radius:0; }
+  .sel { outline:2px solid var(--blau); outline-offset:1px; }
+  .mark { outline:3px solid var(--rot) !important; outline-offset:3px; border-radius:6px; }
+  .ring { position:absolute; border:3px solid var(--rot); border-radius:8px; pointer-events:none; }
+  .pfeil { position:absolute; color:var(--rot); font-weight:900; font-size:22px; }
+  .knopf-zu { height:26px; border-radius:2px; display:grid; place-items:center; color:#FFF8EE; font:700 11px system-ui; padding:0 10px; }
+  .label { font-size:11px; color:var(--dim); margin:6px 0 2px; }
+  .karte svg { max-width:100%; height:auto; }
+  @media (max-width:760px) { .karte { grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Figma: Animationen Schritt für Schritt</h1>
+  <p class="lead">Zwei Dinge: Teil A verbindet die Bildschirme zu einem klickbaren Prototyp. Teil B lässt den Knopf beim Darüberfahren und Drücken weich reagieren. Fang mit A an, das geht schneller und sieht man sofort.</p>
+  <p class="hinweis">Die Bilder sind gezeichnete Schemata, keine echten Figma-Screenshots. Die rot markierten Stellen zeigen, wo du klickst. Namen können je nach Figma-Version leicht anders aussehen. Datei: <b>figma.com/design/Zlv5q7ddf1vt2rkvomybQN</b></p>
+
+  <h2>Überblick: wohin führt welcher Klick (Teil A)</h2>
+  <svg viewBox="0 0 960 360" style="max-height:370px" width="100%" role="img" aria-label="Karte der Bildschirme und Wege" style="background:#fff;border-radius:16px;padding:10px">
+    <defs><marker id="p" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#E5322D"/></marker></defs>
+    <g font-family="system-ui" font-size="13" text-anchor="middle">
+      <g id="b"><rect x="20" y="40" width="110" height="80" rx="8" fill="#7B1E2E"/><text x="75" y="85" fill="#FFF1E4" font-weight="700">1 Einstieg</text></g>
+      <rect x="190" y="40" width="110" height="80" rx="8" fill="#FFF8EE" stroke="#3A0F18"/><text x="245" y="85" font-weight="700">2 Startseite</text>
+      <rect x="360" y="20" width="110" height="80" rx="8" fill="#FFF8EE" stroke="#3A0F18"/><text x="415" y="65" font-weight="700">4 Möbel-</text><text x="415" y="82" font-weight="700">Detail</text>
+      <rect x="530" y="20" width="110" height="80" rx="8" fill="#FFF8EE" stroke="#3A0F18"/><text x="585" y="65" font-weight="700">5 Warenkorb</text>
+      <rect x="360" y="140" width="110" height="80" rx="8" fill="#FFF8EE" stroke="#3A0F18"/><text x="415" y="185" font-weight="700">3 Entdecken</text>
+      <rect x="190" y="240" width="110" height="80" rx="8" fill="#FFF8EE" stroke="#3A0F18"/><text x="245" y="285" font-weight="700">7 Konto</text>
+      <rect x="530" y="140" width="110" height="80" rx="8" fill="#FFF8EE" stroke="#3A0F18"/><text x="585" y="185" font-weight="700">6 Verkaufen</text>
+    </g>
+    <g stroke="#E5322D" stroke-width="2.5" fill="none" marker-end="url(#p)">
+      <path d="M130 80H186"/><path d="M300 70L356 60"/><path d="M470 60H526"/><path d="M245 120L245 236"/><path d="M300 100L356 160"/>
+    </g>
+    <g font-family="system-ui" font-size="11.5" fill="#5A5A5A">
+      <text x="158" y="70" text-anchor="middle">Knopf</text><text x="330" y="52" text-anchor="middle">Karte</text><text x="498" y="52" text-anchor="middle">Knopf</text>
+      <text x="258" y="185">„Konto“</text><text x="322" y="168">oder Tab</text><text x="480" y="348" text-anchor="middle" font-size="13" fill="#E5322D" font-weight="700">Zusätzlich: In der Tab-Leiste unten führen Start, Entdecken, Korb und Verkaufen jeweils zu 2, 3, 5 und 6.</text>
+    </g>
+  </svg>
+
+  <h2>Teil A: Bildschirme verbinden</h2>
+  <p class="lead">Das Gleiche machst du für jeden Pfeil in der Karte oben. Die Klickfolge ist immer dieselbe.</p>
+
+  <div class="karte"><div>
+    <h3><span class="nr">1</span>Seite „Bildschirme“ öffnen</h3>
+    <p>Links in der Leiste „Pages“ auf <b class="k">Bildschirme</b> klicken. Dort liegen die sieben Handy-Bildschirme nebeneinander.</p>
+    <p class="tipp">Siehst du sie nicht: Taste <b class="k">Shift</b>+<b class="k">1</b> zeigt alles.</p>
+  </div>
+  <div class="fig"><div class="links"><div style="color:#fff;font-weight:700">Pages</div><div>Komponenten</div><div class="an mark">Bildschirme</div></div>
+    <div class="mitte"><div class="bs"><div class="h bs" style="height:34px;width:100%;position:absolute"></div></div><div class="bs"><i style="top:10px"></i><i style="top:34px"></i></div><div class="bs"><i style="top:10px"></i></div></div>
+    <div class="rechts"><div class="tabs"><span class="an">Design</span><span>Prototype</span></div><div class="label">Nichts ausgewählt</div></div>
+    </div></div>
+
+  <div class="karte"><div>
+    <h3><span class="nr">2</span>Den Knopf anklicken</h3>
+    <p>Zum Beispiel auf Bildschirm 1 den Knopf „Raum ausmessen“. Ein einfacher Klick wählt oft den ganzen Bildschirm. Dann <b class="k">Strg</b> gedrückt halten und klicken, oder doppelt klicken, bis nur der Knopf blau umrandet ist.</p>
+    <p class="tipp">Kontrolle: Unten rechts steht im Design-Reiter „Instance“ und der Name „Knopf“.</p>
+  </div>
+  <div class="fig"><div class="links"><div style="color:#fff;font-weight:700">Ebenen</div><div>1 Einstieg</div><div class="an">▸ Knopf</div></div>
+    <div class="mitte"><div class="bs"><div class="h bs" style="height:34px;width:100%;position:absolute"></div><i class="sel mark" style="top:70px;background:#3A0F18"></i></div></div>
+    <div class="rechts"><div class="tabs"><span class="an">Design</span><span>Prototype</span></div><div class="label">Instance</div><div class="feld"><span>Knopf</span><span>◆</span></div></div>
+    </div></div>
+
+  <div class="karte"><div>
+    <h3><span class="nr">3</span>Reiter „Prototype“ öffnen</h3>
+    <p>Rechts oben über den Einstellungen wechselst du von <b class="k">Design</b> auf <b class="k">Prototype</b>.</p>
+  </div>
+  <div class="fig"><div class="links"><div class="an">▸ Knopf</div></div><div class="mitte"><div class="bs"><i class="sel" style="top:70px"></i></div></div>
+    <div class="rechts"><div class="tabs"><span>Design</span><span class="an mark">Prototype</span></div><div class="sek"><span>Interactions</span><span class="plus">+</span></div><div class="label">Noch keine</div></div>
+    </div></div>
+
+  <div class="karte"><div>
+    <h3><span class="nr">4</span>Plus bei „Interactions“ klicken</h3>
+    <p>Neben „Interactions“ auf das <b class="k">+</b>. Es erscheint ein kleiner Kreis am Knopf und eine Einstellungsliste.</p>
+  </div>
+  <div class="fig"><div class="links"><div class="an">▸ Knopf</div></div><div class="mitte"><div class="bs"><i class="sel" style="top:70px"></i></div></div>
+    <div class="rechts"><div class="tabs"><span>Design</span><span class="an">Prototype</span></div><div class="sek"><span>Interactions</span><span class="plus mark">+</span></div><div class="feld"><span>On click</span><span>▾</span></div></div>
+    </div></div>
+
+  <div class="karte"><div>
+    <h3><span class="nr">5</span>Vier Felder ausfüllen</h3>
+    <ul><li><b>Trigger:</b> <b class="k">On click</b> (bleibt so)</li><li><b>Action:</b> <b class="k">Navigate to</b></li><li><b>Destination:</b> den Bildschirm wählen, zum Beispiel <b class="k">2 Startseite</b></li><li><b>Animation:</b> <b class="k">Smart animate</b>, Easing <b class="k">Ease out</b>, <b class="k">300 ms</b></li></ul>
+    <p class="tipp">Alternativ in „Destination“ auf den Pfeil „Zurück“ gehen: wählt „Back“ (für den Zurück-Pfeil im Detail).</p>
+  </div>
+  <div class="fig"><div class="links"><div class="an">▸ Knopf</div></div><div class="mitte"><div class="bs"><i class="sel" style="top:70px"></i></div></div>
+    <div class="rechts"><div class="tabs"><span>Design</span><span class="an">Prototype</span></div><div class="sek"><span>Interactions</span><span class="plus">+</span></div>
+      <div class="mark" style="padding:2px"><div class="feld"><span>Trigger</span><span>On click</span></div><div class="feld"><span>Action</span><span>Navigate to ▾</span></div><div class="feld"><span>Ziel</span><span>2 Startseite ▾</span></div><div class="feld"><span>Anim.</span><span>Smart animate</span></div><div class="feld"><span>Easing</span><span>Ease out · 300</span></div></div></div>
+    </div></div>
+
+  <div class="karte"><div>
+    <h3><span class="nr">6</span>Testen mit dem Play-Knopf</h3>
+    <p>Oben rechts in Figma auf das <b class="k">▶</b> (Present) klicken. Es öffnet sich der Prototyp. Auf den Knopf klicken, der Bildschirm wechselt weich.</p>
+    <p class="tipp">Startpunkt: Im Reiter Prototype bei „Flow starting point“ auf <b class="k">+</b> und Bildschirm 1 wählen. Dann beginnt der Prototyp dort.</p>
+  </div>
+  <div class="fig" style="grid-template-columns:1fr;min-height:200px"><div class="mitte" style="justify-content:center;align-items:center;gap:30px">
+    <div class="bs" style="background:#7B1E2E"><i style="top:70px;background:#3A0F18"></i></div><div style="color:var(--rot);font-size:34px;font-weight:900">→</div><div class="bs"><div class="h bs" style="height:34px;width:100%;position:absolute"></div></div></div>
+    <div class="mark" style="position:absolute;right:22px;top:14px;color:#fff;font-size:16px;padding:2px 8px">▶</div></div></div>
+
+  <h2>Teil B: Knopf mit Hover und Drücken</h2>
+  <p class="lead">Dafür braucht der Knopf drei Zustände. Das sind drei Varianten derselben Komponente: Normal, Hover (Maus darüber) und Gedrückt.</p>
+  <div class="karte"><div>
+    <h3><span class="nr">1</span>Komponente „Knopf“ finden</h3>
+    <p>Links auf die Seite <b class="k">Komponenten</b> wechseln und das Feld „Knopf“ anklicken (es hat eine lila Umrandung mit Raute).</p>
+  </div>
+  <div class="fig"><div class="links"><div style="color:#fff;font-weight:700">Pages</div><div class="an">Komponenten</div><div>Bildschirme</div></div>
+    <div class="mitte" style="flex-direction:column;gap:8px"><div class="mark" style="padding:6px;display:flex;flex-direction:column;gap:8px"><div class="knopf-zu" style="background:#3A0F18;width:130px">Normal</div><div class="knopf-zu" style="background:#FFF8EE;color:#7B1E2E;width:130px;border:1px solid #888">Hell</div></div></div>
+    <div class="rechts"><div class="tabs"><span class="an">Design</span><span>Prototype</span></div><div class="label">Component set</div><div class="feld"><span>Knopf</span><span>◆</span></div></div>
+    </div></div>
+
+  <div class="karte"><div>
+    <h3><span class="nr">2</span>Zwei neue Varianten anlegen</h3>
+    <p>Die Variante „Stil=Primaer“ anklicken. Unten links an der Variante erscheint ein <b class="k">+</b>. Zweimal klicken: zwei Kopien entstehen.</p>
+    <p>Rechts im Reiter Design bei „Properties“ den Namen so ändern: <b class="k">Zustand=Hover</b> und <b class="k">Zustand=Gedrueckt</b>. Die erste Variante bekommt <b class="k">Zustand=Normal</b>.</p>
+  </div>
+  <div class="fig"><div class="links"><div class="an">Knopf</div></div>
+    <div class="mitte" style="flex-direction:column;gap:12px"><div style="display:flex;align-items:center;gap:8px"><div class="knopf-zu sel" style="background:#3A0F18;width:130px">Normal</div><span class="mark" style="background:#8A38F5;color:#fff;border-radius:50%;width:20px;height:20px;display:grid;place-items:center;font-weight:800">+</span></div><div class="knopf-zu" style="background:#3A0F18;width:130px">Kopie 1</div><div class="knopf-zu" style="background:#3A0F18;width:130px">Kopie 2</div></div>
+    <div class="rechts"><div class="tabs"><span class="an">Design</span><span>Prototype</span></div><div class="label">Properties</div><div class="feld"><span>Zustand</span><span>Hover</span></div></div>
+    </div></div>
+
+  <div class="karte"><div>
+    <h3><span class="nr">3</span>Farben der Zustände ändern</h3>
+    <ul><li><b>Hover:</b> Füllung auf <b class="k">farbe/weinrot</b></li><li><b>Gedrückt:</b> Füllung auch <b class="k">farbe/weinrot</b>, Deckkraft <b class="k">85 %</b></li></ul>
+    <p class="tipp">Füllung: im Design-Reiter bei „Fill“ auf die vier Punkte klicken und die Variable auswählen.</p>
+  </div>
+  <div class="fig"><div class="links"><div class="an">Zustand=Hover</div></div>
+    <div class="mitte" style="flex-direction:row;align-items:center;gap:16px"><div class="knopf-zu" style="background:#3A0F18;width:90px">Normal</div><div style="color:var(--rot);font-size:26px;font-weight:900">→</div><div class="knopf-zu" style="background:#7B1E2E;width:90px">Hover</div></div>
+    <div class="rechts"><div class="tabs"><span class="an">Design</span><span>Prototype</span></div><div class="label">Fill</div><div class="feld mark"><span>farbe/weinrot</span><span>7B1E2E</span></div><div class="feld"><span>Deckkraft</span><span>100 %</span></div></div>
+    </div></div>
+
+  <div class="karte"><div>
+    <h3><span class="nr">4</span>Animation „Normal → Hover“</h3>
+    <p>Variante „Normal“ anklicken, Reiter <b class="k">Prototype</b>, <b class="k">+</b> bei Interactions. Dann:</p>
+    <ul><li>Trigger <b class="k">While hovering</b></li><li>Action <b class="k">Change to</b></li><li>Ziel <b class="k">Zustand=Hover</b></li><li>Animation <b class="k">Smart animate</b>, <b class="k">Ease out</b>, <b class="k">150 ms</b></li></ul>
+  </div>
+  <div class="fig"><div class="links"><div class="an">Normal</div></div><div class="mitte"><div class="knopf-zu sel" style="background:#3A0F18;width:100px">Normal</div></div>
+    <div class="rechts"><div class="tabs"><span>Design</span><span class="an">Prototype</span></div><div class="sek"><span>Interactions</span><span class="plus">+</span></div>
+      <div class="mark" style="padding:2px"><div class="feld"><span>Trigger</span><span>While hovering</span></div><div class="feld"><span>Action</span><span>Change to</span></div><div class="feld"><span>Ziel</span><span>Hover</span></div><div class="feld"><span>Anim.</span><span>Smart · 150</span></div></div></div>
+    </div></div>
+
+  <div class="karte"><div>
+    <h3><span class="nr">5</span>Animation „Normal → Gedrückt“</h3>
+    <p>Bei „Normal“ noch eine zweite Interaktion mit <b class="k">+</b>: Trigger <b class="k">While pressing</b>, Action <b class="k">Change to</b>, Ziel <b class="k">Zustand=Gedrueckt</b>, gleiche Animation.</p>
+    <p class="tipp">Für den hellen Knopf (Stil=Hell) wiederholst du Schritt 2 bis 5 einmal. Hover-Farbe dort: <b class="k">farbe/kachel</b>, gedrückt: <b class="k">farbe/moebel-hell</b>.</p>
+  </div>
+  <div class="fig"><div class="links"><div class="an">Normal</div></div><div class="mitte"><div class="knopf-zu sel" style="background:#3A0F18;width:100px">Normal</div></div>
+    <div class="rechts"><div class="tabs"><span>Design</span><span class="an">Prototype</span></div><div class="sek"><span>Interactions</span><span class="plus">+</span></div>
+      <div class="feld"><span>1</span><span>While hovering</span></div><div class="feld mark"><span>2</span><span>While pressing</span></div><div class="feld"><span>Ziel</span><span>Gedrückt</span></div></div>
+    </div></div>
+
+  <div class="karte"><div>
+    <h3><span class="nr">6</span>Prüfen</h3>
+    <p>Wieder auf <b class="k">▶</b>, mit der Maus über den Knopf fahren (er wird weinrot) und gedrückt halten (leicht blasser). Zeigt sich nichts, fehlt meist die Interaktion bei der Variante „Normal“, nicht bei Hover.</p>
+  </div>
+  <svg viewBox="0 0 460 150" width="100%" style="background:#1E1E1E;border-radius:10px">
+    <g font-family="system-ui" font-size="12" text-anchor="middle" fill="#E8E8E8">
+      <rect x="20" y="50" width="110" height="40" rx="3" fill="#3A0F18"/><text x="75" y="75" fill="#FFF8EE" font-weight="700">Raum ausmessen</text><text x="75" y="115" fill="#A0A0A0">Normal</text>
+      <path d="M140 70H180" stroke="#E5322D" stroke-width="3"/><text x="160" y="56" fill="#A0A0A0">Maus</text>
+      <rect x="190" y="50" width="110" height="40" rx="3" fill="#7B1E2E"/><text x="245" y="75" fill="#FFF8EE" font-weight="700">Raum ausmessen</text><text x="245" y="115" fill="#A0A0A0">Hover</text>
+      <path d="M310 70H350" stroke="#E5322D" stroke-width="3"/><text x="330" y="56" fill="#A0A0A0">Drücken</text>
+      <rect x="360" y="50" width="90" height="40" rx="3" fill="#7B1E2E" opacity=".85"/><text x="405" y="75" fill="#FFF8EE" font-weight="700">Gedrückt</text>
+    </g></svg></div>
+
+  <h2>Wenn etwas nicht klappt</h2>
+  <div class="karte" style="grid-template-columns:1fr"><ul style="margin:0">
+    <li><b>Es springt statt zu gleiten:</b> Animation steht auf „Instant“. Auf <b class="k">Smart animate</b> stellen.</li>
+    <li><b>Der Klick wählt immer den ganzen Bildschirm:</b> <b class="k">Strg</b> halten beim Klicken oder in der Ebenenliste links den Knopf anklicken.</li>
+    <li><b>Der Prototyp startet am falschen Bildschirm:</b> Bei „Flow starting point“ den richtigen Bildschirm wählen.</li>
+    <li><b>Aus Versehen etwas verschoben:</b> <b class="k">Strg</b>+<b class="k">Z</b>.</li>
+  </ul></div>
+</div>
+</body>
+</html>

@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="390" height="844" viewBox="0 0 390 844"><title>9 Kamera</title>
+<defs><linearGradient id="g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2B1419"/><stop offset="1" stop-color="#0D0508"/></linearGradient></defs>
+<rect id="Kamerabild (Platzhalter)" width="390" height="844" fill="url(#g)"/>
+<g id="Schliessen"><circle cx="44" cy="76" r="20" fill="#FFF8EE" opacity=".2"/><text x="44" y="83" font-family="Inter, Arial, sans-serif" font-size="22" font-weight="700" fill="#FFF8EE" text-anchor="middle" opacity="1">×</text></g>
+<text x="195" y="82" font-family="Inter, Arial, sans-serif" font-size="15" font-weight="700" fill="#FFF8EE" text-anchor="middle" opacity="1">Messen mit Foto</text>
+<rect id="Rahmen Karte" x="45" y="250" width="300" height="190" rx="10" fill="none" stroke="#FF5B2E" stroke-width="3"/>
+<text x="195" y="348" font-family="Inter, Arial, sans-serif" font-size="11" font-weight="400" fill="#FFF8EE" text-anchor="middle" opacity="0.4">Kamerabild</text>
+<text x="195" y="478" font-family="Inter, Arial, sans-serif" font-size="13" font-weight="400" fill="#FFF8EE" text-anchor="middle" opacity="1">Karte flach an die Stelle halten, die du misst</text>
+<g id="Galerie"><rect x="36" y="736" width="56" height="56" rx="10" fill="#FFF8EE" opacity=".2"/><text x="64" y="769" font-family="Inter, Arial, sans-serif" font-size="11" font-weight="400" fill="#FFF8EE" text-anchor="middle" opacity="1">Galerie</text></g>
+<g id="Ausloeser"><circle cx="195" cy="764" r="38" fill="none" stroke="#FFF8EE" stroke-width="4"/><circle cx="195" cy="764" r="30" fill="#FFF8EE"/></g>
+<g id="Kamera wechseln"><circle cx="326" cy="764" r="28" fill="#FFF8EE" opacity=".2"/><text x="326" y="773" font-family="Inter, Arial, sans-serif" font-size="22" font-weight="400" fill="#FFF8EE" text-anchor="middle" opacity="1">↻</text></g></svg>
