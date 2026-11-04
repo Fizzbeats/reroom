@@ -12,7 +12,7 @@
 .inserat-text strong { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .inserat-text span { font-size: .82rem; }
 .inserat-text b { font-family: var(--titel); font-size: 1.1rem; }
-.status-pille { font: 700 .72rem var(--schrift); border-radius: 999px; padding: 4px 10px; background: var(--hintergrund); white-space: nowrap; }
+.status-pille { font: 700 .72rem var(--schrift); border-radius: var(--radius); padding: 4px 10px; background: var(--hintergrund); white-space: nowrap; }
 .status-pille.online { background: var(--gruen-bg); color: var(--gruen); }
 .status-pille.verkauft { background: var(--gelb-bg); color: var(--ampel-gelb); }
 .status-pille.uebergeben { background: var(--primaer); color: var(--auf-primaer); }
@@ -24,7 +24,7 @@
 .foto-kachel { position: relative; aspect-ratio: 1; border-radius: 16px; overflow: hidden; background: var(--karte); }
 .foto-kachel img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .foto-kachel .rund { position: absolute; top: 8px; right: 8px; width: 32px; height: 32px; background: var(--hintergrund); }
-.foto-titel { position: absolute; left: 8px; bottom: 8px; background: var(--hintergrund); font: 700 .7rem var(--schrift); border-radius: 999px; padding: 3px 9px; }
+.foto-titel { position: absolute; left: 8px; bottom: 8px; background: var(--hintergrund); font: 700 .7rem var(--schrift); border-radius: var(--radius); padding: 3px 9px; }
 .foto-neu { aspect-ratio: 1; border-radius: 16px; border: 2px dashed var(--text-gedaempft); display: grid; place-items: center; align-content: center; gap: 6px; text-align: center; padding: 10px; font-weight: 600; font-size: .85rem; cursor: pointer; margin: 0; color: var(--text-gedaempft); }
 .foto-neu input { position: absolute; width: 1px; height: 1px; opacity: 0; pointer-events: none; }
 .foto-neu:has(input:focus-visible) { outline: 3px solid var(--orange); outline-offset: 2px; }
@@ -55,7 +55,7 @@
 .guthaben-zeile { display: flex; gap: 12px; align-items: center; background: var(--gruen-bg); border-radius: 14px; padding: 12px 14px; }
 .guthaben-zeile input { width: 22px; height: 22px; min-height: 0; margin: 0; flex: none; accent-color: var(--gruen); }
 .guthaben-zeile span { flex: 1; font-weight: 600; font-size: .92rem; }
-.hervorgehoben-schild { position: absolute; right: 8px; top: 8px; background: var(--orange); color: #111; font: 700 .66rem var(--schrift); border-radius: 999px; padding: 3px 8px; }
+.hervorgehoben-schild { position: absolute; right: 8px; top: 8px; background: var(--orange); color: #111; font: 700 .66rem var(--schrift); border-radius: var(--radius); padding: 3px 8px; }
 
 /* Leise Knöpfe auf grauen Flächen: heller Grund und feine Linie, sonst sehen sie wie Text aus */
 .flaeche .knopf.leise, .inserat .knopf.leise, .assistent .knopf.leise { background: var(--hintergrund); box-shadow: inset 0 0 0 1px var(--linie); }

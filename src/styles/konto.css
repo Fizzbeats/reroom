@@ -1,13 +1,13 @@
 /* Konto und Preise */
 .kopf-rechts { display: flex; gap: 8px; align-items: center; }
-.konto-karte { background: var(--pastell); color: var(--text); border-radius: 22px; padding: 22px 24px; margin-top: var(--abstand-m); display: grid; gap: 2px; }
-.konto-karte small { color: var(--text-gedaempft); }
+.konto-karte { background: var(--wein); color: var(--auf-wein); border-radius: 22px; padding: 22px 24px; margin-top: var(--abstand-m); display: grid; gap: 2px; }
+.konto-karte small { color: var(--auf-wein); opacity: .8; }
 .konto-karte strong { font: 800 1.6rem var(--titel); letter-spacing: -.02em; }
-.konto-karte span { color: var(--text-gedaempft); font-size: .9rem; }
-.aktion-banner { margin: var(--abstand-s) 0 0; background: var(--pastell-stark); color: var(--auf-pastell); border-radius: 12px; padding: 10px 16px; font: 700 .86rem var(--schrift); }
+.konto-karte span { color: var(--auf-wein); opacity: .8; font-size: .9rem; }
+.aktion-banner { margin: var(--abstand-s) 0 0; background: var(--primaer); color: var(--auf-primaer); border-radius: var(--radius); padding: 10px 16px; font: 700 .86rem var(--schrift); }
 .start-aktion { display: block; width: 100%; border: 0; text-align: left; margin: 0 0 var(--abstand-s); cursor: pointer; }
 .tarif-karte { border: 1.5px solid var(--linie); border-radius: var(--radius); padding: 16px; margin: 12px 0; display: grid; gap: 8px; }
-.tarif-karte.aktiv { border-color: var(--gruen); background: var(--gruen-bg); }
+.tarif-karte.aktiv { border: 2px solid var(--wein); background: var(--karte); }
 .tarif-preis { margin: 0; font: 700 1rem var(--titel); }
 .tarif-features { margin: 0; padding: 0; list-style: none; display: grid; gap: 6px; }
 .tarif-features li { padding-left: 24px; position: relative; font-size: .92rem; }

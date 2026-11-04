@@ -1,26 +1,28 @@
-/* Werte müssen mit src/theme.ts übereinstimmen. */
+/* Variante 18 (Weinrot und Creme). Werte müssen mit src/theme.ts übereinstimmen. */
 :root {
-  --hintergrund: #FFFFFF;
-  --karte: #F1F1EF;
-  --text: #111111;
-  --text-gedaempft: #686868;
-  --primaer: #111111;
-  --auf-primaer: #FFFFFF;
+  --hintergrund: #FFF8EE;
+  --karte: #F6E6DA;
+  --text: #3A0F18;
+  --text-gedaempft: #7A5058;
+  --primaer: #3A0F18;
+  --auf-primaer: #FFF8EE;
   --akzent: #FF5B2E;
-  --auf-akzent: #111111;
-  --ampel-gruen: #12924F;
-  --ampel-gelb: #A87400;
-  --ampel-rot: #D63A2A;
-  --pastell: #E3F3EA;
-  --pastell-stark: #CDEBDA;
-  --auf-pastell: #0B5A38;
+  --auf-akzent: #3A0F18;
+  --ampel-gruen: #4C6B2E;
+  --ampel-gelb: #8A5F00;
+  --ampel-rot: #A8321F;
+  --pastell: #F6E6DA;
+  --pastell-stark: #EBD3C3;
+  --auf-pastell: #7B1E2E;
+  --wein: #7B1E2E;
+  --auf-wein: #FFF1E4;
   --orange: #FF5B2E;
-  --gruen: #0B7A4B;
-  --gruen-bg: #E3F3EA;
+  --gruen: #4C6B2E;
+  --gruen-bg: #E6ECD8;
   --gelb-bg: #FFF1CC;
-  --linie: #E5E4E1;
-  --raumkarte: #111111;
-  --radius: 18px;
+  --linie: #E2D8CE;
+  --raumkarte: #7B1E2E;
+  --radius: 2px;
   /* Abstände für Einstieg und Startseite: zentral, nicht im Code verteilt */
   --abstand-s: 12px;
   --abstand-m: 24px;
@@ -30,30 +32,32 @@
   /* Platz für das Logo: feste Größe, damit es später einfach getauscht werden kann */
   --logo-breite: 132px;
   --logo-hoehe: 40px;
-  --titel: "Bricolage Grotesque Variable", "Segoe UI", system-ui, sans-serif;
+  --titel: "Source Serif 4 Variable", Georgia, "Times New Roman", serif;
   --schrift: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
 }
 @media (prefers-color-scheme: dark) {
   :root {
-    --hintergrund: #0E0E0E;
-    --karte: #1C1C1C;
-    --text: #F2F2F2;
-    --text-gedaempft: #A6A6A6;
-    --primaer: #F2F2F2;
-    --auf-primaer: #0E0E0E;
+    --hintergrund: #1E0E12;
+    --karte: #2C171C;
+    --text: #FFF1E4;
+    --text-gedaempft: #C9ABB0;
+    --primaer: #FFF1E4;
+    --auf-primaer: #3A0F18;
     --akzent: #FF6B3D;
-    --auf-akzent: #0E0E0E;
-    --ampel-gruen: #3FCB7E;
+    --auf-akzent: #2A0A11;
+    --ampel-gruen: #A9D17F;
     --ampel-gelb: #F2C94C;
-    --ampel-rot: #FF6B5B;
-    --pastell: #12301F;
-    --pastell-stark: #1C4A31;
-    --auf-pastell: #A8E8C8;
+    --ampel-rot: #FF8A78;
+    --pastell: #3A1E24;
+    --pastell-stark: #4A2830;
+    --auf-pastell: #FFD9DC;
+    --wein: #5E1A2A;
+    --auf-wein: #FFF1E4;
     --orange: #FF6B3D;
-    --gruen: #5FD39A;
-    --gruen-bg: #12301F;
+    --gruen: #A9D17F;
+    --gruen-bg: #2A3320;
     --gelb-bg: #3A2E0E;
-    --linie: #2A2A2A;
-    --raumkarte: #1C1C1C;
+    --linie: #3D2A2E;
+    --raumkarte: #5E1A2A;
   }
 }

@@ -1,50 +1,35 @@
-/* Einstieg (Willkommen) und leere Startseite: mobil zuerst, viel Weißraum, Pastellgrün aus der CI.
+/* Einstieg (Willkommen) und leere Startseite, Variante 18: weinrote Fläche oben, wenig Text, viel Weißraum.
    Alle Abstände und Farben kommen aus tokens.css. */
 
-/* Platzhalter fürs Logo: feste Größe, später durch das echte Logo ersetzen (siehe Logo() in ui.tsx) */
+/* Platz fürs Logo: feste Größe, später durch das echte Logo ersetzen (siehe Logo() in ui.tsx) */
 .logo-platz {
   display: inline-flex; align-items: center; justify-content: center;
   width: var(--logo-breite); height: var(--logo-hoehe); flex: none;
-  border: 1.5px dashed var(--auf-pastell); border-radius: 12px;
-  color: var(--auf-pastell); font: 700 .8rem var(--schrift); letter-spacing: .08em; text-transform: uppercase;
+  border: 1.5px dashed currentColor; border-radius: var(--radius);
+  font: 700 .8rem var(--schrift); letter-spacing: .08em; text-transform: uppercase;
 }
 .logo-platz img { display: block; width: 100%; height: 100%; object-fit: contain; }
 
-.knopf.pastell { background: var(--pastell-stark); color: var(--auf-pastell); font-size: 1.05rem; min-height: 56px; border-radius: 16px; }
+/* Die Navigation unten bleibt sichtbar: der Einstieg liegt unter ihr */
+.vollbild.willkommen { z-index: 9; }
+.einstieg { max-width: 520px; margin: 0 auto; min-height: 100%; padding-bottom: calc(120px + env(safe-area-inset-bottom)); }
+.einstieg-hero { background: var(--wein); color: var(--auf-wein); padding: calc(var(--abstand-m) + env(safe-area-inset-top)) var(--seite-rand) 28px; }
+.einstieg-kopf { display: flex; align-items: center; justify-content: space-between; }
+.einstieg-kopf .link { color: var(--auf-wein); font-size: .9rem; padding: var(--abstand-s) 0 var(--abstand-s) var(--abstand-s); }
+.einstieg-titel { font-size: clamp(2.5rem, 12.5vw, 3.2rem); line-height: 1; letter-spacing: -.03em; margin: var(--abstand-xl) 0 0; text-wrap: balance; }
+.einstieg-body { padding: var(--abstand-m) var(--seite-rand) 0; display: grid; gap: var(--abstand-m); }
+.einstieg-unter { margin: 0; color: var(--text-gedaempft); font-size: 1.05rem; }
+.einstieg-zeilen { margin: 0; padding: 0; list-style: none; border-top: 1px solid var(--linie); }
+.einstieg-zeilen button { display: flex; align-items: center; justify-content: space-between; gap: var(--abstand-s); width: 100%; padding: 14px 0; border: 0; border-bottom: 1px solid var(--linie); background: none; text-align: left; }
+.einstieg-zeilen b { font-weight: 700; }
+.einstieg-zeilen span { color: var(--text-gedaempft); font-size: .9rem; }
+.einstieg-hinweis { margin: 0; font-size: .8rem; color: var(--text-gedaempft); }
 
-.einstieg { padding-bottom: calc(var(--abstand-l) + env(safe-area-inset-bottom)); }
-.einstieg-kopf { display: flex; align-items: center; justify-content: space-between; min-height: var(--logo-hoehe); }
-
-/* Erster Bildschirm: Szene, Überschrift, ein Satz, ein Knopf. Füllt die sichtbare Höhe, der Rest liegt darunter. */
-.einstieg-hero {
-  min-height: calc(100svh - var(--logo-hoehe) - 2 * var(--abstand-m) - env(safe-area-inset-top));
-  display: flex; flex-direction: column; justify-content: center; gap: var(--abstand-m);
-  padding-block: var(--abstand-m);
-}
-.einstieg-szene { display: block; width: 100%; height: auto; max-height: 34svh; }
-.einstieg-titel { font-size: clamp(2rem, 9vw, 2.6rem); line-height: 1.05; letter-spacing: -.03em; margin: var(--abstand-s) 0 0; text-wrap: balance; }
-.einstieg-unter { margin: calc(-1 * var(--abstand-s) / 2) 0 0; font-size: 1.1rem; color: var(--text-gedaempft); text-wrap: balance; }
-.einstieg-zweit { align-self: center; padding: var(--abstand-s); font-size: .95rem; }
-
-.einstieg-mehr { padding-top: var(--abstand-l); display: grid; gap: var(--abstand-m); }
-.einstieg-mehr h2 { margin: 0; font-size: 1.35rem; }
-.kacheln { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: var(--abstand-s); }
-.kachel { background: var(--pastell); color: var(--text); border-radius: var(--radius); padding: 18px 16px; display: grid; gap: 4px; align-content: start; }
-.kachel strong { font: 700 1rem/1.2 var(--titel); }
-.kachel > span:last-child { font-size: .88rem; color: var(--text-gedaempft); }
-.kachel-icon { width: 44px; height: 44px; border-radius: 50%; background: var(--pastell-stark); color: var(--auf-pastell); display: grid; place-items: center; margin-bottom: 8px; }
-.einstieg-hinweis { margin: var(--abstand-s) 0 0; font-size: .8rem; color: var(--text-gedaempft); text-align: center; }
-
-/* Startseite ohne Raum: ruhige Pastellkarte statt schwarzer Fläche */
-.messen-cta { background: var(--pastell); color: var(--text); border-radius: 24px; padding: var(--abstand-m); display: grid; gap: var(--abstand-s); margin-block: var(--abstand-s); }
+/* Startseite ohne Raum: warme Kachel statt großer Fläche */
+.messen-cta { background: var(--pastell); color: var(--text); border-radius: var(--radius); padding: var(--abstand-m); display: grid; gap: var(--abstand-s); margin-block: var(--abstand-s); }
 .messen-cta h3 { margin: 0; font-size: 1.45rem; font-weight: 800; letter-spacing: -.02em; }
 .messen-cta p { margin: 0; color: var(--text-gedaempft); }
-.messen-cta .knopf { background: var(--pastell-stark); color: var(--auf-pastell); margin-top: var(--abstand-s); }
+.messen-cta .knopf { margin-top: var(--abstand-s); }
 .messen-cta .link { color: var(--text-gedaempft); padding: var(--abstand-s); justify-self: center; }
 
-@media (min-width: 700px) {
-  .einstieg { max-width: 680px; }
-  .einstieg-hero { min-height: 0; padding-block: var(--abstand-xl) var(--abstand-l); }
-  .einstieg-szene { max-height: 280px; }
-  .kacheln { grid-template-columns: repeat(3, 1fr); }
-}
+@media (min-width: 700px) { .einstieg-hero { padding-inline: max(var(--seite-rand), calc(50% - 260px + var(--seite-rand))); } }

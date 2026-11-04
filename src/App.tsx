@@ -204,7 +204,7 @@ export default function App() {
         />
       )}
 
-      {!chatOffen && !detail && (
+      {!chatOffen && !detail && willkommenGesehen && (
         <button className="chat-fab" onClick={() => setChatOffen(true)} aria-label="Assistent öffnen">
           <Icon name="chat" groesse={24} />
         </button>
@@ -270,7 +270,7 @@ export default function App() {
             key={t.id}
             className={t.mitte ? "mitte" : undefined}
             aria-current={tab === t.id && !detail ? "page" : undefined}
-            onClick={() => gehe(t.id)}
+            onClick={() => { setWillkommenGesehen(true); gehe(t.id); }}
           >
             {t.mitte ? <b><Icon name={t.icon} /></b> : <Icon name={t.icon} groesse={24} />}
             {t.id}

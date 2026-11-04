@@ -26,7 +26,7 @@ button, select, input { font: inherit; color: inherit; }
 button { cursor: pointer; }
 button:disabled { opacity: .4; cursor: not-allowed; }
 .knopf {
-  border: 0; border-radius: 14px; padding: 14px 18px; min-height: 48px; font-weight: 700;
+  border: 0; border-radius: var(--radius); padding: 14px 18px; min-height: 48px; font-weight: 700;
   background: var(--primaer); color: var(--auf-primaer); display: inline-flex; align-items: center; justify-content: center; gap: 8px;
 }
 .knopf.breit { width: 100%; }
@@ -41,7 +41,7 @@ input[type="file"] { padding: 10px; }
 /* Chips */
 .chips { display: flex; gap: 8px; overflow-x: auto; scrollbar-width: none; margin: 0 calc(-1 * var(--seite-rand)); padding: 0 var(--seite-rand) 2px; }
 .chips::-webkit-scrollbar { display: none; }
-.chip { flex: none; border: 0; border-radius: 999px; padding: 9px 15px; font: 600 .84rem var(--schrift); background: var(--karte); color: var(--text); display: inline-flex; align-items: center; gap: 6px; min-height: 38px; }
+.chip { flex: none; border: 0; border-radius: var(--radius); padding: 9px 15px; font: 600 .84rem var(--schrift); background: var(--karte); color: var(--text); display: inline-flex; align-items: center; gap: 6px; min-height: 38px; }
 .chip[aria-pressed="true"] { background: var(--primaer); color: var(--auf-primaer); }
 .chip .punkt { width: 12px; height: 12px; border-radius: 50%; box-shadow: inset 0 0 0 1px rgb(0 0 0 / .12); }
 
@@ -53,28 +53,29 @@ input[type="file"] { padding: 10px; }
 .leer strong { color: var(--text); font: 700 1.1rem var(--titel); }
 
 /* Raumkarte auf der Startseite */
-.raumkarte { background: var(--pastell); color: var(--text); border-radius: 24px; padding: 22px; }
+.raumkarte { background: var(--wein); color: var(--auf-wein); border-radius: var(--radius); padding: 22px; }
 .raumkarte .zeile { display: flex; justify-content: space-between; align-items: center; gap: 10px; }
-.raumkarte small { color: var(--text-gedaempft); font-size: .8rem; }
+.raumkarte small { color: var(--auf-wein); opacity: .8; font-size: .8rem; }
 .raumkarte h3 { margin: 0; font-size: 1.3rem; font-weight: 700; }
-.raumkarte .chip { background: var(--pastell-stark); color: var(--auf-pastell); }
+.raumkarte .chip { background: rgb(255 241 228 / .16); color: var(--auf-wein); }
 .grundriss { display: block; width: 100%; height: auto; margin: 6px 0; }
-.grundriss > text { fill: var(--text-gedaempft); font: 11px var(--schrift); }
+.grundriss > text { fill: var(--auf-wein); font: 11px var(--schrift); }
+.detail-plan .grundriss > text { fill: var(--text-gedaempft); }
 .grundriss .fuss-text { font: 700 8.5px var(--schrift); pointer-events: none; }
 .grundriss .weg-text { font: 700 9.5px var(--schrift); fill: #7A5300; }
 .grundriss .klickbar { cursor: pointer; }
 .grundriss .klickbar:hover rect { stroke: var(--orange); stroke-width: 2; }
-.passt-zahl { font: 700 .78rem var(--schrift); color: var(--auf-pastell); white-space: nowrap; }
-.plan-leiste { display: flex; justify-content: space-between; align-items: center; gap: 10px; background: var(--hintergrund); border-radius: 16px; padding: 14px 16px; margin-top: var(--abstand-s); font-size: .86rem; }
+.passt-zahl { font: 700 .78rem var(--schrift); color: var(--auf-wein); white-space: nowrap; }
+.plan-leiste { display: flex; justify-content: space-between; align-items: center; gap: 10px; background: rgb(255 241 228 / .12); border-radius: var(--radius); padding: 14px 16px; margin-top: var(--abstand-s); font-size: .86rem; }
 .plan-leiste b { font: 800 1.15rem var(--titel); margin-left: 4px; }
-.chip.hell { background: var(--pastell-stark); color: var(--auf-pastell); }
-.plan-tipp { margin: var(--abstand-s) 2px 0; font-size: .8rem; color: var(--text-gedaempft); }
+.chip.hell { background: var(--hintergrund); color: var(--text); }
+.plan-tipp { margin: var(--abstand-s) 2px 0; font-size: .8rem; color: var(--auf-wein); opacity: .8; }
 .werte { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
 .werte div { background: var(--hintergrund); border-radius: 12px; padding: 8px 10px; font-size: .74rem; color: var(--text-gedaempft); }
 .werte b { display: block; color: var(--text); font: 700 1.05rem var(--titel); }
 .raumwahl { display: flex; gap: 8px; overflow-x: auto; margin-top: var(--abstand-s); scrollbar-width: none; }
-.raumwahl .chip { background: var(--pastell-stark); color: var(--auf-pastell); }
-.raumwahl .chip[aria-pressed="true"] { background: var(--primaer); color: var(--auf-primaer); }
+.raumwahl .chip { background: rgb(255 241 228 / .16); color: var(--auf-wein); }
+.raumwahl .chip[aria-pressed="true"] { background: var(--hintergrund); color: var(--text); }
 
 /* Produktraster */
 .raster { display: grid; grid-template-columns: 1fr 1fr; gap: var(--abstand-m) var(--abstand-s); }
@@ -86,7 +87,7 @@ input[type="file"] { padding: 10px; }
 .produkt-name { font-size: .86rem; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .produkt-meta { font-size: .78rem; color: var(--text-gedaempft); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .mit-reroom { align-self: flex-start; font: 700 .7rem var(--schrift); color: var(--gruen); background: var(--gruen-bg); border-radius: 6px; padding: 2px 6px; margin: 2px 0; }
-.ampel-schild { position: absolute; top: 8px; left: 8px; background: #fff; color: #111; border-radius: 999px; padding: 4px 9px 4px 7px; font: 700 .7rem var(--schrift); display: inline-flex; align-items: center; gap: 5px; }
+.ampel-schild { position: absolute; top: 8px; left: 8px; background: var(--hintergrund); color: var(--text); border-radius: var(--radius); padding: 4px 9px 4px 7px; font: 700 .7rem var(--schrift); display: inline-flex; align-items: center; gap: 5px; }
 .ampel-schild::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--c); }
 .ampel-schild.gruen { --c: #12924F; } .ampel-schild.gelb { --c: #C98A00; } .ampel-schild.rot { --c: #D63A2A; }
 .suche { display: flex; align-items: center; gap: 10px; background: var(--karte); border-radius: 14px; padding: 0 14px; color: var(--text-gedaempft); margin-bottom: 12px; }
@@ -111,7 +112,7 @@ input[type="file"] { padding: 10px; }
 .passt { border: 1px solid var(--linie); border-radius: var(--radius); padding: 16px; margin-top: 16px; }
 .passt-kopf { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
 .passt-kopf b { font: 700 1rem var(--titel); }
-.status { font: 700 .76rem var(--schrift); border-radius: 999px; padding: 4px 10px; }
+.status { font: 700 .76rem var(--schrift); border-radius: var(--radius); padding: 4px 10px; }
 .status.gruen { background: var(--gruen-bg); color: var(--gruen); }
 .status.gelb { background: var(--gelb-bg); color: var(--ampel-gelb); }
 .status.rot { background: #FDE3DF; color: #A82A1C; }
@@ -184,7 +185,7 @@ input[type="file"] { padding: 10px; }
 .fortschritt i { display: block; height: 100%; background: var(--primaer); transition: width .3s; }
 .wisch-stapel { position: relative; width: 100%; max-width: 340px; margin: 0 auto; }
 .wisch-hinten { position: absolute; inset: 10px -6px -8px 12px; background: var(--karte); border-radius: 26px; transform: rotate(3deg); }
-.wisch-karte { position: relative; border-radius: 26px; overflow: hidden; box-shadow: 0 14px 30px rgb(0 0 0 / .15); touch-action: pan-y; cursor: grab; user-select: none; }
+.wisch-karte { position: relative; border-radius: var(--radius); overflow: hidden; box-shadow: 0 14px 30px rgb(0 0 0 / .15); touch-action: pan-y; cursor: grab; user-select: none; }
 .moodboard { display: block; width: 100%; height: auto; }
 .moodboard-text { font: 700 13px var(--schrift); fill: #111; }
 .wisch-stempel { position: absolute; top: 20px; right: 20px; font: 800 1rem var(--titel); padding: 6px 12px; border-radius: 10px; border: 3px solid; transform: rotate(8deg); background: rgb(255 255 255 / .9); }

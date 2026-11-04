@@ -8,9 +8,9 @@ const [hellCss, dunkelCss] = css.split("@media");
 const cssName = (k: string) => "--" + k.replace(/[A-Z]/g, (c) => "-" + c.toLowerCase());
 
 describe("Farben", () => {
-  it("Vorgabefarben: Schwarz-Weiß mit orangem Akzent", () => {
-    expect(FARBEN.hell.hintergrund).toBe("#FFFFFF");
-    expect(FARBEN.hell.primaer).toBe("#111111");
+  it("Vorgabefarben: Variante 18, Creme und Weinrot mit orangem Akzent", () => {
+    expect(FARBEN.hell.hintergrund).toBe("#FFF8EE");
+    expect(FARBEN.hell.primaer).toBe("#3A0F18");
     expect(FARBEN.hell.akzent).toBe("#FF5B2E");
   });
 
@@ -33,15 +33,15 @@ describe("Farben", () => {
     expect(kontrast(f.aufPrimaer, f.primaer)).toBeGreaterThanOrEqual(4.5);
   });
 
-  it.each(["hell", "dunkel"] as const)("Text auf Pastellgrün erreicht WCAG AA (%s)", (modus) => {
+  it.each(["hell", "dunkel"] as const)("Text auf den warmen Kacheln erreicht WCAG AA (%s)", (modus) => {
     const f = FARBEN[modus];
     expect(kontrast(f.aufPastell, f.pastell)).toBeGreaterThanOrEqual(4.5);
     expect(kontrast(f.aufPastell, f.pastellStark)).toBeGreaterThanOrEqual(4.5);
     expect(kontrast(f.text, f.pastell)).toBeGreaterThanOrEqual(4.5);
   });
 
-  it("Pastellgrün ist der grüne Pastellton aus der CI (gruen-bg)", () => {
-    expect(FARBEN.hell.pastell).toBe("#E3F3EA");
+  it.each(["hell", "dunkel"] as const)("Text auf Weinrot ist lesbar (%s)", (modus) => {
+    expect(kontrast(FARBEN[modus].aufWein, FARBEN[modus].wein)).toBeGreaterThanOrEqual(4.5);
   });
 
   it("Ampelfarben sind auf der Karte erkennbar (Kontrast ab 3)", () => {
